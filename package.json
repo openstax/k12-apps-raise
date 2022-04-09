@@ -6,6 +6,7 @@
     "dev": "vite",
     "lint": "eslint .",
     "build": "tsc && vite build",
+    "watch": "vite build -m development -w",
     "preview": "vite preview"
   },
   "dependencies": {
