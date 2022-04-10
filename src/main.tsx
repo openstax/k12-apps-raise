@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
+import { renderContentElements } from './lib/content'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+const processPage = async (): Promise<void> => {
+  // Load any content that needs to be fetched and inserted into the page
+  await renderContentElements()
+  // TODO: Insert processing "page type" templates
+}
+
+processPage().catch((error) => {
+  console.error(error)
+})
