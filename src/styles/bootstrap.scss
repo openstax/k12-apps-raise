@@ -1,0 +1,19 @@
+.os-raise-bootstrap {
+  // We namespace bootstrap to avoid collisions with Moodle themes, etc.
+  // NOTE: This approach may result in some unexpected issues that we'll have
+  // to address as they arise
+
+  /* stylelint-disable no-invalid-position-at-import-rule */
+
+  // Required styles
+  @import "bootstrap/scss/functions";
+  @import "bootstrap/scss/variables";
+  @import "bootstrap/scss/mixins";
+  @import "bootstrap/scss/root";
+  @import "bootstrap/scss/reboot";
+
+  // Additional styles
+  @import "bootstrap/scss/helpers";
+  @import "bootstrap/scss/buttons";
+  @import "bootstrap/scss/forms";
+}
