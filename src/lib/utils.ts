@@ -1,22 +1,29 @@
-const loadMathJax = async (): Promise<void> => {
+const loadMathJax = async (): Promise<boolean> => {
   const maybeMoodleYUI = window.Y
 
   if (maybeMoodleYUI === undefined) {
     // TODO: Load MathJax manually to support things like preview outside of
     // Moodle
+    return false
   } else {
-    return await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
       maybeMoodleYUI.use('mathjax', () => {
         window.MathJax.Hub.Configured()
         resolve()
       })
     })
+    return true
   }
 }
 
 export const mathifyElement = async (elem: Element): Promise<void> => {
-  if (window.MathJax === undefined) {
-    await loadMathJax()
+  let mathjaxLoaded = window.MathJax !== undefined
+
+  if (!mathjaxLoaded) {
+    mathjaxLoaded = await loadMathJax()
   }
-  window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
+
+  if (mathjaxLoaded) {
+    window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
+  }
 }
