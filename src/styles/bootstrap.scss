@@ -16,4 +16,11 @@
   @import "bootstrap/scss/helpers";
   @import "bootstrap/scss/buttons";
   @import "bootstrap/scss/forms";
+
+  .os-form-control {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-control;
+
+    width: unset;
+  }
 }
