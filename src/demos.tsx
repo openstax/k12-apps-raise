@@ -1,4 +1,5 @@
 import React, { useState, CSSProperties } from 'react'
+import { Property } from 'csstype'
 import { createRoot } from 'react-dom/client'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
@@ -167,7 +168,7 @@ const Draggable = ({ innerHTML, label }: DraggableProps): JSX.Element => {
   const visibility = isMatched ? 'hidden' : 'visible'
 
   const componentStyling = {
-    visibility: visibility as any, // NOTE: This type assertion was a quick fix / hack
+    visibility: visibility as Property.Visibility,
     height: '100px',
     width: '100px',
     opacity: isDragging ? 0.5 : 1
