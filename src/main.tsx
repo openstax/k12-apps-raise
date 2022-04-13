@@ -1,5 +1,5 @@
 import { renderContentElements } from './lib/content'
-import { inputInteractiveDemo } from './demos'
+import { dndInteractiveDemo, inputInteractiveDemo } from './demos'
 import './styles/main.scss'
 
 const processPage = async (): Promise<void> => {
@@ -7,6 +7,7 @@ const processPage = async (): Promise<void> => {
   await renderContentElements()
   // TODO: Insert processing "page type" templates
   inputInteractiveDemo()
+  dndInteractiveDemo()
 }
 
 processPage().catch((error) => {
