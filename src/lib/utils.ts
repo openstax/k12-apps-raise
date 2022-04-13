@@ -1,4 +1,4 @@
-const loadMathJax = async (): Promise<boolean> => {
+export const loadMathJax = async (): Promise<boolean> => {
   const maybeMoodleYUI = window.Y
 
   if (maybeMoodleYUI === undefined) {

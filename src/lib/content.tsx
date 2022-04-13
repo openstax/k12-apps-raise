@@ -1,6 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { mathifyElement } from './utils'
+import { loadMathJax, mathifyElement } from './utils'
 import { ContentLoader } from '../components/ContentLoader'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
@@ -8,6 +8,12 @@ const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 export const renderContentElements = async (): Promise<void> => {
   const osContentItems = document.querySelectorAll(`.${OS_RAISE_CONTENT_CLASS}`)
   const contentPromises: Array<Promise<void>> = []
+
+  if (osContentItems.length !== 0) {
+    // This is an optimization so we can proactively load MathJax in parallel
+    // while loading content
+    loadMathJax().catch(() => {})
+  }
 
   osContentItems.forEach((elem) => {
     const htmlElem = elem as HTMLElement
@@ -22,10 +28,6 @@ export const renderContentElements = async (): Promise<void> => {
       console.log('WARNING: Found non-empty os-raise-content')
     }
 
-    mathifyElement(elem).catch((error) => {
-      console.error(error)
-    })
-
     const contentPromise = new Promise<void>((resolve) => {
       createRoot(htmlElem).render(
         <React.StrictMode>
@@ -37,4 +39,10 @@ export const renderContentElements = async (): Promise<void> => {
   })
 
   await Promise.all(contentPromises)
+
+  osContentItems.forEach((elem) => {
+    mathifyElement(elem).catch((error) => {
+      console.error(error)
+    })
+  })
 }
