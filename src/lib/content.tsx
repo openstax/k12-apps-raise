@@ -1,6 +1,6 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { loadMathJax, mathifyElement } from './utils'
+import { loadMathJax, mathifyElement } from './math'
 import { ContentLoader } from '../components/ContentLoader'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
