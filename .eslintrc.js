@@ -7,7 +7,8 @@ module.exports = {
   ignorePatterns: [
     'dist',
     'vite.config.ts',
-    'jest.config.ts'
+    'jest.config.ts',
+    'playwright.config.ts'
   ],
   rules: {
     '@typescript-eslint/triple-slash-reference': 'off',
