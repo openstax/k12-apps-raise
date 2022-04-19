@@ -16,7 +16,7 @@ const testTooltip = async (): Promise<void> => {
     return
   }
   createRoot(result).render(
-    <TooltipBlock text="my-text" tip="<p>something</p>"/>
+    <TooltipBlock text="my-text" tip="<div><p>\( x=2 \)</p></div>"/>
   )
 }
 

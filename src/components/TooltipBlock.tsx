@@ -1,6 +1,6 @@
 import { Tooltip } from 'bootstrap'
 import { useRef, useEffect } from 'react'
-
+import { mathifyElement } from '../lib/math'
 export interface TooltipBlockProperties {
   text: string
   tip: string
@@ -11,10 +11,12 @@ export const TooltipBlock = ({ text, tip }: TooltipBlockProperties): JSX.Element
   const wrapperEl = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const maybeAnchor = anchorEl.current
-    if (maybeAnchor === null) {
+    const maybeWrapper = wrapperEl.current
+    if (maybeAnchor === null || maybeWrapper === null) {
       return
     }
-    Tooltip.getOrCreateInstance(maybeAnchor, { container: wrapperEl.current, html: true })
+
+    Tooltip.getOrCreateInstance(maybeAnchor, { container: maybeWrapper, html: true, popperConfig: { onFirstUpdate: () => { mathifyElement(maybeWrapper).catch((e) => {}) } } })
   }, [anchorEl, wrapperEl])
   return (
     <span ref={wrapperEl} className='os-raise-bootstrap'>
