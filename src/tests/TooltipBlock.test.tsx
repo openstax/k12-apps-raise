@@ -3,6 +3,10 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TooltipBlock } from '../components/TooltipBlock'
 import { mathifyElement } from '../lib/math'
 
+jest.mock('../lib/math.ts', () => ({
+  mathifyElement: jest.fn(async () => {})
+}))
+
 test('Tooltip Block unit test', async () => {
   render(
     <div data-testid="tooltip-content">
@@ -16,8 +20,6 @@ test('Tooltip Block unit test', async () => {
   expect(document.querySelector('.os-raise-bootstrap')).toHaveTextContent('my-tip')
 })
 test('Tooltip Block renders math', async () => {
-  jest.mock('../lib/math.ts')
-
   render(
     <div data-testid="tooltip-content">
       <TooltipBlock text="my-text" tip="\( x=2 \)"/>
@@ -26,7 +28,5 @@ test('Tooltip Block renders math', async () => {
 
   expect(screen.getByTestId('tooltip-content')).toHaveTextContent('my-text')
   fireEvent.mouseOver(screen.getByText('my-text'))
-  //await waitFor(() => expect(document.querySelector('.MathJax')).not.toBeNull())
-
-  // await waitFor(() => expect(mathifyElement).toHaveBeenCalled())
+  await waitFor(() => expect(mathifyElement).toHaveBeenCalled())
 })
