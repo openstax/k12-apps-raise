@@ -1,5 +1,6 @@
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
+import { renderCTABlocks } from './lib/cta'
 import './styles/main.scss'
 
 const processPage = async (): Promise<void> => {
@@ -10,6 +11,7 @@ const processPage = async (): Promise<void> => {
   // NOTE: renderContentElements should provide any found elements for us
   // to process, but for now just working with document
   tooltipify(document.body).catch(error => console.error(error))
+  renderCTABlocks(document.body).catch(error => console.error(error))
 }
 
 processPage().catch((error) => {
