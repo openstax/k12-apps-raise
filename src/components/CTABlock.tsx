@@ -25,7 +25,6 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
       return
     }
     const handleEvent = (): void => {
-      console.log('Event fired!')
       setShouldRender(true)
     }
 
