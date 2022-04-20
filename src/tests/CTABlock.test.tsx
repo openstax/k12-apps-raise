@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, act } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { CTABlock } from '../components/CTABlock'
 import '@testing-library/jest-dom'
 
@@ -62,9 +62,9 @@ test('CTABlock does render if waitForEvent is fired', async () => {
       <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
     </div>
   )
-  const clickEvent = new CustomEvent('waitForEvent')
+  const renderEvent = new CustomEvent('waitForEvent')
 
-  fireEvent(document, clickEvent)
+  fireEvent(document, renderEvent)
 
   const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
 
