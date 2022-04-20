@@ -39,7 +39,7 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
     if (!clicked) {
       return (<>
       <div dangerouslySetInnerHTML={{ __html: contentPrompt }} />
-      <button onClick={clickHandler} type="button">{buttonText}</button></>)
+      <button onClick={clickHandler} type="button" className="btn btn-outline-primary">{buttonText}</button></>)
     } else {
       return <></>
     }
@@ -48,9 +48,9 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
     return (<></>)
   }
   return (
-    <>
+    <div className="os-raise-bootstrap">
       <div dangerouslySetInnerHTML={{ __html: contentString }} />
     {promptButton()}
-    </>
+    </div>
   )
 }
