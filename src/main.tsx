@@ -12,6 +12,7 @@ const processPage = async (): Promise<void> => {
   // to process, but for now just working with document
   tooltipify(document.body).catch(error => console.error(error))
   renderCTABlocks(document.body).catch(error => console.error(error))
+  renderContentOnlyBlocks(document.body).catch(error => console.error(error))
 }
 
 processPage().catch((error) => {

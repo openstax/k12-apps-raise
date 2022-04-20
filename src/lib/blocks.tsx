@@ -1,11 +1,13 @@
 
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 
 const OS_RAISE_IB_CTA_CLASS = 'os-raise-ib-cta'
 const CONTENT_CLASS = 'os-raise-ib-cta-content'
 const PROMPT_CLASS = 'os-raise-ib-cta-prompt'
+const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
 
 export const renderCTABlocks = async (element: HTMLElement): Promise<void> => {
   const ctaItems = element.querySelectorAll(`.${OS_RAISE_IB_CTA_CLASS}`)
@@ -26,6 +28,21 @@ export const renderCTABlocks = async (element: HTMLElement): Promise<void> => {
     createRoot(htmlElem).render(
         <React.StrictMode>
             <CTABlock contentString={contentString.innerHTML} contentPrompt={contentPrompt.innerHTML} buttonText={buttonText} fireEvent={fireEvent} waitForEvent={waitForEvent} />
+        </React.StrictMode>
+    )
+  })
+}
+
+export const renderContentOnlyBlocks = async (element: HTMLElement): Promise<void> => {
+  const ctaItems = element.querySelectorAll(`.${OS_RAISE_IB_CONTENT_CLASS}`)
+
+  ctaItems.forEach(elem => {
+    const htmlElem = elem as HTMLElement
+    const waitForEvent = htmlElem.dataset.waitForEvent
+
+    createRoot(htmlElem).render(
+        <React.StrictMode>
+            <ContentBlock content={htmlElem.innerHTML} waitForEvent={waitForEvent} />
         </React.StrictMode>
     )
   })
