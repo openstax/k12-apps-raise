@@ -1,6 +1,6 @@
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
-import { renderCTABlocks } from './lib/cta'
+import { renderCTABlocks, renderContentOnlyBlocks } from './lib/blocks'
 import './styles/main.scss'
 
 const processPage = async (): Promise<void> => {
