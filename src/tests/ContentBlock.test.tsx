@@ -9,7 +9,7 @@ test('ContentBlock renders', async () => {
     </div>
   )
 
-  expect(screen.getByTestId('content-block')).toHaveTextContent('String')
+  expect(screen.getByTestId('content-block').querySelector('p')).toHaveTextContent('String')
 })
 
 test('ContentBlock does not render if waitForEvent does not fire', async () => {
@@ -18,7 +18,7 @@ test('ContentBlock does not render if waitForEvent does not fire', async () => {
       <ContentBlock content={'<p>String</p>'} waitForEvent='someEvent' />
     </div>
   )
-  expect(screen.getByTestId('content-block')).not.toHaveTextContent('String')
+  expect(screen.getByTestId('content-block').querySelector('p')).toBeNull()
 })
 
 test('CTABlock does render if waitForEvent is fired', async () => {
@@ -30,5 +30,5 @@ test('CTABlock does render if waitForEvent is fired', async () => {
 
   fireEvent(document, new CustomEvent('someEvent'))
 
-  expect(screen.getByTestId('content-block')).toHaveTextContent('String')
+  expect(screen.getByTestId('content-block').querySelector('p')).toHaveTextContent('String')
 })

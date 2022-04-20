@@ -28,6 +28,6 @@ export const ContentBlock = ({ content, waitForEvent }: ContentBlockProps): JSX.
   }
 
   return (
-    <>{content}</>
+    <div dangerouslySetInnerHTML={{ __html: content }} />
   )
 }
