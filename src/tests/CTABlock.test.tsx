@@ -19,7 +19,7 @@ test('CTABlock renders', async () => {
 test('CTABlock fires event', async () => {
   render(
     <div data-testid="cta-block">
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} firesEvent={'Event'}/>
+      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
     </div>
   )
   const eventHandler = jest.fn()
@@ -32,7 +32,7 @@ test('CTABlock fires event', async () => {
 test('CTABlock button prompt disappear', async () => {
   render(
     <div data-testid="cta-block">
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} firesEvent={'Event'}/>
+      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
     </div>
   )
 

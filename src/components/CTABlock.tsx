@@ -4,18 +4,18 @@ interface CTABlockProps {
   contentString: string
   contentPrompt: string
   buttonText: string
-  firesEvent?: string
+  fireEvent?: string
   waitForEvent?: string
 
 }
 
-export const CTABlock = ({ contentString, contentPrompt, buttonText, firesEvent, waitForEvent }: CTABlockProps): JSX.Element => {
+export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, waitForEvent }: CTABlockProps): JSX.Element => {
   const [clicked, setclicked] = useState<boolean>(false)
   const [shouldRender, setShouldRender] = useState(waitForEvent === undefined)
 
   const clickHandler = (): void => {
-    if (firesEvent !== undefined) {
-      const clickEvent = new CustomEvent(firesEvent)
+    if (fireEvent !== undefined) {
+      const clickEvent = new CustomEvent(fireEvent)
       document.dispatchEvent(clickEvent)
     }
     setclicked(true)
