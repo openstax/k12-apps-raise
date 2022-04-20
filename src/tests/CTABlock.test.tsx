@@ -43,3 +43,33 @@ test('CTABlock button prompt disappear', async () => {
   expect(queryList.length === 1)
   expect(queryList[0]).toHaveTextContent('String')
 })
+
+test('CTABlock does not render if waitForEvent does not fire', async () => {
+  render(
+    <div data-testid="cta-block">
+      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
+    </div>
+  )
+  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
+
+  expect(screen.getByTestId('cta-block').querySelector('button')).toBeNull()
+  expect(queryList.length === 0)
+})
+
+test('CTABlock does render if waitForEvent is fired', async () => {
+  render(
+    <div data-testid="cta-block">
+      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
+    </div>
+  )
+  const clickEvent = new CustomEvent('waitForEvent')
+  document.dispatchEvent(clickEvent)
+  await screen.findByText('String')
+
+  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
+
+  expect(screen.getByTestId('cta-block').querySelector('button')).not.toBeNull()
+  expect(screen.getByTestId('cta-block')).toHaveTextContent('Click me!')
+  expect(queryList[0]).toHaveTextContent('String')
+  expect(queryList[1]).toHaveTextContent('Prompt')
+})
