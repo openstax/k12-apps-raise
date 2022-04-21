@@ -14,20 +14,31 @@ export const renderCTABlocks = async (element: HTMLElement): Promise<void> => {
 
   ctaItems.forEach(elem => {
     const htmlElem = elem as HTMLElement
-    const contentString = htmlElem.querySelector(`.${CONTENT_CLASS}`)
-    const contentPrompt = htmlElem.querySelector(`.${PROMPT_CLASS}`)
+    const contentElem = htmlElem.querySelector(`.${CONTENT_CLASS}`)
+    const promptElem = htmlElem.querySelector(`.${PROMPT_CLASS}`)
     const buttonText = htmlElem.dataset.buttonText ?? 'Next'
     const fireEvent = htmlElem.dataset.fireEvent
     const waitForEvent = htmlElem.dataset.waitForEvent
 
-    if (contentString === null || contentPrompt === null) {
+    if (contentElem === null || promptElem === null) {
       console.error('Content string or prompt is null')
       return
     }
 
+    const contentInnerHTML = contentElem.innerHTML
+    const promptInnerHTML = promptElem.innerHTML
+
+    htmlElem.innerHTML = ''
+
     createRoot(htmlElem).render(
         <React.StrictMode>
-            <CTABlock contentString={contentString.innerHTML} contentPrompt={contentPrompt.innerHTML} buttonText={buttonText} fireEvent={fireEvent} waitForEvent={waitForEvent} />
+          <CTABlock
+            contentString={contentInnerHTML}
+            contentPrompt={promptInnerHTML}
+            buttonText={buttonText}
+            fireEvent={fireEvent}
+            waitForEvent={waitForEvent}
+          />
         </React.StrictMode>
     )
   })
@@ -39,10 +50,13 @@ export const renderContentOnlyBlocks = async (element: HTMLElement): Promise<voi
   ctaItems.forEach(elem => {
     const htmlElem = elem as HTMLElement
     const waitForEvent = htmlElem.dataset.waitForEvent
+    const htmlContent = htmlElem.innerHTML
+
+    htmlElem.innerHTML = ''
 
     createRoot(htmlElem).render(
         <React.StrictMode>
-            <ContentBlock content={htmlElem.innerHTML} waitForEvent={waitForEvent} />
+            <ContentBlock content={htmlContent} waitForEvent={waitForEvent} />
         </React.StrictMode>
     )
   })
