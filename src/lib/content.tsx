@@ -5,9 +5,8 @@ import { ContentLoader } from '../components/ContentLoader'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 
-export const renderContentElements = async (): Promise<number> => {
+export const renderContentElements = (): number => {
   const osContentItems = document.querySelectorAll(`.${OS_RAISE_CONTENT_CLASS}`)
-  const contentPromises: Array<Promise<void>> = []
 
   if (osContentItems.length !== 0) {
     // This is an optimization so we can proactively load MathJax in parallel
@@ -28,17 +27,12 @@ export const renderContentElements = async (): Promise<number> => {
       console.log('WARNING: Found non-empty os-raise-content')
     }
 
-    const contentPromise = new Promise<void>((resolve) => {
-      createRoot(htmlElem).render(
-        <React.StrictMode>
-          <ContentLoader contentId={contentId} contentLoadedCallback={resolve}/>
-        </React.StrictMode>
-      )
-    })
-    contentPromises.push(contentPromise)
+    createRoot(htmlElem).render(
+      <React.StrictMode>
+        <ContentLoader contentId={contentId}/>
+      </React.StrictMode>
+    )
   })
-
-  await Promise.all(contentPromises)
 
   return osContentItems.length
 }

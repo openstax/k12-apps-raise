@@ -13,7 +13,11 @@ enum FetchStatus {
   FetchFailure
 }
 
-export const ContentLoader = ({ contentId, contentLoadedCallback }: { contentId: string, contentLoadedCallback: () => void }): JSX.Element => {
+interface ContentLoaderProps {
+  contentId: string
+}
+
+export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
 
@@ -45,13 +49,6 @@ export const ContentLoader = ({ contentId, contentLoadedCallback }: { contentId:
   useEffect(() => {
     fetchContent().catch(() => {})
   }, [])
-
-  useEffect(() => {
-    if (fetchStatus !== FetchStatus.Unfetched) {
-      // Invoke callback if fetch succeeded or failed
-      contentLoadedCallback()
-    }
-  }, [fetchStatus])
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
     return (

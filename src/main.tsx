@@ -3,9 +3,9 @@ import { renderCTABlocks, renderContentOnlyBlocks } from './lib/blocks'
 import './styles/main.scss'
 import { tooltipify } from './lib/tooltip'
 
-const processPage = async (): Promise<void> => {
+const processPage = (): void => {
   // Load any content that needs to be fetched and inserted into the page
-  const contentElements = await renderContentElements()
+  const contentElements = renderContentElements()
 
   // If we found / fetched content elements, we're done. What follows is
   // intended for content that is in Moodle storage
@@ -18,6 +18,4 @@ const processPage = async (): Promise<void> => {
   renderContentOnlyBlocks(document.body)
 }
 
-processPage().catch((error) => {
-  console.error(error)
-})
+processPage()
