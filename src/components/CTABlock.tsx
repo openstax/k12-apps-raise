@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { EventControlledContent } from './EventControlledContent'
 
 interface CTABlockProps {
   contentString: string
@@ -11,7 +12,6 @@ interface CTABlockProps {
 
 export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, waitForEvent }: CTABlockProps): JSX.Element => {
   const [clicked, setclicked] = useState<boolean>(false)
-  const [shouldRender, setShouldRender] = useState(waitForEvent === undefined)
 
   const clickHandler = (): void => {
     if (fireEvent !== undefined) {
@@ -20,20 +20,6 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
     }
     setclicked(true)
   }
-  useEffect(() => {
-    if (waitForEvent === undefined) {
-      return
-    }
-    const handleEvent = (): void => {
-      setShouldRender(true)
-    }
-
-    document.addEventListener(waitForEvent, handleEvent)
-
-    return () => {
-      document.removeEventListener(waitForEvent, handleEvent)
-    }
-  }, [])
 
   const promptButton = (): JSX.Element => {
     if (!clicked) {
@@ -44,13 +30,13 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
       return <></>
     }
   }
-  if (!shouldRender) {
-    return (<></>)
-  }
+
   return (
-    <div className="os-raise-bootstrap">
-      <div dangerouslySetInnerHTML={{ __html: contentString }} />
-    {promptButton()}
-    </div>
+    <EventControlledContent waitForEvent={waitForEvent}>
+      <div className="os-raise-bootstrap">
+        <div dangerouslySetInnerHTML={{ __html: contentString }} />
+      {promptButton()}
+      </div>
+    </EventControlledContent>
   )
 }

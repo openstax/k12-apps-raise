@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { EventControlledContent } from './EventControlledContent'
 
 interface ContentBlockProps {
   content: string
@@ -6,28 +6,9 @@ interface ContentBlockProps {
 }
 
 export const ContentBlock = ({ content, waitForEvent }: ContentBlockProps): JSX.Element => {
-  const [shouldRender, setShouldRender] = useState(waitForEvent === undefined)
-
-  useEffect(() => {
-    if (waitForEvent === undefined) {
-      return
-    }
-    const handleEvent = (): void => {
-      setShouldRender(true)
-    }
-
-    document.addEventListener(waitForEvent, handleEvent)
-
-    return () => {
-      document.removeEventListener(waitForEvent, handleEvent)
-    }
-  }, [])
-
-  if (!shouldRender) {
-    return <></>
-  }
-
   return (
-    <div dangerouslySetInnerHTML={{ __html: content }} />
+    <EventControlledContent waitForEvent={waitForEvent}>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
+    </EventControlledContent>
   )
 }
