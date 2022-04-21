@@ -21,7 +21,7 @@ export const EventControlledContent = ({ waitForEvent, children }: EventControll
     return () => {
       document.removeEventListener(waitForEvent, handleEvent)
     }
-  }, [])
+  }, [waitForEvent])
 
   if (!shouldRender) {
     return <></>
