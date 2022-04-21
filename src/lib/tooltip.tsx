@@ -11,7 +11,7 @@ const glossaryLookup = (key: string): string | undefined => {
   return glossaryMap.get(key)
 }
 
-export const tooltipify = async (element: HTMLElement): Promise<void> => {
+export const tooltipify = (element: HTMLElement): void => {
   const tooltipItems = element.querySelectorAll(`.${OS_RAISE_IB_TOOLTIP_CLASS}`)
 
   tooltipItems.forEach(elem => {

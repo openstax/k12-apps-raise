@@ -1,11 +1,11 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { loadMathJax, mathifyElement } from './math'
+import { loadMathJax } from './math'
 import { ContentLoader } from '../components/ContentLoader'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 
-export const renderContentElements = async (): Promise<void> => {
+export const renderContentElements = async (): Promise<number> => {
   const osContentItems = document.querySelectorAll(`.${OS_RAISE_CONTENT_CLASS}`)
   const contentPromises: Array<Promise<void>> = []
 
@@ -40,9 +40,5 @@ export const renderContentElements = async (): Promise<void> => {
 
   await Promise.all(contentPromises)
 
-  osContentItems.forEach((elem) => {
-    mathifyElement(elem).catch((error) => {
-      console.error(error)
-    })
-  })
+  return osContentItems.length
 }

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { blockifyElement } from '../lib/blocks'
 import { ENV } from '../lib/env'
 
 export interface ContentResponse {
@@ -13,7 +14,7 @@ enum FetchStatus {
 }
 
 export const ContentLoader = ({ contentId, contentLoadedCallback }: { contentId: string, contentLoadedCallback: () => void }): JSX.Element => {
-  const [innerHTMLContent, setInnerHTMLContent] = useState<string>('')
+  const [children, setChildren] = useState<JSX.Element[]>([])
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
 
   const fetchContent = async (): Promise<void> => {
@@ -24,7 +25,17 @@ export const ContentLoader = ({ contentId, contentLoadedCallback }: { contentId:
       const data = await response.json() as ContentResponse
       const htmlContent = data.content[0].html
 
-      setInnerHTMLContent(htmlContent)
+      // Create a temporary element to build a DOM which can be used to parse /
+      // create blocks
+      const tmpDiv = document.createElement('div')
+      tmpDiv.innerHTML = htmlContent
+
+      setChildren(Array.from(tmpDiv.children).map(
+        (elem, indx) => {
+          const component = blockifyElement(elem as HTMLElement)
+          return <div key={indx}>{component}</div>
+        })
+      )
       setFetchStatus(FetchStatus.FetchSuccess)
     } catch {
       setFetchStatus(FetchStatus.FetchFailure)
@@ -44,7 +55,9 @@ export const ContentLoader = ({ contentId, contentLoadedCallback }: { contentId:
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
     return (
-      <div dangerouslySetInnerHTML={{ __html: innerHTMLContent }} />
+      <>
+        {children}
+      </>
     )
   }
   // TODO (k12-94): Render appropriate content for other fetchStatus states
