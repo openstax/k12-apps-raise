@@ -72,6 +72,13 @@ export const loadMathJax = async (): Promise<boolean> => {
 
 export const mathifyElement = async (elem: Element): Promise<void> => {
   let mathjaxLoaded = window.MathJax !== undefined
+  const innerText = elem.textContent
+
+  // Only try to mathify if content includes expected delimiters
+  // including \( , $$ , or \[
+  if (innerText === null || !/\\\(|\$\$|\\\[/.test(innerText)) {
+    return
+  }
 
   if (!mathjaxLoaded) {
     mathjaxLoaded = await loadMathJax()
