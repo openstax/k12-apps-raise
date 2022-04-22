@@ -2,6 +2,9 @@ import { renderContentElements } from './lib/content'
 import { renderCTABlocks, renderContentOnlyBlocks } from './lib/blocks'
 import './styles/main.scss'
 import { tooltipify } from './lib/tooltip'
+import { createRoot } from 'react-dom/client'
+import { SearchBlock } from './components/SearchBlock'
+import glossary from '../data/glossary.json'
 
 const processPage = (): void => {
   // Load any content that needs to be fetched and inserted into the page
@@ -19,3 +22,12 @@ const processPage = (): void => {
 }
 
 processPage()
+
+const specialData = new Map<string, string>(Object.entries(glossary).map(entry => [entry[0].toLowerCase(), entry[1]]))
+
+const specialElement = document.querySelector('#special')
+if (specialElement !== null) {
+  createRoot(specialElement).render(
+    <SearchBlock data={specialData}/>
+  )
+}
