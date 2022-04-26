@@ -8,6 +8,14 @@ One of the goals of the code in this repository is to support content developers
 
 This document provides schema definitions for supported Interactive Blocks as well as examples of Content Templates.
 
+* Interactive Blocks
+  * [Content-only Block](#content-only-block)
+  * [Call-to-action (CTA) block](#call-to-action-cta-block)
+  * [User input block](#user-input-block)
+  * [Content tooltip block](#content-tooltip-block)
+* Content Templates
+  * [Segmented content](#segmented-content)
+
 ## Interactive Blocks
 
 This section provides a description and schema template for each Interactive Block.
