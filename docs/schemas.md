@@ -133,6 +133,8 @@ A Content tooltip block is an in-line block which allows content developers to a
 
 ## Content Templates
 
+As mentioned previously, Content Templates are comprised of multiple Interactive Blocks. Here we provide examples of supported Content Templates which target specific use cases discussed with the content development team.
+
 ### Segmented content
 
 #### Description
