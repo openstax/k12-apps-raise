@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { ContentBlock } from '../components/ContentBlock'
 import '@testing-library/jest-dom'
+import { parseContentOnlyBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 
 test('ContentBlock renders', async () => {
   render(
@@ -31,4 +32,22 @@ test('ContentBlock does render if waitForEvent is fired', async () => {
   fireEvent(document, new CustomEvent('someEvent'))
 
   expect(screen.getByTestId('content-block').querySelector('p')).toHaveTextContent('String')
+})
+
+test('ContentBlock from parseContentOnlyBlock renders on namespaced event', async () => {
+  const htmlContent = '<div class="os-raise-ib-content" data-wait-for-event="event1"><p>Test content</p></div>'
+  const divElem = document.createElement('div')
+  divElem.innerHTML = htmlContent
+  const generatedContentBlock = parseContentOnlyBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedContentBlock).not.toBeNull()
+
+  render(
+    <div data-testid="content-block">
+      {generatedContentBlock as JSX.Element}
+    </div>
+  )
+  expect(screen.getByTestId('content-block')).not.toHaveTextContent('Test content')
+  fireEvent(document, new CustomEvent(`${OS_RAISE_IB_EVENT_PREFIX}-event1`))
+  expect(screen.getByTestId('content-block')).toHaveTextContent('Test content')
 })

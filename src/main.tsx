@@ -1,12 +1,16 @@
+import { renderContentOnlyBlocks } from './lib/blocks'
 import { renderContentElements } from './lib/content'
 import './styles/main.scss'
 
-const processPage = async (): Promise<void> => {
+const processPage = (): void => {
   // Load any content that needs to be fetched and inserted into the page
-  await renderContentElements()
-  // TODO: Insert processing "page type" templates
+  const contentElements = renderContentElements()
+
+  // If we fetched content elements, we're done
+  if (contentElements === 0) {
+    // Render blocks for Moodle storage
+    renderContentOnlyBlocks(document.body)
+  }
 }
 
-processPage().catch((error) => {
-  console.error(error)
-})
+processPage()
