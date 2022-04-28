@@ -1,4 +1,3 @@
-
 import { test, expect } from '@playwright/test'
 import { mockPageContentRequest } from './utils'
 import { MATHJAX_URL } from '../src/lib/math'
