@@ -70,14 +70,19 @@ export const loadMathJax = async (): Promise<boolean> => {
   }
 }
 
-export const mathifyElement = async (elem: Element): Promise<void> => {
-  let mathjaxLoaded = window.MathJax !== undefined
-
-  if (!mathjaxLoaded) {
-    mathjaxLoaded = await loadMathJax()
+export const mathifyElement = (elem: Element): void => {
+  const mathjaxLoaded = window.MathJax !== undefined
+  const queueMathJax = (elem: Element): void => {
+    window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
   }
 
-  if (mathjaxLoaded) {
-    window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
+  if (!mathjaxLoaded) {
+    loadMathJax().then(loadSuccess => {
+      if (loadSuccess) {
+        queueMathJax(elem)
+      }
+    }).catch(error => console.log(error))
+  } else {
+    queueMathJax(elem)
   }
 }
