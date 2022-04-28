@@ -70,7 +70,7 @@ export const loadMathJax = async (): Promise<boolean> => {
   }
 }
 
-export const mathifyElement = async (elem: Element): Promise<void> => {
+export const mathifyElement = (elem: Element): void => {
   const mathjaxLoaded = window.MathJax !== undefined
   const innerText = elem.textContent
 
