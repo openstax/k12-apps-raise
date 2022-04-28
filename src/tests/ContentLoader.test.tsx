@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ContentLoader } from '../components/ContentLoader'
 
@@ -24,15 +24,11 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 test('content is fetched and rendered on success', async () => {
-  const contentPromise = new Promise<void>((resolve) => {
-    render(
-      <div data-testid="content">
-        <ContentLoader contentId='test-content' contentLoadedCallback={resolve} />
-      </div>
-    )
-  })
-
-  await waitFor(async () => await contentPromise)
-
+  render(
+    <div data-testid="content">
+      <ContentLoader contentId='test-content'/>
+    </div>
+  )
+  expect(await screen.findByText('Test content')).toBeVisible()
   expect(screen.getByTestId('content')).toHaveTextContent('Test content')
 })
