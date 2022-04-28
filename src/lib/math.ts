@@ -71,7 +71,7 @@ export const loadMathJax = async (): Promise<boolean> => {
 }
 
 export const mathifyElement = async (elem: Element): Promise<void> => {
-  let mathjaxLoaded = window.MathJax !== undefined
+  const mathjaxLoaded = window.MathJax !== undefined
   const innerText = elem.textContent
 
   // Only try to mathify if content includes expected delimiters
@@ -80,8 +80,8 @@ export const mathifyElement = async (elem: Element): Promise<void> => {
     return
   }
 
-  if (!mathjaxLoaded) {
-    mathjaxLoaded = await loadMathJax()
+  const queueMathJax = (elem: Element): void => {
+    window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
   }
 
   if (!mathjaxLoaded) {
