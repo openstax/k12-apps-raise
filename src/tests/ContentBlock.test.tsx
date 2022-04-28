@@ -2,6 +2,11 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { ContentBlock } from '../components/ContentBlock'
 import '@testing-library/jest-dom'
 import { parseContentOnlyBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
+import { mathifyElement } from '../lib/math'
+
+jest.mock('../lib/math.ts', () => ({
+  mathifyElement: jest.fn()
+}))
 
 test('ContentBlock renders', async () => {
   render(
@@ -50,4 +55,14 @@ test('ContentBlock from parseContentOnlyBlock renders on namespaced event', asyn
   expect(screen.getByTestId('content-block')).not.toHaveTextContent('Test content')
   fireEvent(document, new CustomEvent(`${OS_RAISE_IB_EVENT_PREFIX}-event1`))
   expect(screen.getByTestId('content-block')).toHaveTextContent('Test content')
+})
+
+test('ContentBlock calls mathifyElement when rendered', async () => {
+  render(
+    <div data-testid="content-block">
+      <ContentBlock content={'<p>String</p>'} />
+    </div>
+  )
+
+  expect(mathifyElement).toBeCalled()
 })
