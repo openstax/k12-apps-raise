@@ -10,7 +10,7 @@ interface ContentBlockProps {
 export const ContentBlock = ({ content, waitForEvent }: ContentBlockProps): JSX.Element => {
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
-      mathifyElement(node)
+      void mathifyElement(node)
     }
   }, [])
 
