@@ -84,7 +84,13 @@ export const mathifyElement = async (elem: Element): Promise<void> => {
     mathjaxLoaded = await loadMathJax()
   }
 
-  if (mathjaxLoaded) {
-    window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
+  if (!mathjaxLoaded) {
+    loadMathJax().then(loadSuccess => {
+      if (loadSuccess) {
+        queueMathJax(elem)
+      }
+    }).catch(error => console.log(error))
+  } else {
+    queueMathJax(elem)
   }
 }
