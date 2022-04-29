@@ -7,9 +7,6 @@ const OS_RAISE_IB_TOOLTIP_CLASS = 'os-raise-ib-tooltip'
 
 const glossaryLookup = (key: string): string | undefined => {
   const glossaryMap = new Map<string, string>(Object.entries(glossary).map(entry => [entry[0].toLowerCase(), entry[1]]))
-  console.log('Key:', key)
-  console.log('Key Value:', glossaryMap.get('annuity'))
-  console.log('Key Value:', glossaryMap.get(key))
 
   return glossaryMap.get(key)
 }
@@ -30,10 +27,9 @@ export const tooltipify = (element: HTMLElement): void => {
     }
 
     if (dataStore === 'glossary-tooltip') {
-      console.log('Search term: ' + elementText.toLocaleLowerCase())
+      console.log('Search term: ' + elementText.toLocaleLowerCase().trim())
 
-      elementMatchingData = glossaryLookup(elementText.toLocaleLowerCase())
-      console.log(elementMatchingData)
+      elementMatchingData = glossaryLookup(elementText.toLocaleLowerCase().trim())
     }
 
     if (elementMatchingData === undefined) {
