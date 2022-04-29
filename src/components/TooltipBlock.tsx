@@ -16,7 +16,7 @@ export const TooltipBlock = ({ text, tip }: TooltipBlockProperties): JSX.Element
       return
     }
 
-    Tooltip.getOrCreateInstance(maybeAnchor, { container: maybeWrapper, html: true, popperConfig: { onFirstUpdate: () => { mathifyElement(maybeWrapper).catch((e) => {}) } } })
+    Tooltip.getOrCreateInstance(maybeAnchor, { container: maybeWrapper, html: true, popperConfig: { onFirstUpdate: () => { mathifyElement(maybeWrapper) } } })
   }, [anchorEl, wrapperEl])
   return (
     <span ref={wrapperEl} className='os-raise-bootstrap'>
