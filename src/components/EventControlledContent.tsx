@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { mathifyElement } from '../lib/math'
 
 interface EventControlledContentProps {
   waitForEvent?: string
@@ -7,6 +8,15 @@ interface EventControlledContentProps {
 
 export const EventControlledContent = ({ waitForEvent, children }: EventControlledContentProps): JSX.Element => {
   const [shouldRender, setShouldRender] = useState(waitForEvent === undefined)
+  const contentDiv = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const maybeDiv = contentDiv.current
+    if (maybeDiv === null) {
+      return
+    }
+    mathifyElement(maybeDiv)
+  }, [shouldRender])
 
   useEffect(() => {
     if (waitForEvent === undefined) {
