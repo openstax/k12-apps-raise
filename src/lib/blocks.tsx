@@ -137,16 +137,24 @@ const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): 
   )
 }
 
-export const renderContentOnlyBlocks = (element: HTMLElement): void => {
-  const contentItems = element.querySelectorAll(`.${OS_RAISE_IB_CONTENT_CLASS}`)
+const renderContentBlocksByClass = (element: HTMLElement, contentClass: string, parser: (element: HTMLElement) => JSX.Element | null): void => {
+  const contentItems = element.querySelectorAll(`.${contentClass}`)
 
   contentItems.forEach(elem => {
     const htmlElem = elem as HTMLElement
-    const maybeContentOnlyBlock = parseContentOnlyBlock(htmlElem)
+    const maybeContentOnlyBlock = parser(htmlElem)
 
     if (maybeContentOnlyBlock === null) {
       return
     }
     replaceElementWithBlock(htmlElem, maybeContentOnlyBlock)
   })
+}
+
+export const renderContentOnlyBlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_IB_CONTENT_CLASS, parseContentOnlyBlock)
+}
+
+export const renderUserInputBlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_IB_INPUT_CLASS, parseUserInputBlock)
 }
