@@ -89,7 +89,7 @@ export const mathifyElement = (elem: Element): void => {
       if (loadSuccess) {
         queueMathJax(elem)
       }
-    }).catch(error => console.log(error))
+    }).catch(error => console.error(error))
   } else {
     queueMathJax(elem)
   }
