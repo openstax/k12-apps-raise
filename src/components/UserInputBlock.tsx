@@ -47,7 +47,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="response" disabled={isSubmitting}/>
+              <Field name="response" as="textarea" disabled={isSubmitting}/>
               <button type="submit" disabled={isSubmitting}>{buttonText !== undefined ? buttonText : DEFAULT_BUTTON_TEXT}</button>
             </Form>
           )}

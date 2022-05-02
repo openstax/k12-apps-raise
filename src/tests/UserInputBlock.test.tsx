@@ -3,7 +3,7 @@ import { UserInputBlock } from '../components/UserInputBlock'
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import '@testing-library/jest-dom'
 
-test('UserInputBlock renders with content, prompt, and form', async () => {
+test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
     <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>"/>
   )
@@ -11,6 +11,7 @@ test('UserInputBlock renders with content, prompt, and form', async () => {
   screen.getByText('Content text')
   screen.getByText('Prompt text')
   screen.getByRole('textbox')
+  expect(document.querySelector('textarea')).not.toBeNull()
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
