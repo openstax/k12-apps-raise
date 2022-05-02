@@ -96,6 +96,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     return null
   }
 
+  const maybeButtonText = element.dataset.buttonText
   const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
   const fireEvent = namespaceEvent(element.dataset.fireEvent)
   const contentElem = element.querySelector(`.${INPUT_CONTENT_CLASS}`)
@@ -115,6 +116,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     content={contentInnerHTML}
     prompt={promptInnerHTML}
     ack={ackInnerHTML}
+    buttonText={maybeButtonText}
     waitForEvent={waitForEvent}
     fireEvent={fireEvent}
   />
