@@ -10,6 +10,7 @@
     "test:jest": "jest",
     "test:playwright": "playwright test",
     "test": "npm run test:jest && npm run test:playwright",
+    "postinstall": "patch-package",
     "build": "tsc && vite build",
     "watch": "vite build -m development -w",
     "preview": "vite preview"
@@ -35,6 +36,7 @@
     "eslint-config-standard-with-typescript": "^21.0.1",
     "jest": "^27.5.1",
     "msw": "^0.39.2",
+    "patch-package": "^6.4.7",
     "sass": "^1.50.0",
     "stylelint": "^14.6.1",
     "stylelint-config-standard": "^25.0.0",
