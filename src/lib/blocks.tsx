@@ -65,6 +65,13 @@ const blockifyElement = (element: HTMLElement): JSX.Element => {
     }
   }
 
+  if (element.classList.contains(OS_RAISE_IB_INPUT_CLASS)) {
+    const maybeUserInputBlock = parseUserInputBlock(element)
+    if (maybeUserInputBlock !== null) {
+      return maybeUserInputBlock
+    }
+  }
+
   return createNonwaitingContentBlock(element.outerHTML)
 }
 

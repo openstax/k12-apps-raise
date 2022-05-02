@@ -1,6 +1,7 @@
 import { EventControlledContent } from './EventControlledContent'
 import { Formik, Form, Field } from 'formik'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { mathifyElement } from '../lib/math'
 
 const DEFAULT_BUTTON_TEXT = 'Submit'
 
@@ -32,10 +33,16 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     }
   }
 
+  const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
+    if (node != null) {
+      mathifyElement(node)
+    }
+  }, [])
+
   const maybePrompt = responseSubmitted
     ? null
     : (
-        <div dangerouslySetInnerHTML={{ __html: prompt }} />
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
       )
 
   const maybeInputForm = responseSubmitted
@@ -56,12 +63,12 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const maybeAck = !responseSubmitted
     ? null
     : (
-      <div dangerouslySetInnerHTML={{ __html: ack }} />
+      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
       {maybePrompt}
       {maybeInputForm}
       {maybeAck}
