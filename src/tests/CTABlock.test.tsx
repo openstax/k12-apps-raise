@@ -1,26 +1,27 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { CTABlock } from '../components/CTABlock'
+import { parseCTABlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
+import { mathifyElement } from '../lib/math'
 import '@testing-library/jest-dom'
+
+jest.mock('../lib/math.ts', () => ({
+  mathifyElement: jest.fn()
+}))
 
 test('CTABlock renders', async () => {
   render(
-    <div data-testid="cta-block">
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'}/>
-    </div>
+    <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'}/>
   )
-  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
 
-  expect(screen.getByTestId('cta-block').querySelector('button')).not.toBeNull()
-  expect(screen.getByTestId('cta-block')).toHaveTextContent('Click me!')
-  expect(queryList[0]).toHaveTextContent('String')
-  expect(queryList[1]).toHaveTextContent('Prompt')
+  screen.getByText('String')
+  screen.getByText('Prompt')
+  screen.getByText('Click me!')
+  screen.getByRole('button')
 })
 
 test('CTABlock fires event', async () => {
   render(
-    <div data-testid="cta-block">
       <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
-    </div>
   )
   const eventHandler = jest.fn()
 
@@ -29,47 +30,62 @@ test('CTABlock fires event', async () => {
   expect(eventHandler).toHaveBeenCalled()
 })
 
-test('CTABlock button prompt disappear', async () => {
+test('CTABlock button and prompt disappear on click', async () => {
   render(
-    <div data-testid="cta-block">
       <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
-    </div>
   )
 
   fireEvent.click(screen.getByText('Click me!'))
-  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
-
-  expect(screen.getByTestId('cta-block')).not.toHaveTextContent('Click me!')
-  expect(queryList.length === 1)
-  expect(queryList[0]).toHaveTextContent('String')
+  expect(screen.queryByText('Click me!')).toBeNull()
+  screen.getByText('String')
+  expect(screen.queryByText('Prompt')).toBeNull()
 })
 
 test('CTABlock does not render if waitForEvent does not fire', async () => {
   render(
-    <div data-testid="cta-block">
       <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
-    </div>
   )
-  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
 
-  expect(screen.getByTestId('cta-block').querySelector('button')).toBeNull()
-  expect(queryList.length === 0)
+  expect(screen.queryByText('String')).toBeNull()
+  expect(screen.queryByText('Prompt')).toBeNull()
+  expect(screen.queryByText('Click me!')).toBeNull()
 })
 
 test('CTABlock does render if waitForEvent is fired', async () => {
   render(
-    <div data-testid="cta-block">
       <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
-    </div>
   )
   const renderEvent = new CustomEvent('waitForEvent')
 
   fireEvent(document, renderEvent)
 
-  const queryList = Array.from(screen.getByTestId('cta-block').querySelectorAll('p'))
+  screen.queryByText('String')
+  screen.queryByText('Prompt')
+  screen.queryByText('Click me!')
+})
 
-  expect(screen.getByTestId('cta-block').querySelector('button')).not.toBeNull()
-  expect(screen.getByTestId('cta-block')).toHaveTextContent('Click me!')
-  expect(queryList[0]).toHaveTextContent('String')
-  expect(queryList[1]).toHaveTextContent('Prompt')
+test('CTABlock from parseCTABlock renders on namespaced event', async () => {
+  const htmlContent = `<div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
+  <div class="os-raise-ib-cta-content"><p>Some Content</p></div>
+  <div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>`
+  const divElem = document.createElement('div')
+  divElem.innerHTML = htmlContent
+  const generatedContentBlock = parseCTABlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedContentBlock).not.toBeNull()
+
+  render(
+    generatedContentBlock as JSX.Element
+  )
+
+  expect(screen.queryByText('String')).toBeNull()
+  fireEvent(document, new CustomEvent(`${OS_RAISE_IB_EVENT_PREFIX}-eventnameY`))
+  expect(screen.queryByText('String')).toBeNull()
+})
+
+test('CTABlock calls mathifyElement when rendered', async () => {
+  render(
+    <CTABlock contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} buttonText={'<p>Click</p>'} fireEvent={'eventX'}/>
+  )
+  expect(mathifyElement).toBeCalled()
 })

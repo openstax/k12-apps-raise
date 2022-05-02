@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { EventControlledContent } from './EventControlledContent'
+import { mathifyElement } from '../lib/math'
 
 interface CTABlockProps {
   contentString: string
@@ -21,10 +22,16 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
     setclicked(true)
   }
 
-  const promptButton = (): JSX.Element => {
+  const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
+    if (node != null) {
+      mathifyElement(node)
+    }
+  }, [])
+
+  const maybePromptAndButton = (): JSX.Element => {
     if (!clicked) {
       return (<>
-      <div dangerouslySetInnerHTML={{ __html: contentPrompt }} />
+      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: contentPrompt }} />
       <button onClick={clickHandler} type="button" className="btn btn-outline-primary">{buttonText}</button></>)
     } else {
       return <></>
@@ -34,8 +41,8 @@ export const CTABlock = ({ contentString, contentPrompt, buttonText, fireEvent, 
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
       <div className="os-raise-bootstrap">
-        <div dangerouslySetInnerHTML={{ __html: contentString }} />
-      {promptButton()}
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: contentString }} />
+      {maybePromptAndButton()}
       </div>
     </EventControlledContent>
   )

@@ -2,7 +2,9 @@ import { createRoot } from 'react-dom/client'
 import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
 import {
-  blockifyHTML, isInteractiveBlock, renderContentOnlyBlocks,
+  blockifyHTML, isInteractiveBlock,
+  renderContentOnlyBlocks, renderCTABlocks,
+  OS_RAISE_IB_CTA_CLASS,
   OS_RAISE_IB_CONTENT_CLASS
 } from '../lib/blocks'
 
@@ -28,6 +30,16 @@ test('isInteractiveBlock recognizes content-only block', async () => {
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 
   tmpDiv.className = `${OS_RAISE_IB_CONTENT_CLASS} otherclass`
+  expect(isInteractiveBlock(tmpDiv)).toBe(true)
+})
+
+test('isInteractiveBlock recognizes CTA-block', async () => {
+  const tmpDiv = document.createElement('div')
+  tmpDiv.className = OS_RAISE_IB_CTA_CLASS
+
+  expect(isInteractiveBlock(tmpDiv)).toBe(true)
+
+  tmpDiv.className = `${OS_RAISE_IB_CTA_CLASS} otherclass`
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 })
 
@@ -62,5 +74,15 @@ test('renderContentOnlyBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderContentOnlyBlocks(document.body)
+  expect(createRoot).toBeCalledWith(divElem)
+})
+
+test('renderCTABlocks parses and creates expected block', async () => {
+  const divElem = document.createElement('div')
+  divElem.className = OS_RAISE_IB_CTA_CLASS
+  divElem.innerHTML = '<div class="os-raise-ib-cta-content"><p>Some Content</p></div><div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>'
+  document.body.appendChild(divElem)
+
+  renderCTABlocks(document.body)
   expect(createRoot).toBeCalledWith(divElem)
 })

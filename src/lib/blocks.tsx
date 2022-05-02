@@ -1,13 +1,18 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
+import { CTABlock } from '../components/CTABlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
+export const OS_RAISE_IB_CTA_CLASS = 'os-raise-ib-cta'
+export const CTA_CONTENT_CLASS = 'os-raise-ib-cta-content'
+export const CTA_PROMPT_CLASS = 'os-raise-ib-cta-prompt'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
-    OS_RAISE_IB_CONTENT_CLASS
+    OS_RAISE_IB_CONTENT_CLASS,
+    OS_RAISE_IB_CTA_CLASS
   ].some(blockClass => element.classList.contains(blockClass))
 }
 
@@ -52,6 +57,13 @@ export const blockifyHTML = (htmlContent: string): JSX.Element[] => {
 }
 
 const blockifyElement = (element: HTMLElement): JSX.Element => {
+  if (element.classList.contains(OS_RAISE_IB_CTA_CLASS)) {
+    const maybeCTABlock = parseCTABlock(element)
+    if (maybeCTABlock !== null) {
+      return maybeCTABlock
+    }
+  }
+
   if (element.classList.contains(OS_RAISE_IB_CONTENT_CLASS)) {
     const maybeContentOnlyBlock = parseContentOnlyBlock(element)
     if (maybeContentOnlyBlock !== null) {
@@ -74,6 +86,34 @@ const createNonwaitingContentBlock = (content: string): JSX.Element => {
   return <ContentBlock content={content} />
 }
 
+export const parseCTABlock = (element: HTMLElement): JSX.Element | null => {
+  if (!element.classList.contains(OS_RAISE_IB_CTA_CLASS)) {
+    return null
+  }
+
+  const contentElem = element.querySelector(`.${CTA_CONTENT_CLASS}`)
+  const promptElem = element.querySelector(`.${CTA_PROMPT_CLASS}`)
+  const buttonText = element.dataset.buttonText ?? 'Next'
+  const fireEvent = namespaceEvent(element.dataset.fireEvent)
+  const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
+
+  if (contentElem === null || promptElem === null) {
+    console.error('CTABlock content string or prompt is null')
+    return null
+  }
+
+  const contentInnerHTML = contentElem.innerHTML
+  const promptInnerHTML = promptElem.innerHTML
+
+  return <CTABlock
+    contentString={contentInnerHTML}
+    contentPrompt={promptInnerHTML}
+    buttonText={buttonText}
+    fireEvent={fireEvent}
+    waitForEvent={waitForEvent}
+  />
+}
+
 export const parseContentOnlyBlock = (element: HTMLElement): JSX.Element | null => {
   if (!element.classList.contains(OS_RAISE_IB_CONTENT_CLASS)) {
     return null
@@ -91,6 +131,23 @@ const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): 
   createRoot(element).render(
     component
   )
+}
+
+export const renderCTABlocks = (element: HTMLElement): void => {
+  const ctaItems = element.querySelectorAll(`.${OS_RAISE_IB_CTA_CLASS}`)
+
+  ctaItems.forEach(elem => {
+    const htmlElem = elem as HTMLElement
+    const maybeCTABlock = parseCTABlock(htmlElem)
+
+    if (maybeCTABlock === null) {
+      return
+    }
+
+    htmlElem.innerHTML = ''
+
+    replaceElementWithBlock(htmlElem, maybeCTABlock)
+  })
 }
 
 export const renderContentOnlyBlocks = (element: HTMLElement): void => {
