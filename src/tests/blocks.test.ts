@@ -2,9 +2,10 @@ import { createRoot } from 'react-dom/client'
 import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
 import {
-  blockifyHTML, isInteractiveBlock, renderContentOnlyBlocks,
+  blockifyHTML, isInteractiveBlock, renderContentOnlyBlocks, renderUserInputBlocks,
   OS_RAISE_IB_CONTENT_CLASS, OS_RAISE_IB_INPUT_CLASS
 } from '../lib/blocks'
+import { UserInputBlock } from '../components/UserInputBlock'
 
 const mockRender = jest.fn()
 
@@ -53,16 +54,22 @@ test('blockifyHTML handles non-block content with interactive blocks', async () 
   <p>P1</p>
   <p>P2</p>
   <p>P3</p>
-  <div class="os-raise-ib-content" data-wait-for-event="event">Test waiting</div>
-  <div class="os-raise-ib-content">Test no wait</div>
+  <div class="${OS_RAISE_IB_CONTENT_CLASS}" data-wait-for-event="event">Test waiting</div>
+  <div class="${OS_RAISE_IB_CONTENT_CLASS}">Test no wait</div>
+  <div class="${OS_RAISE_IB_INPUT_CLASS}">
+    <div class="os-raise-ib-input-content"></div>
+    <div class="os-raise-ib-input-prompt"></div>
+    <div class="os-raise-ib-input-ack"></div>
+  </div>
   <p>P4</p>
   <p>P5</p>`
   const components = blockifyHTML(htmlContent)
-  expect(components.length).toBe(4)
+  expect(components.length).toBe(5)
   expect(components[0].props.children.type).toBe(ContentBlock)
   expect(components[1].props.children.type).toBe(ContentBlock)
   expect(components[2].props.children.type).toBe(ContentBlock)
-  expect(components[3].props.children.type).toBe(ContentBlock)
+  expect(components[3].props.children.type).toBe(UserInputBlock)
+  expect(components[4].props.children.type).toBe(ContentBlock)
 })
 
 test('renderContentOnlyBlocks parses and creates expected block', async () => {
@@ -72,5 +79,19 @@ test('renderContentOnlyBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderContentOnlyBlocks(document.body)
+  expect(createRoot).toBeCalledWith(divElem)
+})
+
+test('renderUserInputBlocks parses and creates expected block', async () => {
+  const divElem = document.createElement('div')
+  divElem.className = OS_RAISE_IB_INPUT_CLASS
+  divElem.innerHTML = `
+  <div class="os-raise-ib-input-content"></div>
+  <div class="os-raise-ib-input-prompt"></div>
+  <div class="os-raise-ib-input-ack"></div>
+  `
+  document.body.appendChild(divElem)
+
+  renderUserInputBlocks(document.body)
   expect(createRoot).toBeCalledWith(divElem)
 })
