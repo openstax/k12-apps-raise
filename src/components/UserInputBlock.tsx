@@ -61,10 +61,11 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
           )}
         </Formik>
       )
+
   const maybeAck = !responseSubmitted
     ? null
     : (
-      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
+      < div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
   return (
