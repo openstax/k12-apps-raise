@@ -1,13 +1,19 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
+import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
+export const OS_RAISE_IB_INPUT_CLASS = 'os-raise-ib-input'
+const INPUT_CONTENT_CLASS = 'os-raise-ib-input-content'
+const INPUT_PROMPT_CLASS = 'os-raise-ib-input-prompt'
+const INPUT_ACK_CLASS = 'os-raise-ib-input-ack'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
-    OS_RAISE_IB_CONTENT_CLASS
+    OS_RAISE_IB_CONTENT_CLASS,
+    OS_RAISE_IB_INPUT_CLASS
   ].some(blockClass => element.classList.contains(blockClass))
 }
 
@@ -83,6 +89,35 @@ export const parseContentOnlyBlock = (element: HTMLElement): JSX.Element | null 
   const htmlContent = element.innerHTML
 
   return <ContentBlock content={htmlContent} waitForEvent={waitForEvent} />
+}
+
+export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null => {
+  if (!element.classList.contains(OS_RAISE_IB_INPUT_CLASS)) {
+    return null
+  }
+
+  const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
+  const fireEvent = namespaceEvent(element.dataset.fireEvent)
+  const contentElem = element.querySelector(`.${INPUT_CONTENT_CLASS}`)
+  const promptElem = element.querySelector(`.${INPUT_PROMPT_CLASS}`)
+  const ackElem = element.querySelector(`.${INPUT_ACK_CLASS}`)
+
+  if (contentElem === null || promptElem === null || ackElem === null) {
+    console.error('UserInputBlock missing expected content')
+    return null
+  }
+
+  const contentInnerHTML = contentElem.innerHTML
+  const promptInnerHTML = promptElem.innerHTML
+  const ackInnerHTML = ackElem.innerHTML
+
+  return <UserInputBlock
+    content={contentInnerHTML}
+    prompt={promptInnerHTML}
+    ack={ackInnerHTML}
+    waitForEvent={waitForEvent}
+    fireEvent={fireEvent}
+  />
 }
 
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {

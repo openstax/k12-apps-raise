@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
 import {
   blockifyHTML, isInteractiveBlock, renderContentOnlyBlocks,
-  OS_RAISE_IB_CONTENT_CLASS
+  OS_RAISE_IB_CONTENT_CLASS, OS_RAISE_IB_INPUT_CLASS
 } from '../lib/blocks'
 
 const mockRender = jest.fn()
@@ -28,6 +28,16 @@ test('isInteractiveBlock recognizes content-only block', async () => {
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 
   tmpDiv.className = `${OS_RAISE_IB_CONTENT_CLASS} otherclass`
+  expect(isInteractiveBlock(tmpDiv)).toBe(true)
+})
+
+test('isInteractiveBlock recognizes user input block', async () => {
+  const tmpDiv = document.createElement('div')
+  tmpDiv.className = OS_RAISE_IB_INPUT_CLASS
+
+  expect(isInteractiveBlock(tmpDiv)).toBe(true)
+
+  tmpDiv.className = `${OS_RAISE_IB_INPUT_CLASS} otherclass`
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 })
 
