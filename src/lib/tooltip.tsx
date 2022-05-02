@@ -22,13 +22,11 @@ export const tooltipify = (element: HTMLElement): void => {
 
     if ((dataStore === undefined) || (elementText === null)) {
       // Ignore elements that don't have datastore specified or there is no
-      // term
+      // element text term
       return
     }
 
     if (dataStore === 'glossary-tooltip') {
-      console.log('Search term: ' + elementText.toLocaleLowerCase().trim())
-
       elementMatchingData = glossaryLookup(elementText.toLocaleLowerCase().trim())
     }
 
@@ -37,10 +35,8 @@ export const tooltipify = (element: HTMLElement): void => {
     }
 
     createRoot(htmlElem).render(
-      <React.StrictMode><>
-      {console.log('Tooltip: ' + elementText)}
+      <React.StrictMode>
         <TooltipBlock text={elementText} tip={elementMatchingData}/>
-        </>
       </React.StrictMode>
 
     )
