@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react'
 import { mathifyElement } from '../lib/math'
 
 const DEFAULT_BUTTON_TEXT = 'Submit'
+const DEFAULT_TEXTAREA_ROWS = 3
 
 interface UserInputBlockProps {
   content: string
@@ -54,8 +55,8 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="response" as="textarea" disabled={isSubmitting}/>
-              <button type="submit" disabled={isSubmitting}>{buttonText !== undefined ? buttonText : DEFAULT_BUTTON_TEXT}</button>
+              <Field name="response" as="textarea" disabled={isSubmitting} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
+              <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText !== undefined ? buttonText : DEFAULT_BUTTON_TEXT}</button>
             </Form>
           )}
         </Formik>
@@ -68,10 +69,12 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
-      {maybePrompt}
-      {maybeInputForm}
-      {maybeAck}
+      <div className="os-raise-bootstrap">
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
+        {maybePrompt}
+        {maybeInputForm}
+        {maybeAck}
+      </div>
     </EventControlledContent>
   )
 }
