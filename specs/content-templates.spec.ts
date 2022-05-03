@@ -25,7 +25,7 @@ test('user input block can trigger content-only block and tooltip', async ({ pag
   await page.waitForSelector('.MathJax')
 })
 
-test('segmented content template works', async ({ page }) => {
+test('segmented content template works and displays tooltips', async ({ page }) => {
   const htmlContent = `
 <div class="os-raise-ib-cta" data-button-text="Yes!" data-fire-event="event1">
   <div class="os-raise-ib-cta-content">
@@ -38,6 +38,7 @@ test('segmented content template works', async ({ page }) => {
 <div class="os-raise-ib-cta" data-button-text="Yes!" data-fire-event="event2" data-wait-for-event="event1">
   <div class="os-raise-ib-cta-content">
     <p>This is the content for block 2</p>
+
   </div>
   <div class="os-raise-ib-cta-prompt">
     <p>Want to see more?</p>
@@ -45,6 +46,8 @@ test('segmented content template works', async ({ page }) => {
 </div>
 <div class="os-raise-ib-content" data-wait-for-event="event2">
   <p>That's all folks!</p>
+  <p>A sentence with the word <span class="os-raise-ib-tooltip" data-store="glossary-tooltip">absolute value</span> with its definition as a tooltip</p>
+
 </div>
   `
 
@@ -58,4 +61,7 @@ test('segmented content template works', async ({ page }) => {
   await expect(page.locator('text=That\'s all folks!')).not.toBeVisible()
   await page.click('text=Yes!')
   await page.waitForSelector('text=That\'s all folks!')
+  await page.locator('text=absolute value').hover()
+  await page.waitForSelector('text=Coming soon!Math: \\( E=mc^2 \\)')
+  await page.waitForSelector('.MathJax')
 })
