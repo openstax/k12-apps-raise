@@ -25,10 +25,7 @@ afterAll(() => server.close())
 
 test('content is fetched and rendered on success', async () => {
   render(
-    <div data-testid="content">
-      <ContentLoader contentId='test-content'/>
-    </div>
+    <ContentLoader contentId='test-content'/>
   )
-  expect(await screen.findByText('Test content')).toBeVisible()
-  expect(screen.getByTestId('content')).toHaveTextContent('Test content')
+  await screen.findByText('Test content')
 })

@@ -1,4 +1,4 @@
-import { renderContentOnlyBlocks } from './lib/blocks'
+import { renderContentOnlyBlocks, renderUserInputBlocks } from './lib/blocks'
 import { renderContentElements } from './lib/content'
 import './styles/main.scss'
 
@@ -10,6 +10,7 @@ const processPage = (): void => {
   if (contentElements === 0) {
     // Render blocks for Moodle storage
     renderContentOnlyBlocks(document.body)
+    renderUserInputBlocks(document.body)
   }
 }
 
