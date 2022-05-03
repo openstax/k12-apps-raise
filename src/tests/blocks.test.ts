@@ -1,9 +1,14 @@
 import { createRoot } from 'react-dom/client'
 import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
+import { CTABlock } from '../components/CTABlock'
 import {
-  blockifyHTML, isInteractiveBlock, renderContentOnlyBlocks, renderUserInputBlocks,
-  OS_RAISE_IB_CONTENT_CLASS, OS_RAISE_IB_INPUT_CLASS
+  blockifyHTML, isInteractiveBlock,
+  renderContentOnlyBlocks, renderCTABlocks,
+  renderUserInputBlocks,
+  OS_RAISE_IB_CTA_CLASS,
+  OS_RAISE_IB_CONTENT_CLASS,
+  OS_RAISE_IB_INPUT_CLASS
 } from '../lib/blocks'
 import { UserInputBlock } from '../components/UserInputBlock'
 
@@ -32,6 +37,15 @@ test('isInteractiveBlock recognizes content-only block', async () => {
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 })
 
+test('isInteractiveBlock recognizes CTA-block', async () => {
+  const tmpDiv = document.createElement('div')
+  tmpDiv.className = OS_RAISE_IB_CTA_CLASS
+
+  expect(isInteractiveBlock(tmpDiv)).toBe(true)
+
+  tmpDiv.className = `${OS_RAISE_IB_CTA_CLASS} otherclass`
+})
+
 test('isInteractiveBlock recognizes user input block', async () => {
   const tmpDiv = document.createElement('div')
   tmpDiv.className = OS_RAISE_IB_INPUT_CLASS
@@ -39,6 +53,7 @@ test('isInteractiveBlock recognizes user input block', async () => {
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 
   tmpDiv.className = `${OS_RAISE_IB_INPUT_CLASS} otherclass`
+
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 })
 
@@ -54,6 +69,14 @@ test('blockifyHTML handles non-block content with interactive blocks', async () 
   <p>P1</p>
   <p>P2</p>
   <p>P3</p>
+  <div class="${OS_RAISE_IB_CTA_CLASS}" data-button-text="CHECK" data-fire-event="event1">
+    <div class="os-raise-ib-cta-content">
+      <p>This is the content for block 1</p>
+    </div>
+    <div class="os-raise-ib-cta-prompt">
+      <p>Want to see more?</p>
+    </div>  
+  </div>
   <div class="${OS_RAISE_IB_CONTENT_CLASS}" data-wait-for-event="event">Test waiting</div>
   <div class="${OS_RAISE_IB_CONTENT_CLASS}">Test no wait</div>
   <div class="${OS_RAISE_IB_INPUT_CLASS}">
@@ -64,12 +87,13 @@ test('blockifyHTML handles non-block content with interactive blocks', async () 
   <p>P4</p>
   <p>P5</p>`
   const components = blockifyHTML(htmlContent)
-  expect(components.length).toBe(5)
+  expect(components.length).toBe(6)
   expect(components[0].props.children.type).toBe(ContentBlock)
-  expect(components[1].props.children.type).toBe(ContentBlock)
+  expect(components[1].props.children.type).toBe(CTABlock)
   expect(components[2].props.children.type).toBe(ContentBlock)
-  expect(components[3].props.children.type).toBe(UserInputBlock)
-  expect(components[4].props.children.type).toBe(ContentBlock)
+  expect(components[3].props.children.type).toBe(ContentBlock)
+  expect(components[4].props.children.type).toBe(UserInputBlock)
+  expect(components[5].props.children.type).toBe(ContentBlock)
 })
 
 test('renderContentOnlyBlocks parses and creates expected block', async () => {
@@ -79,6 +103,16 @@ test('renderContentOnlyBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderContentOnlyBlocks(document.body)
+  expect(createRoot).toBeCalledWith(divElem)
+})
+
+test('renderCTABlocks parses and creates expected block', async () => {
+  const divElem = document.createElement('div')
+  divElem.className = OS_RAISE_IB_CTA_CLASS
+  divElem.innerHTML = '<div class="os-raise-ib-cta-content"><p>Some Content</p></div><div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>'
+  document.body.appendChild(divElem)
+
+  renderCTABlocks(document.body)
   expect(createRoot).toBeCalledWith(divElem)
 })
 
