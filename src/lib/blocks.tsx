@@ -106,8 +106,8 @@ export const parseCTABlock = (element: HTMLElement): JSX.Element | null => {
   const promptInnerHTML = promptElem.innerHTML
 
   return <CTABlock
-    contentString={contentInnerHTML}
-    contentPrompt={promptInnerHTML}
+    content={contentInnerHTML}
+    prompt={promptInnerHTML}
     buttonText={buttonText}
     fireEvent={fireEvent}
     waitForEvent={waitForEvent}
@@ -143,9 +143,6 @@ export const renderCTABlocks = (element: HTMLElement): void => {
     if (maybeCTABlock === null) {
       return
     }
-
-    htmlElem.innerHTML = ''
-
     replaceElementWithBlock(htmlElem, maybeCTABlock)
   })
 }

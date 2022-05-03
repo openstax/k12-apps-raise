@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
+import { CTABlock } from '../components/CTABlock'
 import {
   blockifyHTML, isInteractiveBlock,
   renderContentOnlyBlocks, renderCTABlocks,
@@ -57,14 +58,23 @@ test('blockifyHTML handles non-block content with interactive blocks', async () 
   <p>P3</p>
   <div class="os-raise-ib-content" data-wait-for-event="event">Test waiting</div>
   <div class="os-raise-ib-content">Test no wait</div>
+  <div class="${OS_RAISE_IB_CTA_CLASS}" data-button-text="CHECK" data-fire-event="event1">
+    <div class="os-raise-ib-cta-content">
+      <p>This is the content for block 1</p>
+    </div>
+    <div class="os-raise-ib-cta-prompt">
+      <p>Want to see more?</p>
+    </div>  
+  </div>
   <p>P4</p>
   <p>P5</p>`
   const components = blockifyHTML(htmlContent)
-  expect(components.length).toBe(4)
+  expect(components.length).toBe(5)
   expect(components[0].props.children.type).toBe(ContentBlock)
   expect(components[1].props.children.type).toBe(ContentBlock)
   expect(components[2].props.children.type).toBe(ContentBlock)
-  expect(components[3].props.children.type).toBe(ContentBlock)
+  expect(components[3].props.children.type).toBe(CTABlock)
+  expect(components[4].props.children.type).toBe(ContentBlock)
 })
 
 test('renderContentOnlyBlocks parses and creates expected block', async () => {

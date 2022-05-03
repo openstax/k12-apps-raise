@@ -10,7 +10,7 @@ jest.mock('../lib/math.ts', () => ({
 
 test('CTABlock renders', async () => {
   render(
-    <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'}/>
+    <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'}/>
   )
 
   screen.getByText('String')
@@ -21,7 +21,7 @@ test('CTABlock renders', async () => {
 
 test('CTABlock fires event', async () => {
   render(
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
   )
   const eventHandler = jest.fn()
 
@@ -32,7 +32,7 @@ test('CTABlock fires event', async () => {
 
 test('CTABlock button and prompt disappear on click', async () => {
   render(
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
   )
 
   fireEvent.click(screen.getByText('Click me!'))
@@ -43,7 +43,7 @@ test('CTABlock button and prompt disappear on click', async () => {
 
 test('CTABlock does not render if waitForEvent does not fire', async () => {
   render(
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
   )
 
   expect(screen.queryByText('String')).toBeNull()
@@ -53,7 +53,7 @@ test('CTABlock does not render if waitForEvent does not fire', async () => {
 
 test('CTABlock does render if waitForEvent is fired', async () => {
   render(
-      <CTABlock buttonText="Click me!" contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} waitForEvent={'waitForEvent'}/>
   )
   const renderEvent = new CustomEvent('waitForEvent')
 
@@ -65,7 +65,7 @@ test('CTABlock does render if waitForEvent is fired', async () => {
 })
 
 test('CTABlock from parseCTABlock renders on namespaced event', async () => {
-  const htmlContent = `<div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
+  const htmlContent = `<div class="os-raise-ib-cta" data-button-text="ButtonText" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-cta-content"><p>Some Content</p></div>
   <div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>`
   const divElem = document.createElement('div')
@@ -83,9 +83,26 @@ test('CTABlock from parseCTABlock renders on namespaced event', async () => {
   expect(screen.queryByText('String')).toBeNull()
 })
 
+test('CTABlock from parse CTABlock fires namespaced event on click', async () => {
+  const htmlContent = `<div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-schema-version="1.0">
+  <div class="os-raise-ib-cta-content"><p>Some Content</p></div>
+  <div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>`
+  const divElem = document.createElement('div')
+  divElem.innerHTML = htmlContent
+  const generatedContentBlock = parseCTABlock(divElem.children[0] as HTMLElement)
+
+  render(
+    generatedContentBlock as JSX.Element
+  )
+  const eventHandler = jest.fn()
+  document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-eventnameX`, eventHandler)
+  fireEvent.click(screen.getByText('ButtonText'))
+  expect(eventHandler).toHaveBeenCalled()
+})
+
 test('CTABlock calls mathifyElement when rendered', async () => {
   render(
-    <CTABlock contentString={'<p>String</p>'} contentPrompt={'<p>Prompt</p>'} buttonText={'<p>Click</p>'} fireEvent={'eventX'}/>
+    <CTABlock content={'<p>String</p>'} prompt={'<p>Prompt</p>'} buttonText={'<p>Click</p>'} fireEvent={'eventX'}/>
   )
   expect(mathifyElement).toBeCalled()
 })
