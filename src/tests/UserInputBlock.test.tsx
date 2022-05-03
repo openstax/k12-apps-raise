@@ -75,6 +75,18 @@ test('UserInputBlock requires non-empty input', async () => {
   screen.getByText('Prompt text')
   screen.getByRole('textbox')
   screen.getByRole('button')
+  screen.getByText('Please provide valid input')
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
+  })
+
+  screen.getByText('Please provide valid input')
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'S' } })
+  })
+  expect(screen.queryByText('Please provide valid input')).toBeNull()
 })
 
 test('UserInputBlock from parseUserInputBlock renders on namespaced event', async () => {

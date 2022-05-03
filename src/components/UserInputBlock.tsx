@@ -1,7 +1,8 @@
 import { EventControlledContent } from './EventControlledContent'
-import { Formik, Form, Field } from 'formik'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useState, useCallback } from 'react'
 import { mathifyElement } from '../lib/math'
+import * as Yup from 'yup'
 
 const DEFAULT_BUTTON_TEXT = 'Submit'
 const DEFAULT_TEXTAREA_ROWS = 3
@@ -21,6 +22,10 @@ interface InputFormValues {
 
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
+
+  const schema = Yup.object({
+    response: Yup.string().trim().required('Please provide valid input')
+  })
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
     if (values.response === '') {
@@ -52,10 +57,12 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         <Formik
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
+          validationSchema={schema}
         >
           {({ isSubmitting }) => (
             <Form>
               <Field name="response" as="textarea" disabled={isSubmitting} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
+              <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText !== undefined ? buttonText : DEFAULT_BUTTON_TEXT}</button>
             </Form>
           )}
