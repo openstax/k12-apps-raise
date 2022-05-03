@@ -37,7 +37,6 @@ test('isInteractiveBlock recognizes content-only block', async () => {
   expect(isInteractiveBlock(tmpDiv)).toBe(true)
 })
 
-
 test('isInteractiveBlock recognizes CTA-block', async () => {
   const tmpDiv = document.createElement('div')
   tmpDiv.className = OS_RAISE_IB_CTA_CLASS
