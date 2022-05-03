@@ -28,10 +28,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   })
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
-    if (values.response === '') {
-      return
-    }
-
     setResponseSubmitted(true)
     if (fireEvent !== undefined) {
       const submitEvent = new CustomEvent(fireEvent)
