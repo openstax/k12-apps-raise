@@ -1,4 +1,4 @@
-import { renderContentOnlyBlocks } from './lib/blocks'
+import { renderContentOnlyBlocks, renderUserInputBlocks } from './lib/blocks'
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'
@@ -12,6 +12,7 @@ const processPage = (): void => {
     // Render blocks for Moodle storage
     tooltipify(document.body)
     renderContentOnlyBlocks(document.body)
+    renderUserInputBlocks(document.body)
   }
 }
 
