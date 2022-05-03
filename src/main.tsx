@@ -11,7 +11,6 @@ const processPage = (): void => {
   if (contentElements === 0) {
     // Render blocks for Moodle storage
     tooltipify(document.body)
-
     renderContentOnlyBlocks(document.body)
   }
 }
