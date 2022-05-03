@@ -56,3 +56,7 @@ For `Stylelint`, you will need to add the following to your `.vscode/settings.js
   "stylelint.validate": ["css", "scss"]
 }
 ```
+
+## Schemas for Interactive Blocks and Content Templates
+
+Please refer to [schemas](docs/schemas.md) for details on using supported interactive capabilities.

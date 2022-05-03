@@ -10,33 +10,28 @@ jest.mock('../lib/math.ts', () => ({
 
 test('ContentBlock renders', async () => {
   render(
-    <div data-testid="content-block">
-      <ContentBlock content={'<p>String</p>'} />
-    </div>
+    <ContentBlock content={'<p>String</p>'} />
   )
 
-  expect(screen.getByTestId('content-block').querySelector('p')).toHaveTextContent('String')
+  screen.getByText('String')
 })
 
 test('ContentBlock does not render if waitForEvent does not fire', async () => {
   render(
-    <div data-testid="content-block">
-      <ContentBlock content={'<p>String</p>'} waitForEvent='someEvent' />
-    </div>
+    <ContentBlock content={'<p>String</p>'} waitForEvent='someEvent' />
   )
-  expect(screen.getByTestId('content-block')).not.toHaveTextContent('String')
+
+  expect(screen.queryByText('String')).toBeNull()
 })
 
 test('ContentBlock does render if waitForEvent is fired', async () => {
   render(
-    <div data-testid="content-block">
-      <ContentBlock content={'<p>String</p>'} waitForEvent='someEvent' />
-    </div>
+    <ContentBlock content={'<p>String</p>'} waitForEvent='someEvent' />
   )
 
   fireEvent(document, new CustomEvent('someEvent'))
 
-  expect(screen.getByTestId('content-block').querySelector('p')).toHaveTextContent('String')
+  screen.getByText('String')
 })
 
 test('ContentBlock from parseContentOnlyBlock renders on namespaced event', async () => {
@@ -48,20 +43,17 @@ test('ContentBlock from parseContentOnlyBlock renders on namespaced event', asyn
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    <div data-testid="content-block">
-      {generatedContentBlock as JSX.Element}
-    </div>
+    generatedContentBlock as JSX.Element
   )
-  expect(screen.getByTestId('content-block')).not.toHaveTextContent('Test content')
+
+  expect(screen.queryByText('Test content')).toBeNull()
   fireEvent(document, new CustomEvent(`${OS_RAISE_IB_EVENT_PREFIX}-event1`))
-  expect(screen.getByTestId('content-block')).toHaveTextContent('Test content')
+  screen.getByText('Test content')
 })
 
 test('ContentBlock calls mathifyElement when rendered', async () => {
   render(
-    <div data-testid="content-block">
-      <ContentBlock content={'<p>String</p>'} />
-    </div>
+    <ContentBlock content={'<p>String</p>'} />
   )
 
   expect(mathifyElement).toBeCalled()

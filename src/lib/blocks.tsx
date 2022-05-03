@@ -2,17 +2,23 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
+import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
 export const OS_RAISE_IB_CTA_CLASS = 'os-raise-ib-cta'
 export const CTA_CONTENT_CLASS = 'os-raise-ib-cta-content'
 export const CTA_PROMPT_CLASS = 'os-raise-ib-cta-prompt'
+export const OS_RAISE_IB_INPUT_CLASS = 'os-raise-ib-input'
+const INPUT_CONTENT_CLASS = 'os-raise-ib-input-content'
+const INPUT_PROMPT_CLASS = 'os-raise-ib-input-prompt'
+const INPUT_ACK_CLASS = 'os-raise-ib-input-ack'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
     OS_RAISE_IB_CONTENT_CLASS,
-    OS_RAISE_IB_CTA_CLASS
+    OS_RAISE_IB_CTA_CLASS,
+    OS_RAISE_IB_INPUT_CLASS
   ].some(blockClass => element.classList.contains(blockClass))
 }
 
@@ -71,6 +77,13 @@ const blockifyElement = (element: HTMLElement): JSX.Element => {
     }
   }
 
+  if (element.classList.contains(OS_RAISE_IB_INPUT_CLASS)) {
+    const maybeUserInputBlock = parseUserInputBlock(element)
+    if (maybeUserInputBlock !== null) {
+      return maybeUserInputBlock
+    }
+  }
+
   return createNonwaitingContentBlock(element.outerHTML)
 }
 
@@ -125,6 +138,37 @@ export const parseContentOnlyBlock = (element: HTMLElement): JSX.Element | null 
   return <ContentBlock content={htmlContent} waitForEvent={waitForEvent} />
 }
 
+export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null => {
+  if (!element.classList.contains(OS_RAISE_IB_INPUT_CLASS)) {
+    return null
+  }
+
+  const maybeButtonText = element.dataset.buttonText
+  const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
+  const fireEvent = namespaceEvent(element.dataset.fireEvent)
+  const contentElem = element.querySelector(`.${INPUT_CONTENT_CLASS}`)
+  const promptElem = element.querySelector(`.${INPUT_PROMPT_CLASS}`)
+  const ackElem = element.querySelector(`.${INPUT_ACK_CLASS}`)
+
+  if (contentElem === null || promptElem === null || ackElem === null) {
+    console.error('UserInputBlock missing expected content')
+    return null
+  }
+
+  const contentInnerHTML = contentElem.innerHTML
+  const promptInnerHTML = promptElem.innerHTML
+  const ackInnerHTML = ackElem.innerHTML
+
+  return <UserInputBlock
+    content={contentInnerHTML}
+    prompt={promptInnerHTML}
+    ack={ackInnerHTML}
+    buttonText={maybeButtonText}
+    waitForEvent={waitForEvent}
+    fireEvent={fireEvent}
+  />
+}
+
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
   element.innerHTML = ''
 
@@ -133,30 +177,28 @@ const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): 
   )
 }
 
-export const renderCTABlocks = (element: HTMLElement): void => {
-  const ctaItems = element.querySelectorAll(`.${OS_RAISE_IB_CTA_CLASS}`)
-
-  ctaItems.forEach(elem => {
-    const htmlElem = elem as HTMLElement
-    const maybeCTABlock = parseCTABlock(htmlElem)
-
-    if (maybeCTABlock === null) {
-      return
-    }
-    replaceElementWithBlock(htmlElem, maybeCTABlock)
-  })
-}
-
-export const renderContentOnlyBlocks = (element: HTMLElement): void => {
-  const contentItems = element.querySelectorAll(`.${OS_RAISE_IB_CONTENT_CLASS}`)
+const renderContentBlocksByClass = (element: HTMLElement, contentClass: string, parser: (element: HTMLElement) => JSX.Element | null): void => {
+  const contentItems = element.querySelectorAll(`.${contentClass}`)
 
   contentItems.forEach(elem => {
     const htmlElem = elem as HTMLElement
-    const maybeContentOnlyBlock = parseContentOnlyBlock(htmlElem)
+    const maybeContentOnlyBlock = parser(htmlElem)
 
     if (maybeContentOnlyBlock === null) {
       return
     }
     replaceElementWithBlock(htmlElem, maybeContentOnlyBlock)
   })
+}
+
+export const renderCTABlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_IB_CTA_CLASS, parseCTABlock)
+}
+
+export const renderContentOnlyBlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_IB_CONTENT_CLASS, parseContentOnlyBlock)
+}
+
+export const renderUserInputBlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_IB_INPUT_CLASS, parseUserInputBlock)
 }

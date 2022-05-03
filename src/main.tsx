@@ -1,4 +1,9 @@
-import { renderContentOnlyBlocks, renderCTABlocks } from './lib/blocks'
+
+import {
+  renderContentOnlyBlocks,
+  renderCTABlocks,
+  renderUserInputBlocks
+} from './lib/blocks'
 import { renderContentElements } from './lib/content'
 import './styles/main.scss'
 
@@ -11,6 +16,7 @@ const processPage = (): void => {
     // Render blocks for Moodle storage
     renderContentOnlyBlocks(document.body)
     renderCTABlocks(document.body)
+    renderUserInputBlocks(document.body)
   }
 }
 
