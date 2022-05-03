@@ -9,24 +9,20 @@ jest.mock('../lib/math.ts', () => ({
 
 test('Tooltip Block unit test', async () => {
   render(
-    <div data-testid="tooltip-content">
-      <TooltipBlock text="my-text" tip="<p>my-tip</p>"/>
-    </div>
+      <TooltipBlock text='my-text' tip='<p>my-tip</p>'/>
   )
 
-  expect(screen.getByTestId('tooltip-content')).toHaveTextContent('my-text')
+  expect(screen.getByText('my-text'))
   fireEvent.mouseOver(screen.getByText('my-text'))
   expect(await screen.findByText('my-tip')).toBeVisible()
   expect(document.querySelector('.os-raise-bootstrap')).toHaveTextContent('my-tip')
 })
 test('Tooltip Block renders math', async () => {
   render(
-    <div data-testid="tooltip-content">
-      <TooltipBlock text="my-text" tip="\( x=2 \)"/>
-    </div>
+    <TooltipBlock text='my-text' tip='<p>my-tip</p>'/>
   )
 
-  expect(screen.getByTestId('tooltip-content')).toHaveTextContent('my-text')
+  expect(screen.getByText('my-text'))
   fireEvent.mouseOver(screen.getByText('my-text'))
   await waitFor(() => expect(mathifyElement).toHaveBeenCalled())
 })
