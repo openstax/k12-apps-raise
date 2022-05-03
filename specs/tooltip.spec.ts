@@ -1,17 +1,12 @@
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { mockPageContentRequest } from './utils'
 
-test('tooltip renders math from glossary-tooltip.', async ({ page }) => {
-  const htmlContent = `
+test('tooltip renders on hover', async ({ page }) => {
+  const htmlContent = '<p>A sentence with the word <span class="os-raise-ib-tooltip" data-store="glossary-tooltip">absolute value</span> with its definition as a tooltip</p>'
 
-    <p><span id="tooltip1" class="os-raise-ib-tooltip" data-store="glossary-tooltip" data-schema-version="1.0">absolute value</span></p>
-
-  `
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
-  await page.waitForSelector('text= absolute value ')
-  await expect(page.locator('text=The absolute value of a number')).not.toBeVisible()
-  await page.locator('#tooltip1').hover()
-  await page.waitForSelector('text=The absolute value of a number')
-  await expect(page.locator('text=The absolute value of a number')).toBeVisible()
+  await page.locator('text=absolute value').hover()
+  await page.waitForSelector('text=Coming soon!Math: \\( E=mc^2 \\)')
+  await page.waitForSelector('.MathJax')
 })
