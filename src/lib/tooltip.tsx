@@ -38,7 +38,6 @@ export const tooltipify = (element: HTMLElement): void => {
       <React.StrictMode>
         <TooltipBlock text={elementText} tip={elementMatchingData}/>
       </React.StrictMode>
-
     )
   })
 }

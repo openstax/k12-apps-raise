@@ -7,7 +7,7 @@ jest.mock('../lib/math.ts', () => ({
   mathifyElement: jest.fn(async () => {})
 }))
 
-test('Tooltip Block unit test', async () => {
+test('Tooltip Block displays tip after mouse over event', async () => {
   render(
       <TooltipBlock text='my-text' tip='<p>my-tip</p>'/>
   )
