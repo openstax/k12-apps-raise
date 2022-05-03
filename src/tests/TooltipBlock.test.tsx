@@ -12,7 +12,8 @@ test('Tooltip Block unit test', async () => {
       <TooltipBlock text='my-text' tip='<p>my-tip</p>'/>
   )
 
-  expect(screen.getByText('my-text'))
+  screen.getByText('my-text')
+  expect(document.querySelector('.os-raise-bootstrap')).not.toHaveTextContent('my-tip')
   fireEvent.mouseOver(screen.getByText('my-text'))
   expect(await screen.findByText('my-tip')).toBeVisible()
   expect(document.querySelector('.os-raise-bootstrap')).toHaveTextContent('my-tip')
