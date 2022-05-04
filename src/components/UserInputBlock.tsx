@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useState, useCallback } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
+import { tooltipify } from '../lib/tooltip'
 
 const DEFAULT_BUTTON_TEXT = 'Submit'
 const DEFAULT_TEXTAREA_ROWS = 3
@@ -38,6 +39,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
       mathifyElement(node)
+      tooltipify(node)
     }
   }, [])
 

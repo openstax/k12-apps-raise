@@ -5,6 +5,7 @@ import {
   renderUserInputBlocks
 } from './lib/blocks'
 import { renderContentElements } from './lib/content'
+import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'
 
 const processPage = (): void => {
@@ -14,6 +15,7 @@ const processPage = (): void => {
   // If we fetched content elements, we're done
   if (contentElements === 0) {
     // Render blocks for Moodle storage
+    tooltipify(document.body)
     renderContentOnlyBlocks(document.body)
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)
