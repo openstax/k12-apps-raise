@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import { EventControlledContent } from './EventControlledContent'
 import { mathifyElement } from '../lib/math'
+import { tooltipify } from '../lib/tooltip'
 
 interface CTABlockProps {
   content: string
@@ -24,6 +25,7 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
       mathifyElement(node)
+      tooltipify(node)
     }
   }, [])
 
