@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
+import { ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
@@ -12,6 +13,10 @@ export const OS_RAISE_IB_INPUT_CLASS = 'os-raise-ib-input'
 const INPUT_CONTENT_CLASS = 'os-raise-ib-input-content'
 const INPUT_PROMPT_CLASS = 'os-raise-ib-input-prompt'
 const INPUT_ACK_CLASS = 'os-raise-ib-input-ack'
+export const OS_RAISE_IB_PSET_CLASS = 'os-raise-ib-pset'
+const PSET_PROBLEM_CLASS = 'os-raise-ib-pset-problem'
+const PSET_CORRECT_RESPONSE_CLASS = 'os-raise-ib-pset-correct-response'
+const PSET_ENCOURAGE_RESPONSE_CLASS = 'os-raise-ib-pset-encourage-response'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
@@ -165,6 +170,64 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     buttonText={maybeButtonText ?? 'Submit'}
     waitForEvent={waitForEvent}
     fireEvent={fireEvent}
+  />
+}
+
+export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null => {
+  if (!element.classList.contains(OS_RAISE_IB_PSET_CLASS)) {
+    return null
+  }
+
+  const fireSuccessEvent = namespaceEvent(element.dataset.fireSuccessEvent)
+  const fireLearningOpportunityEvent = namespaceEvent(element.dataset.fireLearningOpportunityEvent)
+  const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
+  const maybeRetryLimit = element.dataset.retryLimit
+  const maybeButtonText = element.dataset.buttonText
+  const psetCorrectResponseElem = element.querySelector(`:scope > .${PSET_CORRECT_RESPONSE_CLASS}`)
+  const psetEncourageResponseElem = element.querySelector(`:scope > .${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+  const psetProblemElems = element.querySelectorAll(`.${PSET_PROBLEM_CLASS}`)
+  const problems: ProblemData[] = []
+
+  if (psetCorrectResponseElem === null || psetEncourageResponseElem === null || psetProblemElems.length === 0) {
+    console.error('ProblemSetBlock missing expected content')
+    return null
+  }
+
+  psetProblemElems.forEach(prob => {
+    const htmlElem = prob as HTMLElement
+    const problemType = htmlElem.dataset.problemType
+    const solution = htmlElem.dataset.solution
+    const problemComparator = htmlElem.dataset.problemComparator
+    const solutionOptions = htmlElem.dataset.solutionOptions
+    const maybeCorrectResponseOverride = htmlElem.querySelector(`.${PSET_CORRECT_RESPONSE_CLASS}`)
+    const maybeEncourageResponseOverride = htmlElem.querySelector(`.${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+
+    if (problemType === undefined ||
+      solution === undefined ||
+      (problemType === PROBLEM_TYPE_INPUT && problemComparator === undefined) ||
+      (problemType === PROBLEM_TYPE_DROPDOWN && solutionOptions === undefined) ||
+      (problemType === PROBLEM_TYPE_MULTISELECT && solutionOptions === undefined)) {
+      console.error('Ignoring incorrectly defined problem')
+      return
+    }
+
+    problems.push({
+      type: problemType,
+      solution: solution,
+      comparator: htmlElem.dataset.problemComparator,
+      solutionOptions: solutionOptions,
+      buttonText: maybeButtonText ?? 'Check',
+      retryLimit: maybeRetryLimit === undefined ? 0 : parseInt(maybeRetryLimit),
+      correctResponse: (maybeCorrectResponseOverride === null) ? psetCorrectResponseElem.innerHTML : maybeCorrectResponseOverride.innerHTML,
+      encourageResponse: (maybeEncourageResponseOverride === null) ? psetEncourageResponseElem.innerHTML : maybeEncourageResponseOverride.innerHTML
+    })
+  })
+
+  return <ProblemSetBlock
+    problems={problems}
+    fireSuccessEvent={fireSuccessEvent}
+    fireLearningOpportunityEvent={fireLearningOpportunityEvent}
+    waitForEvent={waitForEvent}
   />
 }
 
