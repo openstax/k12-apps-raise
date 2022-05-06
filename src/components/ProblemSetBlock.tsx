@@ -1,3 +1,8 @@
+import { DropdownProblem } from './DropdownProblem'
+import { EventControlledContent } from './EventControlledContent'
+import { InputProblem } from './InputProblem'
+import { MultiselectProblem } from './MultiselectProblem'
+
 export interface ProblemData {
   type: string
   solution: string
@@ -21,5 +26,23 @@ interface ProblemSetBlockProps {
 }
 
 export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, problems }: ProblemSetBlockProps): JSX.Element => {
-  return (<></>)
+  const children: JSX.Element[] = []
+
+  problems.forEach((prob, indx) => {
+    if (prob.type === PROBLEM_TYPE_INPUT) {
+      children.push(<InputProblem key={indx}/>)
+    }
+    if (prob.type === PROBLEM_TYPE_DROPDOWN) {
+      children.push(<DropdownProblem key={indx}/>)
+    }
+    if (prob.type === PROBLEM_TYPE_MULTISELECT) {
+      children.push(<MultiselectProblem key={indx}/>)
+    }
+  })
+
+  return (
+    <EventControlledContent waitForEvent={waitForEvent}>
+      {children}
+    </EventControlledContent>
+  )
 }
