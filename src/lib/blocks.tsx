@@ -1,4 +1,3 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
