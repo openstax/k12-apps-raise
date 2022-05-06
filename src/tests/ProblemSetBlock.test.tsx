@@ -1,23 +1,44 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
 import '@testing-library/jest-dom'
-import { ProblemData, ProblemSetBlock } from '../components/ProblemSetBlock'
+import { BaseProblemProps, ProblemData, ProblemSetBlock } from '../components/ProblemSetBlock'
 
 jest.mock('../components/DropdownProblem', () => {
   return {
-    DropdownProblem: () => (<p>Mock dropdown problem</p>)
+    DropdownProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
+      <>
+        <p>Mock dropdown problem</p>
+        <button onClick={solvedCallback}>Solve Dropdown</button>
+        <button onClick={exhaustedCallback}>Exhaust Dropdown</button>
+        <button onClick={allowedRetryCallback}>Retry Dropdown</button>
+      </>
+    )
   }
 })
 
 jest.mock('../components/MultiselectProblem', () => {
   return {
-    MultiselectProblem: () => (<p>Mock multiselect problem</p>)
+    MultiselectProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
+      <>
+        <p>Mock multiselect problem</p>
+        <button onClick={solvedCallback}>Solve Multiselect</button>
+        <button onClick={exhaustedCallback}>Exhaust Multiselect</button>
+        <button onClick={allowedRetryCallback}>Retry Multiselect</button>
+      </>
+    )
   }
 })
 
 jest.mock('../components/InputProblem', () => {
   return {
-    InputProblem: () => (<p>Mock input problem</p>)
+    InputProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
+      <>
+        <p>Mock input problem</p>
+        <button onClick={solvedCallback}>Solve Input</button>
+        <button onClick={exhaustedCallback}>Exhaust Input</button>
+        <button onClick={allowedRetryCallback}>Retry Input</button>
+      </>
+    )
   }
 })
 
@@ -154,4 +175,106 @@ test('ProblemSetBlock from parseUserInputBlock renders on namespaced event', asy
   expect(screen.queryByText('Mock input problem')).toBeNull()
   fireEvent(document, new CustomEvent(`${OS_RAISE_IB_EVENT_PREFIX}-event1`))
   screen.getByText('Mock input problem')
+})
+
+test('ProblemSetBlock from parseUserInputBlock fires namespaced success event', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-fire-success-event="event1" data-fire-learning-opportunity-event="event2" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Dropdown problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedProblemSetBlock).not.toBeNull()
+
+  render(
+    generatedProblemSetBlock as JSX.Element
+  )
+
+  const successHandler = jest.fn()
+  const learningOppHandler = jest.fn()
+  document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event1`, successHandler)
+  document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event2`, learningOppHandler)
+
+  await act(async () => {
+    screen.getByText('Solve Input').click()
+    screen.getByText('Solve Multiselect').click()
+    screen.getByText('Solve Dropdown').click()
+  })
+
+  expect(successHandler).toBeCalledTimes(1)
+  expect(learningOppHandler).toBeCalledTimes(0)
+})
+
+test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportunity event', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-fire-success-event="event1" data-fire-learning-opportunity-event="event2" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Dropdown problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedProblemSetBlock).not.toBeNull()
+
+  render(
+    generatedProblemSetBlock as JSX.Element
+  )
+
+  const successHandler = jest.fn()
+  const learningOppHandler = jest.fn()
+  document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event1`, successHandler)
+  document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event2`, learningOppHandler)
+
+  await act(async () => {
+    screen.getByText('Solve Input').click()
+    screen.getByText('Exhaust Multiselect').click()
+    screen.getByText('Exhaust Dropdown').click()
+  })
+
+  expect(successHandler).toBeCalledTimes(0)
+  expect(learningOppHandler).toBeCalledTimes(1)
 })
