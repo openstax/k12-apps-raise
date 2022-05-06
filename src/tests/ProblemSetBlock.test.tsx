@@ -45,6 +45,7 @@ jest.mock('../components/InputProblem', () => {
 const testProblems: ProblemData[] = [
   {
     type: 'input',
+    content: '',
     solution: 'red',
     correctResponse: '',
     encourageResponse: '',
@@ -54,6 +55,7 @@ const testProblems: ProblemData[] = [
   },
   {
     type: 'dropdown',
+    content: '',
     solution: 'red',
     solutionOptions: '["red", "blue"]',
     correctResponse: '',
@@ -63,6 +65,7 @@ const testProblems: ProblemData[] = [
   },
   {
     type: 'multiselect',
+    content: '',
     solution: '["red"]',
     solutionOptions: '["red", "blue"]',
     correctResponse: '',

@@ -17,6 +17,7 @@ export const OS_RAISE_IB_PSET_CLASS = 'os-raise-ib-pset'
 const PSET_PROBLEM_CLASS = 'os-raise-ib-pset-problem'
 const PSET_CORRECT_RESPONSE_CLASS = 'os-raise-ib-pset-correct-response'
 const PSET_ENCOURAGE_RESPONSE_CLASS = 'os-raise-ib-pset-encourage-response'
+const PSET_PROBLEM_CONTENT_CLASS = 'os-raise-ib-pset-problem-content'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
@@ -209,9 +210,11 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     const solutionOptions = htmlElem.dataset.solutionOptions
     const maybeCorrectResponseOverride = htmlElem.querySelector(`.${PSET_CORRECT_RESPONSE_CLASS}`)
     const maybeEncourageResponseOverride = htmlElem.querySelector(`.${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+    const maybeProblemContent = htmlElem.querySelector(`.${PSET_PROBLEM_CONTENT_CLASS}`)
 
     if (problemType === undefined ||
       solution === undefined ||
+      maybeProblemContent === null ||
       (problemType === PROBLEM_TYPE_INPUT && problemComparator === undefined) ||
       (problemType === PROBLEM_TYPE_DROPDOWN && solutionOptions === undefined) ||
       (problemType === PROBLEM_TYPE_MULTISELECT && solutionOptions === undefined)) {
@@ -221,6 +224,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
 
     problems.push({
       type: problemType,
+      content: maybeProblemContent.innerHTML,
       solution: solution,
       comparator: htmlElem.dataset.problemComparator,
       solutionOptions: solutionOptions,

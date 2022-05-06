@@ -9,6 +9,7 @@ export interface ProblemData {
   solution: string
   comparator?: string
   solutionOptions?: string
+  content: string
   correctResponse: string
   encourageResponse: string
   retryLimit: number
@@ -19,6 +20,7 @@ export interface BaseProblemProps {
   solvedCallback: () => void
   exhaustedCallback: () => void
   allowedRetryCallback: () => void
+  content: string
   correctResponse: string
   encourageResponse: string
   retryLimit: number
@@ -102,6 +104,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       allowedRetryCallback: allowedRetryCallbackFactory(indx),
       solution: prob.solution,
       retryLimit: prob.retryLimit,
+      content: prob.content,
       correctResponse: prob.correctResponse,
       encourageResponse: prob.encourageResponse
     }
