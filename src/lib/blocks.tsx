@@ -162,7 +162,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     content={contentInnerHTML}
     prompt={promptInnerHTML}
     ack={ackInnerHTML}
-    buttonText={maybeButtonText}
+    buttonText={maybeButtonText ?? 'Submit'}
     waitForEvent={waitForEvent}
     fireEvent={fireEvent}
   />
