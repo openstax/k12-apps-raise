@@ -25,6 +25,7 @@ export interface BaseProblemProps {
   encourageResponse: string
   retryLimit: number
   solution: string
+  buttonText: string
 }
 
 export const PROBLEM_TYPE_INPUT = 'input'
@@ -106,7 +107,8 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       retryLimit: prob.retryLimit,
       content: prob.content,
       correctResponse: prob.correctResponse,
-      encourageResponse: prob.encourageResponse
+      encourageResponse: prob.encourageResponse,
+      buttonText: prob.buttonText
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
