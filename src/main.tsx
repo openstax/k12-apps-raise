@@ -2,6 +2,7 @@
 import {
   renderContentOnlyBlocks,
   renderCTABlocks,
+  renderProblemSetBlocks,
   renderUserInputBlocks
 } from './lib/blocks'
 import { renderContentElements } from './lib/content'
@@ -19,6 +20,7 @@ const processPage = (): void => {
     renderContentOnlyBlocks(document.body)
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)
+    renderProblemSetBlocks(document.body)
   }
 }
 

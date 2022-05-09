@@ -5,7 +5,7 @@ import '@testing-library/jest-dom'
 
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>"/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="Submit"/>
   )
 
   screen.getByText('Content text')
@@ -17,14 +17,14 @@ test('UserInputBlock renders with content, prompt, and form as textarea', async 
 
 test('UserInputBlock allows setting custom button text', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>" buttonText="CustomButtonText"/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText"/>
   )
   expect(screen.getByRole('button').textContent).toBe('CustomButtonText')
 })
 
 test('UserInputBlock does not render if waitForEvent does not fire', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>" waitForEvent='someEvent'/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText" waitForEvent='someEvent'/>
   )
 
   expect(screen.queryByText('Content text')).toBeNull()
@@ -35,7 +35,7 @@ test('UserInputBlock does not render if waitForEvent does not fire', async () =>
 
 test('UserInputBlock does render if waitForEvent is fired', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>" waitForEvent='someEvent'/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText" waitForEvent='someEvent'/>
   )
 
   fireEvent(document, new CustomEvent('someEvent'))
@@ -48,7 +48,7 @@ test('UserInputBlock does render if waitForEvent is fired', async () => {
 
 test('UserInputBlock removes and adds expected content on valid submission', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>"/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText"/>
   )
 
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
@@ -64,7 +64,7 @@ test('UserInputBlock removes and adds expected content on valid submission', asy
 
 test('UserInputBlock requires non-empty input', async () => {
   render(
-    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>/>"/>
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText"/>
   )
 
   await act(async () => {

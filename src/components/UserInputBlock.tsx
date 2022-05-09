@@ -5,7 +5,6 @@ import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { tooltipify } from '../lib/tooltip'
 
-const DEFAULT_BUTTON_TEXT = 'Submit'
 const DEFAULT_TEXTAREA_ROWS = 3
 
 interface UserInputBlockProps {
@@ -14,7 +13,7 @@ interface UserInputBlockProps {
   ack: string
   waitForEvent?: string
   fireEvent?: string
-  buttonText?: string
+  buttonText: string
 }
 
 interface InputFormValues {
@@ -61,7 +60,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
             <Form>
               <Field name="response" as="textarea" disabled={isSubmitting} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText !== undefined ? buttonText : DEFAULT_BUTTON_TEXT}</button>
+              <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
             </Form>
           )}
         </Formik>
