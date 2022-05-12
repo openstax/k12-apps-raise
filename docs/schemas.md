@@ -13,6 +13,7 @@ This document provides schema definitions for supported Interactive Blocks as we
   * [Call-to-action (CTA) block](#call-to-action-cta-block)
   * [User input block](#user-input-block)
   * [Content tooltip block](#content-tooltip-block)
+  * [Problem set block](#problem-set-block)
 * Content Templates
   * [Segmented content](#segmented-content)
 
@@ -116,6 +117,91 @@ Notes on schema:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * The `data-fire-event` attribute is optional
 * The `data-button-text` is optional but allows the content developer to customize the text in the CTA button. The default value is `Submit`.
+
+### Problem set block
+
+#### Description
+
+A problem set consists of a wrapping problem set definition and one or more problems. It encapsulates the following components:
+
+* Problem set definition
+* Correct response HTML
+* Encouragement response HTML
+* Multiple problems (which can be of different supported types) and corresponding content HTML with the problem itself
+
+Users can attempt to answer questions and check their solution. Retries are allowed by default, but a limit can be defined. Whenever a question is checked, the Correct response or Encouragement response HTML is displayed depending on whether the solution is matched or not respectively. The component fires events when the problem set is "completed" (all problems are either solved or hit the retry limit).
+
+#### Schema definition
+
+```html
+<div class="os-raise-ib-pset" data-fire-success-event="eventnameX" data-fire-learning-opportunity-event="eventnameY" data-wait-for-event="eventnameZ" data-retry-limit="3" data-button-text="Check" data-schema-version="1.0">
+  <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+    </div>
+  </div>
+  <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+    </div>
+  </div>
+  <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+    </div>
+  </div>
+  <div class="os-raise-ib-pset-correct-response">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+</div>
+```
+
+##### Problem specific overrides:
+
+The schema outlined above provides content developers the ability to define HTML to be displayed when problems are checked and found to be correct or not. These can also be optionally defined at the problem level to override with specific feedback. An example of using this feature in the `input` problem from above:
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+  <div class="os-raise-ib-pset-problem-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-correct-response">
+    <!-- INSERT ANY VALID HTML HERE WITH PROBLEM SPECIFIC RESPONSE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response">
+    <!-- INSERT ANY VALID HTML HERE WITH PROBLEM SPECIFIC RESPONSE-->
+  </div>
+</div>
+```
+
+##### Attributes for the problem set:
+* The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
+* `data-retry-limit` is optional and defaults to `0` (no limit). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
+* `data-button-text` is optional but allows the content developer to customize the text in the button associated with each question that allows users to check their answers. The default value is `Check`.
+* The `data-fire-success-event` and `data-fire-learning-opportunity-event` attributes are optional
+  * `data-fire-success-event` - This event is fired by the block if the student is deemed to have completed the problem set without difficulty according to some built-in function.
+  * `data-fire-learning-opportunity-event` - This event is fired by the block if it is deemed that the problem set has surfaced a potential learning opportunity according to some built-in function
+
+##### Attributes for all problem types:
+* `data-problem-type`: Valid values include `input`, `dropdown`, `multiselect`
+* `data-solution` is required. It is used by each problem type as follows:
+  * `input` question: The solution string is compared to the user input based upon the prescribed comparator (see options below)
+  * `dropdown` question: The solution string should match one of the options in the array passed as `data-solution-options` (see details below)
+  * `multiselect` question: The solution string should be an array with the set of answers that are correct. For example, if `data-solution-options='["Option 1", "Option2", "Option 3"]'` is used, than `data-solution='["Option2", "Option 3"]'` designates that the user should select `Option 2` and `Option 3` to answer correctly.
+
+##### Attributes specific to `input` problem type:
+* Valid values for `data-problem-comparator` include: `integer`, `float`, `text`
+  * If the comparator is `integer` or `float`, user input will be converted to values of the corresponding type before comparing
+  * If the comparator is `text`, user input is compared using a case-insensitive match
+
+##### Attributes specific to `dropdown` problem type:
+* `data-solution-options` should be an array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
+
+##### Attributes specific to `multiselect` problem type:
+* `data-solution-options` should be an array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
 
 ### Content tooltip block
 
