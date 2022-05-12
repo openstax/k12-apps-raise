@@ -117,6 +117,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_DROPDOWN) {
       children.push(<DropdownProblem
+        solutionOptions={prob.solutionOptions as string}
         {...sharedProps}
       />)
     }
