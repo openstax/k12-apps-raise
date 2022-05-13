@@ -62,3 +62,30 @@ test('math and tooltip is rendered in cta blocks', async ({ page }) => {
   await page.waitForSelector('text=Coming soon!')
   await page.waitForSelector('.MathJax')
 })
+
+test('math is rendered in Multiselect question', async ({ page }) => {
+  const htmlContent = `
+  <div class="os-raise-ib-pset" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution="['red']" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p id="problem">Multiselect problem content: \\( x^2 \\)</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p id="correct">Correct response with math: \\( x=2 \\)</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
+    </div>
+  </div>
+  `
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  await page.waitForSelector('#problem .MathJax')
+  await page.locator('text=green').click()
+  await page.locator('text=Check').click()
+  await page.waitForSelector('#encourage .MathJax')
+  await page.selectOption('select', { label: 'red' }) // Might not work for multiselect
+  await page.locator('text=Check').click()
+  await page.waitForSelector('#correct .MathJax')
+})
