@@ -28,7 +28,6 @@ export const MultiselectProblem = ({
 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
-      console.log('mathify')
       mathifyElement(node)
     }
   }, [])
@@ -80,9 +79,6 @@ export const MultiselectProblem = ({
   }
 
   const handleSubmit = async (values: MultiselectFormValues): Promise<void> => {
-    console.log('Handle Submit Called')
-    console.log(values.response)
-    console.log(solutionArray)
     if (compareForm(values.response, solutionArray)) {
       setFeedback(correctResponse)
       solvedCallback()
@@ -99,8 +95,8 @@ export const MultiselectProblem = ({
   }
 
   return (
-    <div className="os-raise-bootstrap">
-      <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
+    <div className="os-raise-bootstrap" ref={contentRefCallback}>
+      <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
         initialValues={{ response: [] }}
         onSubmit={handleSubmit}

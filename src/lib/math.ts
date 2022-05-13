@@ -73,22 +73,18 @@ export const loadMathJax = async (): Promise<boolean> => {
 export const mathifyElement = (elem: Element): void => {
   const mathjaxLoaded = window.MathJax !== undefined
   const innerText = elem.textContent
-  console.log('before')
   // Only try to mathify if content includes expected delimiters
   // including \( , $$ , or \[
   if (innerText === null || !/\\\(|\$\$|\\\[/.test(innerText)) {
     return
   }
-  console.log('found')
   const queueMathJax = (elem: Element): void => {
     window.MathJax.Hub.Queue(['Typeset', window.MathJax.Hub, elem])
   }
 
   if (!mathjaxLoaded) {
     loadMathJax().then(loadSuccess => {
-      console.log('in mathify')
       if (loadSuccess) {
-        console.log('queuing mathjax')
         queueMathJax(elem)
       }
     }).catch(error => console.error(error))
