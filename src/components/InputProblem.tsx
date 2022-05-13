@@ -16,26 +16,21 @@ interface InputFormValues {
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback,
-  solution, retryLimit, content, comparitor, encourageResponse
+  solution, retryLimit, content, comparitor, encourageResponse, buttonText, correctResponse
 }: InputProblemProps): JSX.Element => {
-  const [numberOfRetries, setNumberOfRetries] = useState(0)
+  const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
 
   const schema = (): Yup.SchemaOf<InputSchema> => {
     if (comparitor === 'integer') {
       return Yup.object({
-        response: Yup.number().integer().required('Please provide an Integer')
+        response: Yup.number().integer().typeError('Please provide an Integer').required('Please provide an Integer')
       })
     }
     if (comparitor === 'float') {
       return Yup.object({
-        response: Yup.number().required('Please provide a number')
-      })
-    }
-    if (comparitor === 'text') {
-      return Yup.object({
-        response: Yup.string().trim().required('Please provide valid input')
+        response: Yup.number().typeError('Please provide an number').required('Please provide a number')
       })
     }
     return Yup.object({
@@ -50,35 +45,21 @@ export const InputProblem = ({
   }, [])
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
-    console.log(values.response)
-    console.log(feedback)
-
-    if (values.response === solution) {
-      setFeedback('Correct!')
-      console.log('After correct! ', feedback)
-
+    if (values.response.trim() === solution.trim()) {
+      console.log('solved callback')
+      setFeedback(correctResponse)
       solvedCallback()
-      return
-    }
-    if (retryLimit === 0) {
-      setFeedback('Try again')
-      allowedRetryCallback()
-      return
-    }
-    if (numberOfRetries === retryLimit) {
       setInputDisabled(true)
-      setFeedback('No more attempts allowed')
-      exhaustedCallback()
-    } else {
-      setNumberOfRetries(numberOfRetries + 1)
-      setFeedback(`Try again ${retryLimit - numberOfRetries} retries left`)
+    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+      setRetriesAllowed(currRetries => currRetries + 1)
+      setFeedback(encourageResponse)
       allowedRetryCallback()
+    } else {
+      exhaustedCallback()
+      setFeedback('No more attempts allowed')
+      setInputDisabled(true)
     }
   }
-
-  // const clearFeedback = (): void => {
-  //   setFeedback('')
-  // }
 
   return (
   <div className="os-raise-bootstrap">
@@ -87,13 +68,13 @@ export const InputProblem = ({
     <Formik
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
-          validationSchema={schema()}
+          validationSchema={schema}
         >
           {({ isSubmitting }) => (
-            <Form>
+            <Form >
               <Field name="response" as="textarea" disabled={inputDisabled} className="form-control my-3" />
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={inputDisabled} className="btn btn-outline-primary">Submit</button>
+              <button type="submit" disabled={inputDisabled} className="btn btn-outline-primary">{buttonText}</button>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
 
             </Form>
