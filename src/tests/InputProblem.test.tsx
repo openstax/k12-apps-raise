@@ -217,16 +217,17 @@ test('Limit, encourageResponse, and exaustedCallback test', async () => {
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
     screen.getByRole('button').click()
+    screen.getByRole('button').click()
+    screen.getByRole('button').click()
   })
   await screen.findByText('Try again!')
-  screen.getByRole('button').click()
-  await screen.findByText('Try again!')
-  screen.getByRole('button').click()
-  await screen.findByText('Try again!')
-  screen.getByRole('button').click()
-  await screen.findByText('Try again!')
-  screen.getByRole('button').click()
 
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
+    screen.getByRole('button').click()
+  })
+
+  await screen.findByText('No more attempts allowed')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
   expect(allowedRetryHandler).toBeCalledTimes(3)
@@ -254,16 +255,16 @@ test('Correct answer after retry. ', async () => {
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
     screen.getByRole('button').click()
+    screen.getByRole('button').click()
+    screen.getByRole('button').click()
   })
   await screen.findByText('Try again!')
-  screen.getByRole('button').click()
-  await screen.findByText('Try again!')
-  screen.getByRole('button').click()
-  await screen.findByText('Try again!')
+
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '5' } })
     screen.getByRole('button').click()
   })
+
   await screen.findByText('Correct!')
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
