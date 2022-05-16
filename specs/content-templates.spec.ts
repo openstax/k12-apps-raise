@@ -56,7 +56,7 @@ test('segmented content template works', async ({ page }) => {
   await page.waitForSelector('text=That\'s all folks!')
 })
 
-test('problemsets with success triggered content - dropdown', async ({ page }) => {
+test('problemsets with success triggered content', async ({ page }) => {
   const htmlContent = `
   <div class="os-raise-ib-pset" data-fire-success-event="event1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
@@ -79,33 +79,6 @@ test('problemsets with success triggered content - dropdown', async ({ page }) =
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   await page.selectOption('select', { label: 'red' })
-  await page.locator('text=Check').click()
-  await page.waitForSelector('text=Great job!')
-})
-
-test('problemsets with success triggered content - multiselect', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-pset" data-fire-success-event="event1" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red"]' data-solution-options='["red", "blue", "green"]'>
-      <div class="os-raise-ib-pset-problem-content">
-        <p id="problem">Dropdown problem content: \\( x^2 \\)</p>
-      </div>
-    </div>
-    <div class="os-raise-ib-pset-correct-response">
-      <p id="correct">Correct response with math: \\( x=2 \\)</p>
-    </div>
-    <div class="os-raise-ib-pset-encourage-response">
-      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
-    </div>
-  </div>
-  <div class="os-raise-ib-content" data-wait-for-event="event1" data-schema-version="1.0">
-    <p>Great job!</p>
-  </div>
-  `
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.locator('text=red').click()
   await page.locator('text=Check').click()
   await page.waitForSelector('text=Great job!')
 })
@@ -133,35 +106,6 @@ test('problem sets with learning opportunity triggered content', async ({ page }
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   await page.selectOption('select', { label: 'green' })
-  await page.locator('text=Check').click()
-  await page.locator('text=Check').click()
-  await page.locator('text=Check').click()
-  await page.waitForSelector('text=Let\'s take another look at some concepts')
-})
-
-test('problemsets with learning opportunity triggered content', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-pset" data-fire-learning-opportunity-event="event1" data-retry-limit="2" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red"]' data-solution-options='["red", "blue", "green"]'>
-      <div class="os-raise-ib-pset-problem-content">
-        <p id="problem">Dropdown problem content: \\( x^2 \\)</p>
-      </div>
-    </div>
-    <div class="os-raise-ib-pset-correct-response">
-      <p id="correct">Correct response with math: \\( x=2 \\)</p>
-    </div>
-    <div class="os-raise-ib-pset-encourage-response">
-      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
-    </div>
-  </div>
-  <div class="os-raise-ib-content" data-wait-for-event="event1" data-schema-version="1.0">
-    <p>Let's take another look at some concepts</p>
-  </div>
-  `
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.locator('text=green').click()
   await page.locator('text=Check').click()
   await page.locator('text=Check').click()
   await page.locator('text=Check').click()

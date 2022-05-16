@@ -1,4 +1,4 @@
-import { BaseProblemProps } from './ProblemSetBlock'
+import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
@@ -55,7 +55,7 @@ export const DropdownProblem = ({
       allowedRetryCallback()
     } else {
       exhaustedCallback()
-      setFeedback('No more attempts allowed')
+      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setFormDisabled(true)
     }
   }

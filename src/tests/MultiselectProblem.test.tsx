@@ -81,6 +81,50 @@ test('Multiselect shows correct response, invokes callback, and disables self on
   expect(screen.getByRole('button')).toBeDisabled()
 })
 
+test('Multiselect shows incorrect response, then check is unclicked, and correct response is triggered', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={'<p>Great job!</p>'}
+    encourageResponse={'<p>Try again!'}
+    retryLimit={0}
+    solution={'["Option 2", "Option 3"]'}
+    buttonText={'Check'}
+    />
+  )
+
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    fireEvent.click(screen.getByLabelText('Option 2'))
+    fireEvent.click(screen.getByLabelText('Option 3'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Try again!')
+  expect(solvedHandler).toBeCalledTimes(0)
+  expect(exhaustedHandler).toBeCalledTimes(0)
+  expect(allowedRetryHandler).toBeCalledTimes(1)
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Great job!')
+  expect(solvedHandler).toBeCalledTimes(1)
+  expect(exhaustedHandler).toBeCalledTimes(0)
+  expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
+  expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
+  expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
+  expect(screen.getByRole('button')).toBeDisabled()
+})
+
 test('MultiselectProblem shows encourage response and invokes callback on check with no match and retries remaining', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
