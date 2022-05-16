@@ -5,16 +5,16 @@ import '@testing-library/jest-dom'
 test('InputProblem renders with content, textarea and button', async () => {
   render(
         <InputProblem
-        solvedCallback={() => {}}
-        exhaustedCallback={() => {}}
-        allowedRetryCallback={() => {}}
-        content={'Content'}
-        correctResponse={''}
-        encourageResponse={''}
-        retryLimit={0}
-        solution={' 5 '}
-        buttonText={'Submit'}
-        />
+      solvedCallback={() => { } }
+      exhaustedCallback={() => { } }
+      allowedRetryCallback={() => { } }
+      content={'Content'}
+      correctResponse={''}
+      encourageResponse={''}
+      retryLimit={0}
+      solution={' 5 '}
+      buttonText={'Submit'}
+      comparator={'integer'} />
   )
 
   screen.getByText('Content')
@@ -35,7 +35,7 @@ test('InputProblem shows warning if no input in textbox', async () => {
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -60,7 +60,7 @@ test('Correct answer to Integer InputProblem should evalute to correct', async (
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -89,7 +89,7 @@ test(' Text InputProblem button click with correct answer should evaluate to cor
           retryLimit={0}
           solution={' Apple '}
           buttonText={'Submit'}
-          comparitor={'text'}
+          comparator={'text'}
           />
   )
   await act(async () => {
@@ -114,7 +114,7 @@ test('InputProblem button click with no input should show warning', async () => 
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -134,7 +134,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'float'}
+          comparator={'float'}
           />
   )
   await act(async () => {
@@ -156,7 +156,7 @@ test('InputProblem textbox is expecting int but input is text.', async () => {
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -182,7 +182,7 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
           retryLimit={0}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -211,7 +211,7 @@ test('Limit, encourageResponse, and exaustedCallback test', async () => {
           retryLimit={3}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {
@@ -249,7 +249,7 @@ test('Correct answer after retry. ', async () => {
           retryLimit={2}
           solution={' 5 '}
           buttonText={'Submit'}
-          comparitor={'integer'}
+          comparator={'integer'}
           />
   )
   await act(async () => {

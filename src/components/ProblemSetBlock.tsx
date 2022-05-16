@@ -26,7 +26,6 @@ export interface BaseProblemProps {
   retryLimit: number
   solution: string
   buttonText: string
-  comparitor?: string
 }
 
 export const PROBLEM_TYPE_INPUT = 'input'
@@ -113,7 +112,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
-        comparitor={prob.comparator as string}
+        comparator={prob.comparator as string}
         {...sharedProps}
       />)
     }

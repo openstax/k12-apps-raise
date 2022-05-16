@@ -4,7 +4,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 
-interface InputProblemProps extends BaseProblemProps { }
+interface InputProblemProps extends BaseProblemProps {
+  comparator: string
+}
 
 interface InputSchema {
   response: string | number
@@ -16,19 +18,19 @@ interface InputFormValues {
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback,
-  solution, retryLimit, content, comparitor, encourageResponse, buttonText, correctResponse
+  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
 
   const schema = (): Yup.SchemaOf<InputSchema> => {
-    if (comparitor === 'integer') {
+    if (comparator === 'integer') {
       return Yup.object({
         response: Yup.number().integer().typeError('Please provide an Integer').required('Please provide an Integer')
       })
     }
-    if (comparitor === 'float') {
+    if (comparator === 'float') {
       return Yup.object({
         response: Yup.number().typeError('Please provide an number').required('Please provide a number')
       })
@@ -60,7 +62,9 @@ export const InputProblem = ({
       setInputDisabled(true)
     }
   }
-
+  const clearFeedback = (): void => {
+    setFeedback('')
+  }
   return (
   <div className="os-raise-bootstrap">
 
@@ -70,9 +74,14 @@ export const InputProblem = ({
           onSubmit={handleSubmit}
           validationSchema={schema}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, setFieldValue }) => (
             <Form >
-              <Field name="response" as="textarea" disabled={inputDisabled} className="form-control my-3" />
+              <Field
+              name="response"
+              as="textarea"
+              disabled={inputDisabled}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+              className="form-control my-3" />
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <button type="submit" disabled={inputDisabled} className="btn btn-outline-primary">{buttonText}</button>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
