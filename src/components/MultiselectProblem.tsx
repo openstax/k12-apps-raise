@@ -50,20 +50,19 @@ export const MultiselectProblem = ({
     const options: JSX.Element[] = []
 
     parsedOptionValues.forEach(val => options.push(
-      <>
-    <label className="form-check-label" key={val}>
-      <Field
-      class="form-check-input"
-      type="checkbox"
-      name="response"
-      onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
-      disabled={isSubmitting || formDisabled}
-      value={val}>
-      </Field>
-      {' ' + val}
-    </label>
-    <br></br>
-    </>
+    <div className="form-check">
+      <label className="form-check-label" key={val}>
+        <Field
+        className="form-check-input"
+        type="checkbox"
+        name="response"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
+        disabled={isSubmitting || formDisabled}
+        value={val}>
+        </Field>
+        {val}
+      </label>
+    </div>
     ))
 
     return options
@@ -99,7 +98,7 @@ export const MultiselectProblem = ({
 
   return (
     <div className="os-raise-bootstrap" ref={contentRefCallback}>
-      <div className="form-check my-3" dangerouslySetInnerHTML={{ __html: content }} />
+      <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
         initialValues={{ response: [] }}
         onSubmit={handleSubmit}
@@ -109,7 +108,6 @@ export const MultiselectProblem = ({
           <Form>
             {generateOptions(values, isSubmitting, setFieldValue)}
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <br></br>
             <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary">{buttonText}</button>
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
           </Form>
