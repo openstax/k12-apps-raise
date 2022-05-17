@@ -56,7 +56,7 @@ test('segmented content template works', async ({ page }) => {
   await page.waitForSelector('text=That\'s all folks!')
 })
 
-test('Dropdown problem with success triggered content', async ({ page }) => {
+test('problemsets with success triggered content', async ({ page }) => {
   const htmlContent = `
   <div class="os-raise-ib-pset" data-fire-success-event="event1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
@@ -83,7 +83,7 @@ test('Dropdown problem with success triggered content', async ({ page }) => {
   await page.waitForSelector('text=Great job!')
 })
 
-test('Dropdown problem with learning opportunity triggered content', async ({ page }) => {
+test('problem sets with learning opportunity triggered content', async ({ page }) => {
   const htmlContent = `
   <div class="os-raise-ib-pset" data-fire-learning-opportunity-event="event1" data-retry-limit="2" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
@@ -109,97 +109,5 @@ test('Dropdown problem with learning opportunity triggered content', async ({ pa
   await page.locator('text=Check').click()
   await page.locator('text=Check').click()
   await page.locator('text=Check').click()
-  await page.waitForSelector('text=Let\'s take another look at some concepts')
-})
-
-test('User input problem with success triggered content', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-pset" data-fire-success-event="event1" data-retry-limit="3" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer" >
-      <div class="os-raise-ib-pset-problem-content">
-      <p id="content">Input problem content: \\( x^2 \\)</p>
-      </div>
-  </div>
-    <div class="os-raise-ib-pset-correct-response">
-      <p id="correct">Correct response with math: \\( x=2 \\)</p>
-    </div>
-    <div class="os-raise-ib-pset-encourage-response">
-      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
-    </div>
-  </div>
-  <div class="os-raise-ib-content" data-wait-for-event="event1" data-schema-version="1.0">
-    <p>Great job!</p>
-  </div>
-  `
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.waitForSelector('#content .MathJax')
-
-  await page.fill('textarea', ' 42')
-  await page.click('button')
-  await page.waitForSelector('#correct .MathJax')
-  await page.waitForSelector('text=Great job!')
-})
-
-test('User input problem with encouragement response', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-pset" data-fire-encourage-event="event1" data-retry-limit="3" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer" >
-      <div class="os-raise-ib-pset-problem-content">
-      <p id="content">Input problem content: \\( x^2 \\)</p>
-      </div>
-  </div>
-    <div class="os-raise-ib-pset-correct-response">
-      <p id="correct">Correct response with math: \\( x=2 \\)</p>
-    </div>
-    <div class="os-raise-ib-pset-encourage-response" data-wait-for-event="event1">
-      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
-    </div>
-  </div>
-  <div class="os-raise-ib-content" data-wait-for-event="event2" data-schema-version="1.0">
-    <p>Great job!</p>
-  </div>
-  `
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.waitForSelector('#content .MathJax')
-  await page.fill('textarea', ' 41')
-  await page.click('button')
-  await page.waitForSelector('#encourage .MathJax')
-  await page.waitForSelector('text=Encourage response')
-})
-
-test('User input problem with learning opportunity ', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-pset" data-fire-learning-opportunity-event="event1" data-retry-limit="2" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer" >
-      <div class="os-raise-ib-pset-problem-content">
-      <p id="content">Input problem content: \\( x^2 \\)</p>
-      </div>
-    </div>
-    <div class="os-raise-ib-pset-correct-response">
-      <p id="correct">Correct response with math: \\( x=2 \\)</p>
-    </div>
-    <div class="os-raise-ib-pset-encourage-response">
-      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
-    </div>
-  </div>
-  <div class="os-raise-ib-content" data-wait-for-event="event1" data-schema-version="1.0">
-  <p>Let's take another look at some concepts</p>
-</div>
-
-`
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.waitForSelector('#content .MathJax')
-
-  await page.fill('textarea', ' 41')
-  await page.click('button')
-  await page.click('button')
-  await page.click('button')
-  await page.waitForSelector('text=No more attempts allowed')
   await page.waitForSelector('text=Let\'s take another look at some concepts')
 })
