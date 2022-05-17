@@ -51,7 +51,7 @@ export const MultiselectProblem = ({
 
     parsedOptionValues.forEach(val => options.push(
     <div key={val} className="form-check">
-      <label className="form-check-label" key={val}>
+      <label className="form-check-label">
         <Field
         className="form-check-input"
         type="checkbox"
