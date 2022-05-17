@@ -56,7 +56,7 @@ test('segmented content template works', async ({ page }) => {
   await page.waitForSelector('text=That\'s all folks!')
 })
 
-test('problem sets with success triggered content', async ({ page }) => {
+test('problemsets with success triggered content', async ({ page }) => {
   const htmlContent = `
   <div class="os-raise-ib-pset" data-fire-success-event="event1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>

@@ -28,6 +28,7 @@ export interface BaseProblemProps {
   buttonText: string
 }
 
+export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
 export const PROBLEM_TYPE_INPUT = 'input'
 export const PROBLEM_TYPE_DROPDOWN = 'dropdown'
 export const PROBLEM_TYPE_MULTISELECT = 'multiselect'
@@ -123,6 +124,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_MULTISELECT) {
       children.push(<MultiselectProblem
+        solutionOptions={prob.solutionOptions as string}
         {...sharedProps}
       />)
     }
