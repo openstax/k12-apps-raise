@@ -23,57 +23,7 @@ test('InputProblem renders with content, textarea and button', async () => {
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
-test('InputProblem shows warning if no input in textbox', async () => {
-  render(
-          <InputProblem
-          solvedCallback={() => {}}
-          exhaustedCallback={() => {}}
-          allowedRetryCallback={() => {}}
-          content={'Content'}
-          correctResponse={''}
-          encourageResponse={''}
-          retryLimit={0}
-          solution={' 5 '}
-          buttonText={'Submit'}
-          comparator={'integer'}
-          />
-  )
-  await act(async () => {
-    screen.getByRole('button').click()
-  })
-  await screen.findByText('Please provide an Integer')
-})
-
-test('Correct answer to Integer InputProblem should evalute to correct', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
-
-  render(
-          <InputProblem
-          solvedCallback={solvedHandler}
-          exhaustedCallback={exhaustedHandler}
-          allowedRetryCallback={allowedRetryHandler}
-          content={'Content'}
-          correctResponse={'Correct!'}
-          encourageResponse={''}
-          retryLimit={0}
-          solution={' 5 '}
-          buttonText={'Submit'}
-          comparator={'integer'}
-          />
-  )
-  await act(async () => {
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: ' 5' } })
-    screen.getByRole('button').click()
-  })
-  await screen.findByText('Correct!')
-  expect(solvedHandler).toBeCalledTimes(1)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(0)
-})
-
-test(' Text InputProblem button click with correct answer should evaluate to correct', async () => {
+test('Text InputProblem button click with correct answer should evaluate to correct', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
@@ -144,7 +94,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
   await screen.findByText('Please provide an number')
 })
 
-test('InputProblem textbox is expecting int but input is text.', async () => {
+test('InputProblem textbox is expecting Integer but input was text.', async () => {
   render(
           <InputProblem
           solvedCallback={() => {}}
@@ -160,7 +110,7 @@ test('InputProblem textbox is expecting int but input is text.', async () => {
           />
   )
   await act(async () => {
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'HAHAHAHA' } })
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Wrong input!' } })
     screen.getByRole('button').click()
   })
   await screen.findByText('Please provide an Integer')
@@ -195,7 +145,7 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
   expect(allowedRetryHandler).toBeCalledTimes(1)
 })
 
-test('Limit, encourageResponse, and exaustedCallback test', async () => {
+test('Retry limit, encourageResponse, and exausted callback test', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
@@ -230,43 +180,5 @@ test('Limit, encourageResponse, and exaustedCallback test', async () => {
   await screen.findByText('No more attempts allowed')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
-  expect(allowedRetryHandler).toBeCalledTimes(3)
-})
-
-test('Correct answer after retry. ', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
-
-  render(
-          <InputProblem
-          solvedCallback={solvedHandler}
-          exhaustedCallback={exhaustedHandler}
-          allowedRetryCallback={allowedRetryHandler}
-          content={'Content'}
-          correctResponse={'Correct!'}
-          encourageResponse={'Try again!'}
-          retryLimit={2}
-          solution={' 5 '}
-          buttonText={'Submit'}
-          comparator={'integer'}
-          />
-  )
-  await act(async () => {
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
-    screen.getByRole('button').click()
-    screen.getByRole('button').click()
-    screen.getByRole('button').click()
-  })
-  await screen.findByText('Try again!')
-
-  await act(async () => {
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: '5' } })
-    screen.getByRole('button').click()
-  })
-
-  await screen.findByText('Correct!')
-  expect(solvedHandler).toBeCalledTimes(1)
-  expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(3)
 })
