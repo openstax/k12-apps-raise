@@ -48,7 +48,6 @@ export const InputProblem = ({
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
     if (values.response.trim() === solution.trim()) {
-      console.log('solved callback')
       setFeedback(correctResponse)
       solvedCallback()
       setInputDisabled(true)
