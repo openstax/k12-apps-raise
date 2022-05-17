@@ -74,4 +74,11 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #212529;
   --bs-body-bg: #fff;
+
+  .os-form-select {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-select;
+
+    width: unset;
+  }
 }
