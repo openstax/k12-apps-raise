@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { DropdownProblem } from './DropdownProblem'
 import { EventControlledContent } from './EventControlledContent'
 import { InputProblem } from './InputProblem'
+import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
 
 export interface ProblemData {
@@ -32,6 +33,7 @@ export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
 export const PROBLEM_TYPE_INPUT = 'input'
 export const PROBLEM_TYPE_DROPDOWN = 'dropdown'
 export const PROBLEM_TYPE_MULTISELECT = 'multiselect'
+export const PROBLEM_TYPE_MULTIPLECHOICE = 'multiplechoice'
 
 interface ProblemResult {
   solved: boolean
@@ -124,6 +126,12 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_MULTISELECT) {
       children.push(<MultiselectProblem
+        solutionOptions={prob.solutionOptions as string}
+        {...sharedProps}
+      />)
+    }
+    if (prob.type === PROBLEM_TYPE_MULTIPLECHOICE) {
+      children.push(<MultipleChoiceProblem
         solutionOptions={prob.solutionOptions as string}
         {...sharedProps}
       />)
