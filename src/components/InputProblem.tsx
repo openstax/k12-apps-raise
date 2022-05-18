@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { BaseProblemProps } from './ProblemSetBlock'
+import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -25,12 +25,12 @@ export const InputProblem = ({
   const [feedback, setFeedback] = useState('')
 
   const schema = (): Yup.SchemaOf<InputSchema> => {
-    if (comparator === 'integer') {
+    if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
-        response: Yup.number().integer().typeError('Please provide an Integer').required('Please provide an Integer')
+        response: Yup.number().integer('Please provide an Integer').typeError('Please provide an Integer').required('Please provide an Integer')
       })
     }
-    if (comparator === 'float') {
+    if (comparator.toLowerCase() === 'float') {
       return Yup.object({
         response: Yup.number().typeError('Please provide an number').required('Please provide a number')
       })
@@ -46,8 +46,19 @@ export const InputProblem = ({
     }
   }, [])
 
+  const evaluateInput = (input: string, answer: string): boolean => {
+    if (comparator.toLowerCase() === 'integer') {
+      return parseInt(input) === parseInt(answer)
+    }
+    if (comparator.toLowerCase() === 'float') {
+      return parseFloat(input) === parseFloat(answer)
+    }
+
+    return input.toLowerCase() === answer.toLowerCase()
+  }
+
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
-    if (values.response.trim() === solution.trim()) {
+    if (evaluateInput(values.response.trim(), solution.trim())) {
       setFeedback(correctResponse)
       solvedCallback()
       setInputDisabled(true)
@@ -57,7 +68,7 @@ export const InputProblem = ({
       allowedRetryCallback()
     } else {
       exhaustedCallback()
-      setFeedback('No more attempts allowed')
+      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setInputDisabled(true)
     }
   }
@@ -77,12 +88,11 @@ export const InputProblem = ({
             <Form >
               <Field
               name="response"
-              as="textarea"
-              disabled={inputDisabled}
+              disabled={inputDisabled || isSubmitting}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className="form-control my-3" />
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={inputDisabled} className="btn btn-outline-primary">{buttonText}</button>
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
 
             </Form>
