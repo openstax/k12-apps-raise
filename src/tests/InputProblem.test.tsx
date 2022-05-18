@@ -2,7 +2,7 @@ import { render, screen, fireEvent, act } from '@testing-library/react'
 import { InputProblem } from '../components/InputProblem'
 import '@testing-library/jest-dom'
 
-test('InputProblem renders with content, textarea and button', async () => {
+test('InputProblem renders with content, input and button', async () => {
   render(
         <InputProblem
       solvedCallback={() => { } }
@@ -19,7 +19,7 @@ test('InputProblem renders with content, textarea and button', async () => {
 
   screen.getByText('Content')
   screen.getByRole('textbox')
-  expect(document.querySelector('textarea')).not.toBeNull()
+  expect(document.querySelector('input')).not.toBeNull()
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
@@ -42,11 +42,14 @@ test('Text InputProblem button click with correct answer should evaluate to corr
           comparator={'text'}
           />
   )
+
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Apple ' } })
     screen.getByRole('button').click()
   })
   await screen.findByText('Correct!')
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  expect(screen.getByRole('button')).toBeDisabled()
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
@@ -178,6 +181,9 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
   })
 
   await screen.findByText('No more attempts allowed')
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  expect(screen.getByRole('button')).toBeDisabled()
+
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
   expect(allowedRetryHandler).toBeCalledTimes(3)
