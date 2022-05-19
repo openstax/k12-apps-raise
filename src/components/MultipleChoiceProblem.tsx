@@ -42,7 +42,7 @@ export const MultipleChoiceProblem = ({
     <div key={val} className="form-check">
       <label className="form-check-label">
         <Field
-        className="form-radio-input"
+        className="form-check-input"
         type="radio"
         name="response"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
