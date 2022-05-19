@@ -90,10 +90,10 @@ export const InputProblem = ({
               name="response"
               disabled={inputDisabled || isSubmitting}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-              className="mb-3" />
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary ml-3">{buttonText}</button>
-              <ErrorMessage className="text-danger mb-3" component="div" name="response" />
+              className="os-form-control mb-3" />
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+              <ErrorMessage className="text-danger mb-3" component="div" name="response" />
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
 
             </Form>
           )}
