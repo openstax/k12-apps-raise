@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
-import { ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
+import { ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
@@ -217,7 +217,8 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
       maybeProblemContent === null ||
       (problemType === PROBLEM_TYPE_INPUT && problemComparator === undefined) ||
       (problemType === PROBLEM_TYPE_DROPDOWN && solutionOptions === undefined) ||
-      (problemType === PROBLEM_TYPE_MULTISELECT && solutionOptions === undefined)) {
+      (problemType === PROBLEM_TYPE_MULTISELECT && solutionOptions === undefined) ||
+      (problemType === PROBLEM_TYPE_MULTIPLECHOICE && solutionOptions === undefined)) {
       console.error('Ignoring incorrectly defined problem')
       return
     }
