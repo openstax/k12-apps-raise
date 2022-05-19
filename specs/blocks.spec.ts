@@ -145,3 +145,37 @@ test('math is rendered in DropdownProblem question', async ({ page }) => {
   await page.locator('text=Check').click()
   await page.waitForSelector('#correct .MathJax')
 })
+
+test('math is rendered in user input answer', async ({ page }) => {
+  const htmlContent = `
+  <div class="os-raise-ib-pset" data-fire-success-event="event1" data-retry-limit="3" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer" >
+      <div class="os-raise-ib-pset-problem-content">
+      <p id="problem">Input problem content: \\( x^2 \\)</p>
+      </div>
+  </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p id="correct">Correct response with math: \\( x=2 \\)</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
+    </div>
+  </div>
+  <div class="os-raise-ib-content" data-wait-for-event="event1" data-schema-version="1.0">
+    <p>Great job!</p>
+  </div>
+  `
+
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  await page.waitForSelector('#problem .MathJax')
+
+  await page.fill('input', ' 41')
+  await page.click('button')
+  await page.waitForSelector('#encourage .MathJax')
+  await page.fill('input', ' 42')
+  await page.click('button')
+
+  await page.waitForSelector('#correct .MathJax')
+  await page.waitForSelector('text=Great job!')
+})

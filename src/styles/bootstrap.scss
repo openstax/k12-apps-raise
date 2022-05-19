@@ -81,4 +81,11 @@
 
     width: unset;
   }
+
+  .os-form-control {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-control;
+
+    width: unset;
+  }
 }

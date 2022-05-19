@@ -113,6 +113,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
+        comparator={prob.comparator as string}
         {...sharedProps}
       />)
     }
