@@ -10,6 +10,7 @@ export const OS_RAISE_IB_CTA_CLASS = 'os-raise-ib-cta'
 export const CTA_CONTENT_CLASS = 'os-raise-ib-cta-content'
 export const CTA_PROMPT_CLASS = 'os-raise-ib-cta-prompt'
 export const OS_RAISE_IB_INPUT_CLASS = 'os-raise-ib-input'
+export const OS_RAISE_IB_DESMOS_CLASS = 'os-raise-ib-desmos'
 const INPUT_CONTENT_CLASS = 'os-raise-ib-input-content'
 const INPUT_PROMPT_CLASS = 'os-raise-ib-input-prompt'
 const INPUT_ACK_CLASS = 'os-raise-ib-input-ack'
@@ -280,4 +281,7 @@ export const renderUserInputBlocks = (element: HTMLElement): void => {
 
 export const renderProblemSetBlocks = (element: HTMLElement): void => {
   renderContentBlocksByClass(element, OS_RAISE_IB_PSET_CLASS, parseProblemSetBlock)
+}
+export const renderDesmosBlocks = (element: HTMLElement): void => {
+  renderDesmosBlocksByClass(element, )
 }
