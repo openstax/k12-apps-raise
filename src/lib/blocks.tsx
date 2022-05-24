@@ -1,6 +1,7 @@
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
+import { DesmosBlock } from '../components/DesmosBlock'
 import { ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 
@@ -245,6 +246,17 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
   />
 }
 
+export const parseDesmosBlock = (element: HTMLElement): JSX.Element | null => {
+  if (!element.classList.contains(OS_RAISE_IB_DESMOS_CLASS)) {
+    return null
+  }
+
+  const width = element.dataset.width
+  const height = element.dataset.height
+
+  return <DesmosBlock width={width ?? '800'} height={height ?? '800'}/>
+}
+
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
   element.innerHTML = ''
 
@@ -283,5 +295,5 @@ export const renderProblemSetBlocks = (element: HTMLElement): void => {
   renderContentBlocksByClass(element, OS_RAISE_IB_PSET_CLASS, parseProblemSetBlock)
 }
 export const renderDesmosBlocks = (element: HTMLElement): void => {
-  renderDesmosBlocksByClass(element, )
+  renderContentBlocksByClass(element, OS_RAISE_IB_DESMOS_CLASS, parseDesmosBlock)
 }
