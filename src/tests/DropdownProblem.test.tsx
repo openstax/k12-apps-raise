@@ -15,6 +15,7 @@ test('DropdownProblem renders', async () => {
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -40,6 +41,7 @@ test('DropdownProblem shows message if user does not select an option', async ()
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -66,6 +68,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -98,6 +101,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -124,6 +128,7 @@ test('DropdownProblem clears encourage response when user changes answer', async
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -155,6 +160,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     retryLimit={3}
     solution={'Option 2'}
     buttonText={'Check'}
+    answerResponses={[]}
     />
   )
 
@@ -180,4 +186,63 @@ test('DropdownProblem exhausts and disables itself after configured number of re
   expect(screen.getByRole('combobox')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
   screen.getByText('No more attempts allowed')
+})
+
+test('DropdownProblem renders answer specific content', async () => {
+  render(
+    <DropdownProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  expect(screen.queryByText('Try again!')).toBeNull()
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 3' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Even Closer')
+  expect(screen.queryByText('Try again!')).toBeNull()
+})
+
+test('DropdownProblem renders answer specific content only on button click', async () => {
+  render(
+    <DropdownProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 3' } })
+  })
+  expect(screen.queryByText('Even Closer')).toBeNull()
 })

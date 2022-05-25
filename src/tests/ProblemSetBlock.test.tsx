@@ -51,7 +51,8 @@ const testProblems: ProblemData[] = [
     encourageResponse: '',
     retryLimit: 0,
     buttonText: 'Check',
-    comparator: 'text'
+    comparator: 'text',
+    answerResponses: []
   },
   {
     type: 'dropdown',
@@ -61,7 +62,8 @@ const testProblems: ProblemData[] = [
     correctResponse: '',
     encourageResponse: '',
     retryLimit: 0,
-    buttonText: 'Check'
+    buttonText: 'Check',
+    answerResponses: []
   },
   {
     type: 'multiselect',
@@ -71,7 +73,8 @@ const testProblems: ProblemData[] = [
     correctResponse: '',
     encourageResponse: '',
     retryLimit: 0,
-    buttonText: 'Check'
+    buttonText: 'Check',
+    answerResponses: []
   }
 ]
 

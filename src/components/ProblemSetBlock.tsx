@@ -15,6 +15,12 @@ export interface ProblemData {
   encourageResponse: string
   retryLimit: number
   buttonText: string
+  answerResponses: AnswerSpecificResponse[]
+}
+
+export interface AnswerSpecificResponse {
+  answer: string
+  response: string
 }
 
 export interface BaseProblemProps {
@@ -27,6 +33,7 @@ export interface BaseProblemProps {
   retryLimit: number
   solution: string
   buttonText: string
+  answerResponses: AnswerSpecificResponse[]
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
@@ -111,7 +118,8 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       content: prob.content,
       correctResponse: prob.correctResponse,
       encourageResponse: prob.encourageResponse,
-      buttonText: prob.buttonText
+      buttonText: prob.buttonText,
+      answerResponses: prob.answerResponses
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
@@ -144,4 +152,14 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       {children}
     </EventControlledContent>
   )
+}
+
+export const determineFeedback = (userResponse: string | string[], encourageResponse: string, answerResponses: AnswerSpecificResponse[], comparator: ((input: string, answer: string) => boolean) | ((input: string[], answer: string) => boolean)): string => {
+  let response
+  answerResponses.forEach(val => {
+    if (comparator(userResponse as any, val.answer)) {
+      response = val.response
+    }
+  })
+  return response === undefined ? encourageResponse : response
 }

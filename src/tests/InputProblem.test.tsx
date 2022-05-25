@@ -14,7 +14,9 @@ test('InputProblem renders with content, input and button', async () => {
       retryLimit={0}
       solution={' 5 '}
       buttonText={'Submit'}
-      comparator={'integer'} />
+      comparator={'integer'}
+      answerResponses={[]}
+      />
   )
 
   screen.getByText('Content')
@@ -40,6 +42,7 @@ test('Text InputProblem button click with correct answer should evaluate to corr
           solution={' Apple '}
           buttonText={'Submit'}
           comparator={'text'}
+          answerResponses={[]}
           />
   )
 
@@ -68,6 +71,7 @@ test('InputProblem button click with no input should show warning', async () => 
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          answerResponses={[]}
           />
   )
   await act(async () => {
@@ -88,6 +92,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'float'}
+          answerResponses={[]}
           />
   )
   await act(async () => {
@@ -110,6 +115,7 @@ test('InputProblem textbox is expecting Integer but input was text.', async () =
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          answerResponses={[]}
           />
   )
   await act(async () => {
@@ -136,6 +142,7 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          answerResponses={[]}
           />
   )
   await act(async () => {
@@ -165,6 +172,7 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          answerResponses={[]}
           />
   )
   await act(async () => {
@@ -187,4 +195,81 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
   expect(allowedRetryHandler).toBeCalledTimes(3)
+})
+
+test('InputProblem renders answer specific content', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+          <InputProblem
+          solvedCallback={solvedHandler}
+          exhaustedCallback={exhaustedHandler}
+          allowedRetryCallback={allowedRetryHandler}
+          content={'Content'}
+          correctResponse={'Correct!'}
+          encourageResponse={'Try again!'}
+          retryLimit={3}
+          solution={' 5 '}
+          buttonText={'Submit'}
+          comparator={'integer'}
+          answerResponses={[{ answer: '3', response: 'Almost There' }, { answer: '4', response: 'Even Closer' }]}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '2' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Try again!')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Even Closer')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '5' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Correct!')
+})
+
+test('InputProblem renders answer specific content only on button click', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+          <InputProblem
+          solvedCallback={solvedHandler}
+          exhaustedCallback={exhaustedHandler}
+          allowedRetryCallback={allowedRetryHandler}
+          content={'Content'}
+          correctResponse={'Correct!'}
+          encourageResponse={'Try again!'}
+          retryLimit={3}
+          solution={' 5 '}
+          buttonText={'Submit'}
+          comparator={'integer'}
+          answerResponses={[{ answer: '3', response: 'Almost There' }, { answer: '4', response: 'Even Closer' }]}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
+  })
+  expect(screen.queryByText('Almost There')).toBeNull()
+  await act(async () => {
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Even Closer')
 })
