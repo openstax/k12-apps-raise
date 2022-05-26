@@ -250,11 +250,13 @@ export const parseDesmosBlock = (element: HTMLElement): JSX.Element | null => {
   if (!element.classList.contains(OS_RAISE_IB_DESMOS_CLASS)) {
     return null
   }
-
+  const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
   const width = element.dataset.width
   const height = element.dataset.height
+  const equations = element.dataset.equations
+  const expressions = element.dataset.expressions
 
-  return <DesmosBlock width={width ?? '800'} height={height ?? '800'}/>
+  return <DesmosBlock width={width ?? '400'} height={height ?? '400'} waitForEvent={waitForEvent} equations={equations ?? ''} expressions={expressions ?? 'true'}/>
 }
 
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
