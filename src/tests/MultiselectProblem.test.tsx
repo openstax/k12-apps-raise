@@ -15,6 +15,7 @@ test('MultiselectProblem renders', async () => {
     retryLimit={0}
     solution={'[]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -38,6 +39,7 @@ test('Multiselect shows message if user does not select an option', async () => 
     retryLimit={0}
     solution={'[]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -65,6 +67,7 @@ test('Multiselect shows correct response, invokes callback, and disables self on
     retryLimit={0}
     solution={'["Option 2", "Option 3"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -101,6 +104,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
     retryLimit={0}
     solution={'["Option 2", "Option 3"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -146,6 +150,7 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     retryLimit={0}
     solution={'["Option "]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -173,6 +178,7 @@ test('MultiselectProblem clears encourage response when user changes answer', as
     retryLimit={0}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -205,6 +211,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     retryLimit={3}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={'No more attempts allowed'}
     answerResponses={[]}
     />
   )
@@ -252,6 +259,7 @@ test('MultiselectProblem renders answer specific responses', async () => {
     retryLimit={3}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
     />
   )
@@ -295,6 +303,7 @@ test('MultiselectProblem renders answer specific responses only on submit', asyn
     retryLimit={3}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
     />
   )

@@ -15,6 +15,7 @@ test('DropdownProblem renders', async () => {
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -41,6 +42,7 @@ test('DropdownProblem shows message if user does not select an option', async ()
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -68,6 +70,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -101,6 +104,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -128,6 +132,7 @@ test('DropdownProblem clears encourage response when user changes answer', async
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
@@ -160,6 +165,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     retryLimit={3}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={'No more attempts allowed'}
     answerResponses={[]}
     />
   )
@@ -201,6 +207,7 @@ test('DropdownProblem renders answer specific content', async () => {
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
     />
   )
@@ -232,6 +239,7 @@ test('DropdownProblem renders answer specific content only on button click', asy
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
     answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
     />
   )

@@ -52,6 +52,7 @@ const testProblems: ProblemData[] = [
     retryLimit: 0,
     buttonText: 'Check',
     comparator: 'text',
+    attemptsExhaustedResponse: 'No more attempts allowed',
     answerResponses: []
   },
   {
@@ -63,6 +64,7 @@ const testProblems: ProblemData[] = [
     encourageResponse: '',
     retryLimit: 0,
     buttonText: 'Check',
+    attemptsExhaustedResponse: 'No more attempts allowed',
     answerResponses: []
   },
   {
@@ -74,6 +76,7 @@ const testProblems: ProblemData[] = [
     encourageResponse: '',
     retryLimit: 0,
     buttonText: 'Check',
+    attemptsExhaustedResponse: 'No more attempts allowed',
     answerResponses: []
   }
 ]
@@ -325,6 +328,50 @@ test('parseProblemSetBlock applies answer specific overrides and defaults', asyn
 
   expect(generatedProblemSetBlock?.props.problems[0].answerResponses[0].response).toMatch('Answer override encourage response')
   expect(generatedProblemSetBlock?.props.problems[0].answerResponses[1].response).toMatch('Answer override encourage response 2')
+  expect(generatedProblemSetBlock?.props.problems[0].retryLimit).toBe(0)
+  expect(generatedProblemSetBlock?.props.problems[0].buttonText).toBe('Check')
+  expect(generatedProblemSetBlock?.props.problems[1].correctResponse).toMatch('Generic correct response')
+  expect(generatedProblemSetBlock?.props.problems[1].encourageResponse).toMatch('Generic encouragement response')
+})
+
+test('parseProblemSetBlock applies attempts exhausted response overrides', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+      <div class='os-raise-ib-pset-attempts-exhausted-response'>
+        <p>The answer is 42 </p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Dropdown problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedProblemSetBlock).not.toBeNull()
+
+  expect(generatedProblemSetBlock?.props.problems[0].attemptsExhaustedResponse).toMatch('The answer is 42')
+  expect(generatedProblemSetBlock?.props.problems[1].attemptsExhaustedResponse).toMatch('No more attempts allowed')
+  expect(generatedProblemSetBlock?.props.problems[2].attemptsExhaustedResponse).toMatch('No more attempts allowed')
   expect(generatedProblemSetBlock?.props.problems[0].retryLimit).toBe(0)
   expect(generatedProblemSetBlock?.props.problems[0].buttonText).toBe('Check')
   expect(generatedProblemSetBlock?.props.problems[1].correctResponse).toMatch('Generic correct response')
