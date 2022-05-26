@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -18,7 +19,7 @@ interface InputFormValues {
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback,
-  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse
+  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse, answerResponses
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
@@ -64,7 +65,7 @@ export const InputProblem = ({
       setInputDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
       exhaustedCallback()

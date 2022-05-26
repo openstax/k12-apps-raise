@@ -1,4 +1,5 @@
 import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
@@ -13,7 +14,7 @@ interface MultipleChoiceFormValues {
 }
 
 export const MultipleChoiceProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, solutionOptions,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, answerResponses, solutionOptions,
   correctResponse, encourageResponse, solution, retryLimit
 }: MultipleChoiceProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
@@ -57,14 +58,18 @@ export const MultipleChoiceProblem = ({
     return options
   }
 
+  const evaluateInput = (input: string, answer: string): boolean => {
+    return input === answer
+  }
+
   const handleSubmit = async (values: MultipleChoiceFormValues): Promise<void> => {
-    if (values.response === solution) {
+    if (evaluateInput(values.response, solution)) {
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
       exhaustedCallback()

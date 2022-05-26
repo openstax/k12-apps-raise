@@ -51,7 +51,8 @@ const testProblems: ProblemData[] = [
     encourageResponse: '',
     retryLimit: 0,
     buttonText: 'Check',
-    comparator: 'text'
+    comparator: 'text',
+    answerResponses: []
   },
   {
     type: 'dropdown',
@@ -61,7 +62,8 @@ const testProblems: ProblemData[] = [
     correctResponse: '',
     encourageResponse: '',
     retryLimit: 0,
-    buttonText: 'Check'
+    buttonText: 'Check',
+    answerResponses: []
   },
   {
     type: 'multiselect',
@@ -71,7 +73,8 @@ const testProblems: ProblemData[] = [
     correctResponse: '',
     encourageResponse: '',
     retryLimit: 0,
-    buttonText: 'Check'
+    buttonText: 'Check',
+    answerResponses: []
   }
 ]
 
@@ -280,4 +283,50 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportu
 
   expect(successHandler).toBeCalledTimes(0)
   expect(learningOppHandler).toBeCalledTimes(1)
+})
+
+test('parseProblemSetBlock applies answer specific overrides and defaults', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+      <div class="os-raise-ib-pset-encourage-response" data-answer='41'>
+        <p>Answer override encourage response</p>
+      </div>
+      <div class="os-raise-ib-pset-encourage-response" data-answer='40'>
+        <p>Answer override encourage response 2</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Dropdown problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedProblemSetBlock).not.toBeNull()
+
+  expect(generatedProblemSetBlock?.props.problems[0].answerResponses[0].response).toMatch('Answer override encourage response')
+  expect(generatedProblemSetBlock?.props.problems[0].answerResponses[1].response).toMatch('Answer override encourage response 2')
+  expect(generatedProblemSetBlock?.props.problems[0].retryLimit).toBe(0)
+  expect(generatedProblemSetBlock?.props.problems[0].buttonText).toBe('Check')
+  expect(generatedProblemSetBlock?.props.problems[1].correctResponse).toMatch('Generic correct response')
+  expect(generatedProblemSetBlock?.props.problems[1].encourageResponse).toMatch('Generic encouragement response')
 })
