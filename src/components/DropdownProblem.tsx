@@ -1,4 +1,5 @@
-import { BaseProblemProps, determineFeedback, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
@@ -49,7 +50,7 @@ export const DropdownProblem = ({
   }
 
   const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
-    if (values.response === solution) {
+    if (evaluateInput(values.response, solution)) {
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)

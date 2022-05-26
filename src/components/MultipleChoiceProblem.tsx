@@ -1,4 +1,5 @@
-import { BaseProblemProps, determineFeedback, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'

@@ -1,7 +1,10 @@
 import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
-import { AnswerSpecificResponse, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
+import {
+  AnswerSpecificResponse, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN,
+  PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT
+} from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'

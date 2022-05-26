@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
-import { BaseProblemProps, determineFeedback, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
+import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
