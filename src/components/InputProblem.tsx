@@ -89,7 +89,7 @@ export const InputProblem = ({
               <Field
               name="response"
               disabled={inputDisabled || isSubmitting}
-              autocomplete={'off'}
+              autoComplete={'off'}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className="os-form-control mb-3" />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
