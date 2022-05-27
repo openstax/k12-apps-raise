@@ -255,8 +255,18 @@ export const parseDesmosBlock = (element: HTMLElement): JSX.Element | null => {
   const height = element.dataset.height
   const equations = element.dataset.equations
   const expressions = element.dataset.expressions
+  const scaleTop = element.dataset.top
+  const scaleBottom = element.dataset.bottom
+  const scaleLeft = element.dataset.left
+  const scaleRight = element.dataset.right
 
-  return <DesmosBlock width={width ?? '400'} height={height ?? '400'} waitForEvent={waitForEvent} equations={equations ?? ''} expressions={expressions ?? 'true'}/>
+  return <DesmosBlock width={width ?? '400'} height={height ?? '400'}
+          waitForEvent={waitForEvent} equations={equations ?? ''}
+          expressions={expressions ?? 'true'} scaleTop={scaleTop ?? '10'}
+          scaleBottom={scaleBottom ?? '-10'} scaleRight={scaleRight ?? '10'}
+          scaleLeft={scaleLeft ?? '-10'}
+
+  />
 }
 
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
