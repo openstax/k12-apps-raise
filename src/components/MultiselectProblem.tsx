@@ -31,7 +31,7 @@ export const MultiselectProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const clearFeedback = (): void => {
     setFeedback('')

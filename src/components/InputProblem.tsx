@@ -45,7 +45,7 @@ export const InputProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const evaluateInput = (input: string, answer: string): boolean => {
     if (comparator.toLowerCase() === 'integer') {

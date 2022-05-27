@@ -30,7 +30,7 @@ export const MultipleChoiceProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const clearFeedback = (): void => {
     setFeedback('')
