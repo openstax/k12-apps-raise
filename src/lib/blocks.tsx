@@ -2,7 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import {
-  AnswerSpecificResponse, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN,
+  AnswerSpecificResponse, NO_MORE_ATTEMPTS_MESSAGE, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN,
   PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT
 } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
@@ -21,6 +21,7 @@ const PSET_PROBLEM_CLASS = 'os-raise-ib-pset-problem'
 const PSET_CORRECT_RESPONSE_CLASS = 'os-raise-ib-pset-correct-response'
 const PSET_ENCOURAGE_RESPONSE_CLASS = 'os-raise-ib-pset-encourage-response'
 const PSET_PROBLEM_CONTENT_CLASS = 'os-raise-ib-pset-problem-content'
+const PSET_ATTEMPTS_EXHAUSTED_CLASS = 'os-raise-ib-pset-attempts-exhausted-response'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
@@ -230,6 +231,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     const maybeEncourageResponseOverride = findEncouragementOverride(htmlElem)
     const maybeProblemContent = htmlElem.querySelector(`.${PSET_PROBLEM_CONTENT_CLASS}`)
     const maybeAnswerSpecificResponses = findAnswerSpecificOverride(htmlElem)
+    const maybeAttemptsExhaustedResponse = htmlElem.querySelector(`.${PSET_ATTEMPTS_EXHAUSTED_CLASS}`)
 
     if (problemType === undefined ||
       solution === undefined ||
@@ -252,7 +254,8 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
       retryLimit: maybeRetryLimit === undefined ? 0 : parseInt(maybeRetryLimit),
       correctResponse: (maybeCorrectResponseOverride === null) ? psetCorrectResponseElem.innerHTML : maybeCorrectResponseOverride.innerHTML,
       encourageResponse: (maybeEncourageResponseOverride === null) ? psetEncourageResponseElem.innerHTML : maybeEncourageResponseOverride.innerHTML,
-      answerResponses: buildAnswerSpecificOverridesObject(maybeAnswerSpecificResponses)
+      answerResponses: buildAnswerSpecificOverridesObject(maybeAnswerSpecificResponses),
+      attemptsExhaustedResponse: (maybeAttemptsExhaustedResponse === null) ? NO_MORE_ATTEMPTS_MESSAGE : maybeAttemptsExhaustedResponse.innerHTML
     })
   })
 

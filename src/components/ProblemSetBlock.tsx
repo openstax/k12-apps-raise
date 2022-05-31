@@ -15,6 +15,7 @@ export interface ProblemData {
   encourageResponse: string
   retryLimit: number
   buttonText: string
+  attemptsExhaustedResponse: string
   answerResponses: AnswerSpecificResponse[]
 }
 
@@ -33,6 +34,7 @@ export interface BaseProblemProps {
   retryLimit: number
   solution: string
   buttonText: string
+  attemptsExhaustedResponse: string
   answerResponses: AnswerSpecificResponse[]
 }
 
@@ -119,6 +121,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       correctResponse: prob.correctResponse,
       encourageResponse: prob.encourageResponse,
       buttonText: prob.buttonText,
+      attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
       answerResponses: prob.answerResponses
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {

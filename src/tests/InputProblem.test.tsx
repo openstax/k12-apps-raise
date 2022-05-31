@@ -15,6 +15,7 @@ test('InputProblem renders with content, input and button', async () => {
       solution={' 5 '}
       buttonText={'Submit'}
       comparator={'integer'}
+      attemptsExhaustedResponse={''}
       answerResponses={[]}
       />
   )
@@ -42,6 +43,7 @@ test('Text InputProblem button click with correct answer should evaluate to corr
           solution={' Apple '}
           buttonText={'Submit'}
           comparator={'text'}
+          attemptsExhaustedResponse={''}
           answerResponses={[]}
           />
   )
@@ -71,6 +73,7 @@ test('InputProblem button click with no input should show warning', async () => 
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={''}
           answerResponses={[]}
           />
   )
@@ -92,6 +95,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'float'}
+          attemptsExhaustedResponse={''}
           answerResponses={[]}
           />
   )
@@ -115,6 +119,7 @@ test('InputProblem textbox is expecting Integer but input was text.', async () =
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={''}
           answerResponses={[]}
           />
   )
@@ -142,6 +147,7 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={''}
           answerResponses={[]}
           />
   )
@@ -172,6 +178,7 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={'No more attempts allowed'}
           answerResponses={[]}
           />
   )
@@ -214,6 +221,7 @@ test('InputProblem renders answer specific content', async () => {
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={''}
           answerResponses={[{ answer: '3', response: 'Almost There' }, { answer: '4', response: 'Even Closer' }]}
           />
   )
@@ -256,6 +264,7 @@ test('InputProblem renders answer specific content only on button click', async 
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
+          attemptsExhaustedResponse={''}
           answerResponses={[{ answer: '3', response: 'Almost There' }, { answer: '4', response: 'Even Closer' }]}
           />
   )
