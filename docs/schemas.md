@@ -182,6 +182,35 @@ The schema outlined above provides content developers the ability to define HTML
 </div>
 ```
 
+The schema also allows developers to display HTML when specific answers are given to problems. These are defined at the problem level, as shown below, and use the `data-answer` attribute to match on the provided answer. The value passed to `data-answer` should match the schema for providing `data-solutions` to any problem type. An example is shown below for the `multiselect` problem type:
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+  <div class="os-raise-ib-pset-problem-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response" data-answer='["blue"]'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response" data-answer='["green", "blue"]'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+</div>
+```
+
+Individual problems can also display HTML for when users exhaust the amount of attempts that are alotted for a problem in a problemset. An example is shown below for a `multiplechoice` type question.
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green", "yellow"]'>
+  <div class="os-raise-ib-pset-problem-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class='os-raise-ib-pset-attempts-exhausted-response'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+</div>
+```
+
 ##### Attributes for the problem set:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * `data-retry-limit` is optional and defaults to `0` (no limit). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
