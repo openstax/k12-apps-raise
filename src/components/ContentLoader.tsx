@@ -4,7 +4,7 @@ import { ENV } from '../lib/env'
 
 export interface ContentResponse {
   id: string
-  content: Array<{variant: string, html: string}>
+  content: Array<{ variant: string, html: string }>
 }
 
 enum FetchStatus {
@@ -26,6 +26,11 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
 
     try {
       const response = await fetch(request)
+      if (!response.ok) {
+        setFetchStatus(FetchStatus.FetchFailure)
+        return
+      }
+
       const data = await response.json() as ContentResponse
       const htmlContent = data.content[0].html
 
@@ -37,7 +42,7 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
   }
 
   useEffect(() => {
-    fetchContent().catch(() => {})
+    fetchContent().catch(() => { })
   }, [])
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
@@ -47,9 +52,24 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
       </>
     )
   }
-  // TODO (k12-94): Render appropriate content for other fetchStatus states
-  // so users are aware content is loading or fails to do so
+
+  if (fetchStatus === FetchStatus.FetchFailure) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <span className="text-danger">There was an error loading content. Please try refreshing the page.</span>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <></>
+    <div className="os-raise-bootstrap">
+      <div className="text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
   )
 }
