@@ -302,3 +302,12 @@ The following template provides an example with two CTA blocks and a terminal Co
   <!-- INSERT ANY VALID HTML HERE -->
 </div>
 ```
+
+#### Schema definition
+
+The following template provides an example with a Desmos interactive graphing calculator block. 
+
+```html
+<div class="os-raise-ib-desmos" data-wait-for-event="eventnameY" data-expressions="false" data-height="500" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50"  data-equations="["(1,2)","x=5"]">
+</div>
+```
