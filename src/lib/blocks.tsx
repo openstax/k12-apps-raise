@@ -26,7 +26,8 @@ export const isInteractiveBlock = (element: HTMLElement): boolean => {
     OS_RAISE_IB_CONTENT_CLASS,
     OS_RAISE_IB_CTA_CLASS,
     OS_RAISE_IB_INPUT_CLASS,
-    OS_RAISE_IB_PSET_CLASS
+    OS_RAISE_IB_PSET_CLASS,
+    OS_RAISE_IB_DESMOS_CLASS
   ].some(blockClass => element.classList.contains(blockClass))
 }
 
@@ -96,6 +97,13 @@ const blockifyElement = (element: HTMLElement): JSX.Element => {
     const maybeProblemSetBlock = parseProblemSetBlock(element)
     if (maybeProblemSetBlock !== null) {
       return maybeProblemSetBlock
+    }
+  }
+
+  if (element.classList.contains(OS_RAISE_IB_DESMOS_CLASS)) {
+    const maybeDesmosBlock = parseDesmosBlock(element)
+    if (maybeDesmosBlock !== null) {
+      return maybeDesmosBlock
     }
   }
 

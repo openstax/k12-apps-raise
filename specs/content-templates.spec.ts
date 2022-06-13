@@ -111,15 +111,3 @@ test('problem sets with learning opportunity triggered content', async ({ page }
   await page.locator('text=Check').click()
   await page.waitForSelector('text=Let\'s take another look at some concepts')
 })
-
-test('Desmos block renders calculator', async ({ page }) => {
-  const htmlContent = `
-  <div class="os-raise-ib-desmos" data-expressions="true" data-width="600" data-height="500" data-equations="[]">
-  </div>
-  `
-
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  await page.locator('#dcg-wrapper')
-  await page.waitForSelector('#dcg-wrapper')
-})

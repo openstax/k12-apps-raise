@@ -3,7 +3,7 @@ export const DESMOS_URL = 'https://www.desmos.com/api/v1.7/calculator.js?apiKey=
 export const loadDesmos = async (callback: () => void): Promise<void> => {
   const existingScript = document.getElementById('Desmos')
   let loadedPromise: Promise<void> | null = null
-
+  console.log('Script called from DesmosBlock')
   if (existingScript == null) {
     const script = document.createElement('script')
     script.src = DESMOS_URL

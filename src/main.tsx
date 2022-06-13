@@ -23,7 +23,6 @@ const processPage = (): void => {
     renderUserInputBlocks(document.body)
     renderProblemSetBlocks(document.body)
     renderDesmosBlocks(document.body)
-    renderDesmosBlocks(document.body)
   }
 }
 

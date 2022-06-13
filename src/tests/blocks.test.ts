@@ -10,7 +10,9 @@ import {
   OS_RAISE_IB_CONTENT_CLASS,
   OS_RAISE_IB_INPUT_CLASS,
   OS_RAISE_IB_PSET_CLASS,
-  renderProblemSetBlocks
+  OS_RAISE_IB_DESMOS_CLASS,
+  renderProblemSetBlocks,
+  renderDesmosBlocks
 } from '../lib/blocks'
 import { UserInputBlock } from '../components/UserInputBlock'
 import { ProblemSetBlock } from '../components/ProblemSetBlock'
@@ -148,6 +150,16 @@ test('renderCTABlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderCTABlocks(document.body)
+  expect(createRoot).toBeCalledWith(divElem)
+})
+
+test('renderDesmosBlocks parses and creates expected block', async () => {
+  const divElem = document.createElement('div')
+  divElem.className = OS_RAISE_IB_DESMOS_CLASS
+  divElem.innerHTML = '<div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "(x=5)"]\'></div>'
+  document.body.appendChild(divElem)
+
+  renderDesmosBlocks(document.body)
   expect(createRoot).toBeCalledWith(divElem)
 })
 
