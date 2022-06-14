@@ -306,7 +306,7 @@ The following template provides an example with two CTA blocks and a terminal Co
 #### Description
 
 The Desmos interactive block displays a graphing calculator. The user can see a graph and an optional expressions panel.
-Users can add expressions if the data-expressions attribute is set to true. The schema user can define where the graph
+The user can add expressions if the data-expressions attribute is set to true. The schema user can define where the graph
 viewport is using data-bottom, data-top, data-left, data-right attributes. 
 
 #### Schema definition
