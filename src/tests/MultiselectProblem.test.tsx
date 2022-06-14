@@ -15,6 +15,8 @@ test('MultiselectProblem renders', async () => {
     retryLimit={0}
     solution={'[]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
   screen.getByText('Question Content')
@@ -37,6 +39,8 @@ test('Multiselect shows message if user does not select an option', async () => 
     retryLimit={0}
     solution={'[]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -63,6 +67,8 @@ test('Multiselect shows correct response, invokes callback, and disables self on
     retryLimit={0}
     solution={'["Option 2", "Option 3"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -98,6 +104,8 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
     retryLimit={0}
     solution={'["Option 2", "Option 3"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -142,6 +150,8 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     retryLimit={0}
     solution={'["Option "]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -168,6 +178,8 @@ test('MultiselectProblem clears encourage response when user changes answer', as
     retryLimit={0}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -199,6 +211,8 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     retryLimit={3}
     solution={'["Option 2"]'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={'No more attempts allowed'}
+    answerResponses={[]}
     />
   )
 
@@ -226,4 +240,85 @@ test('MultiselectProblem exhausts and disables itself after configured number of
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
   expect(screen.getByRole('button')).toBeDisabled()
   screen.getByText('No more attempts allowed')
+})
+
+test('MultiselectProblem renders answer specific responses', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={'<p>Correct</p>'}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={3}
+    solution={'["Option 2"]'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  expect(screen.queryByText('Try again!')).toBeNull()
+
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 3'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Even Closer')
+  expect(screen.queryByText('Almost')).toBeNull()
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 3'))
+    fireEvent.click(screen.getByLabelText('Option 2'))
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Correct')
+})
+
+test('MultiselectProblem renders answer specific responses only on submit', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={'<p>Correct</p>'}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={3}
+    solution={'["Option 2"]'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+  })
+  expect(screen.queryByText('Almost There')).toBeNull()
+  await act(async () => {
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 3'))
+  })
+  expect(screen.queryByText('Almost There')).toBeNull()
+  expect(screen.queryByText('Even Closer')).toBeNull()
 })

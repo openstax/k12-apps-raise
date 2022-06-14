@@ -15,6 +15,13 @@ export interface ProblemData {
   encourageResponse: string
   retryLimit: number
   buttonText: string
+  attemptsExhaustedResponse: string
+  answerResponses: AnswerSpecificResponse[]
+}
+
+export interface AnswerSpecificResponse {
+  answer: string
+  response: string
 }
 
 export interface BaseProblemProps {
@@ -27,6 +34,8 @@ export interface BaseProblemProps {
   retryLimit: number
   solution: string
   buttonText: string
+  attemptsExhaustedResponse: string
+  answerResponses: AnswerSpecificResponse[]
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
@@ -111,7 +120,9 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       content: prob.content,
       correctResponse: prob.correctResponse,
       encourageResponse: prob.encourageResponse,
-      buttonText: prob.buttonText
+      buttonText: prob.buttonText,
+      attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
+      answerResponses: prob.answerResponses
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem

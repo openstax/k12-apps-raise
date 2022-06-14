@@ -145,6 +145,11 @@ Users can attempt to answer questions and check their solution. Retries are allo
       <!-- INSERT ANY VALID HTML HERE -->
     </div>
   </div>
+  <div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+    </div>
+  </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
@@ -177,6 +182,35 @@ The schema outlined above provides content developers the ability to define HTML
 </div>
 ```
 
+The schema also allows developers to display HTML when specific answers are given to problems. These are defined at the problem level, as shown below, and use the `data-answer` attribute to match on the provided answer. The value passed to `data-answer` should match the schema for providing `data-solutions` to any problem type. An example is shown below for the `multiselect` problem type:
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+  <div class="os-raise-ib-pset-problem-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response" data-answer='["blue"]'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class="os-raise-ib-pset-encourage-response" data-answer='["green", "blue"]'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+</div>
+```
+
+Individual problems can also display HTML for when users exhaust the amount of attempts that are alotted for a problem in a problemset. An example is shown below for a `multiplechoice` type question.
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green", "yellow"]'>
+  <div class="os-raise-ib-pset-problem-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+  <div class='os-raise-ib-pset-attempts-exhausted-response'>
+    <!-- INSERT ANY VALID HTML HERE -->
+  </div>
+</div>
+```
+
 ##### Attributes for the problem set:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * `data-retry-limit` is optional and defaults to `0` (no limit). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
@@ -186,11 +220,12 @@ The schema outlined above provides content developers the ability to define HTML
   * `data-fire-learning-opportunity-event` - This event is fired by the block if it is deemed that the problem set has surfaced a potential learning opportunity according to some built-in function
 
 ##### Attributes for all problem types:
-* `data-problem-type`: Valid values include `input`, `dropdown`, `multiselect`
+* `data-problem-type`: Valid values include `input`, `dropdown`, `multiselect`, `multiplechoice`
 * `data-solution` is required. It is used by each problem type as follows:
   * `input` question: The solution string is compared to the user input based upon the prescribed comparator (see options below)
   * `dropdown` question: The solution string should match one of the options in the array passed as `data-solution-options` (see details below)
-  * `multiselect` question: The solution string should be an array with the set of answers that are correct. For example, if `data-solution-options='["Option 1", "Option2", "Option 3"]'` is used, than `data-solution='["Option2", "Option 3"]'` designates that the user should select `Option 2` and `Option 3` to answer correctly.
+  * `multiplechoice` question: The solution string should match one of the options in the array passed as `data-solution-options` (see details below)
+  * `multiselect` question: The solution string should be a JSON array with the set of answers that are correct. For example, if `data-solution-options='["Option 1", "Option2", "Option 3"]'` is used, than `data-solution='["Option2", "Option 3"]'` designates that the user should select `Option 2` and `Option 3` to answer correctly.
 
 ##### Attributes specific to `input` problem type:
 * Valid values for `data-problem-comparator` include: `integer`, `float`, `text`
@@ -198,10 +233,25 @@ The schema outlined above provides content developers the ability to define HTML
   * If the comparator is `text`, user input is compared using a case-insensitive match
 
 ##### Attributes specific to `dropdown` problem type:
-* `data-solution-options` should be an array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
+* `data-solution-options` should be a JSON array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
+
+##### Attributes specific to `multiplechoice` problem type:
+* `data-solution-options` should be a JSON array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
 
 ##### Attributes specific to `multiselect` problem type:
-* `data-solution-options` should be an array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
+* `data-solution-options` should be a JSON array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`
+
+#### Using MathJax math in `data-solution` and `data-solution-options` attributes
+
+The `multiselect` and `multiplechoice` problem types support using MathJax math with `\(` and `\)` delimeters in the solution choices. However, the backslashes must be escaped when used in JSON array strings. Examples of for both problem types:
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="\( x^2 \)" data-solution-options='["\\( x^2 \\)", "\\( x+2 \\)", "\\( \\frac{2*x}{3} \\)"]'>
+```
+
+```html
+<div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["\\( x^2 \\)", "\\( x+2 \\)"]' data-solution-options='["\\( x^2 \\)", "\\( x+2 \\)", "\\( 2*x \\)"]'>
+```
 
 ### Content tooltip block
 

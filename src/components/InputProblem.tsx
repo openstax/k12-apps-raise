@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { BaseProblemProps } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -17,8 +18,8 @@ interface InputFormValues {
 }
 
 export const InputProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback,
-  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse
+  solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
+  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse, answerResponses
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
@@ -44,7 +45,7 @@ export const InputProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const evaluateInput = (input: string, answer: string): boolean => {
     if (comparator.toLowerCase() === 'integer') {
@@ -64,11 +65,11 @@ export const InputProblem = ({
       setInputDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
-      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setInputDisabled(true)
     }
   }
@@ -89,6 +90,7 @@ export const InputProblem = ({
               <Field
               name="response"
               disabled={inputDisabled || isSubmitting}
+              autoComplete={'off'}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className="os-form-control mb-3" />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />

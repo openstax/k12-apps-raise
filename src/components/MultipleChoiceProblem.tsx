@@ -1,4 +1,5 @@
-import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { BaseProblemProps } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
@@ -13,8 +14,8 @@ interface MultipleChoiceFormValues {
 }
 
 export const MultipleChoiceProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit
+  solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, answerResponses, solutionOptions,
+  correctResponse, encourageResponse, solution, retryLimit, attemptsExhaustedResponse
 }: MultipleChoiceProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -29,7 +30,7 @@ export const MultipleChoiceProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const clearFeedback = (): void => {
     setFeedback('')
@@ -57,18 +58,22 @@ export const MultipleChoiceProblem = ({
     return options
   }
 
+  const evaluateInput = (input: string, answer: string): boolean => {
+    return input === answer
+  }
+
   const handleSubmit = async (values: MultipleChoiceFormValues): Promise<void> => {
-    if (values.response === solution) {
+    if (evaluateInput(values.response, solution)) {
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
-      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setFormDisabled(true)
     }
   }

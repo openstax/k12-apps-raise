@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
-import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
+import { BaseProblemProps } from './ProblemSetBlock'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
@@ -14,7 +15,7 @@ interface MultiselectFormValues {
 
 export const MultiselectProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit
+  correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
 }: MultiselectProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -30,7 +31,7 @@ export const MultiselectProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const clearFeedback = (): void => {
     setFeedback('')
@@ -68,6 +69,10 @@ export const MultiselectProblem = ({
     return options
   }
 
+  const evaluateInput = (input: string[], answer: string): boolean => {
+    return compareForm(input, JSON.parse(answer))
+  }
+
   const compareForm = (form: string[], solution: string[]): boolean => {
     if (form.length !== solution.length) {
       return false
@@ -87,11 +92,11 @@ export const MultiselectProblem = ({
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
-      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setFormDisabled(true)
     }
   }

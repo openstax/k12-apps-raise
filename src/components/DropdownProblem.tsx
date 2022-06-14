@@ -1,4 +1,5 @@
-import { BaseProblemProps, NO_MORE_ATTEMPTS_MESSAGE } from './ProblemSetBlock'
+import { BaseProblemProps } from './ProblemSetBlock'
+import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
@@ -14,7 +15,7 @@ interface DropdownFormValues {
 
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, solutionOptions,
-  encourageResponse, correctResponse, solution, retryLimit
+  encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -38,24 +39,28 @@ export const DropdownProblem = ({
     if (node != null) {
       mathifyElement(node)
     }
-  }, [])
+  }, [feedback])
 
   const clearFeedback = (): void => {
     setFeedback('')
   }
 
+  const evaluateInput = (input: string, answer: string): boolean => {
+    return input === answer
+  }
+
   const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
-    if (values.response === solution) {
+    if (evaluateInput(values.response, solution)) {
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(encourageResponse)
+      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
-      setFeedback(NO_MORE_ATTEMPTS_MESSAGE)
       setFormDisabled(true)
     }
   }

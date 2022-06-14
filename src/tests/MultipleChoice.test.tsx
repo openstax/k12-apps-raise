@@ -15,6 +15,8 @@ test('MultipleChoiceProblem renders', async () => {
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -38,6 +40,8 @@ test('MultipleChoiceProblem shows message if user does not select an option', as
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -64,6 +68,8 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -96,6 +102,8 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -122,6 +130,8 @@ test('MultipleChoiceProblem clears encourage response when user changes answer',
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
     />
   )
 
@@ -153,6 +163,8 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     retryLimit={3}
     solution={'Option 2'}
     buttonText={'Check'}
+    attemptsExhaustedResponse={'No more attempts allowed'}
+    answerResponses={[]}
     />
   )
 
@@ -178,4 +190,66 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
   expect(screen.getByLabelText('Option 2')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
   screen.getByText('No more attempts allowed')
+})
+
+test('MultipleChoiceProblem renders answer specific responses', async () => {
+  render(
+    <MultipleChoiceProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    screen.getByText('Option 1').click()
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  expect(screen.queryByText('Try again!')).toBeNull()
+  await act(async () => {
+    screen.getByText('Option 3').click()
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Even Closer')
+  expect(screen.queryByText('Try again!')).toBeNull()
+  expect(screen.queryByText('Almost There')).toBeNull()
+})
+
+test('MultipleChoiceProblem renders answer specific responses only on button clicks', async () => {
+  render(
+    <MultipleChoiceProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
+    />
+  )
+
+  await act(async () => {
+    screen.getByText('Option 1').click()
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Almost There')
+  await act(async () => {
+    screen.getByText('Option 3').click()
+  })
+  expect(screen.queryByText('Almost There')).toBeNull()
 })

@@ -2,7 +2,10 @@ import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import { DesmosBlock } from '../components/DesmosBlock'
-import { ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN, PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT } from '../components/ProblemSetBlock'
+import {
+  AnswerSpecificResponse, NO_MORE_ATTEMPTS_MESSAGE, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN,
+  PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT
+} from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
@@ -20,6 +23,7 @@ const PSET_PROBLEM_CLASS = 'os-raise-ib-pset-problem'
 const PSET_CORRECT_RESPONSE_CLASS = 'os-raise-ib-pset-correct-response'
 const PSET_ENCOURAGE_RESPONSE_CLASS = 'os-raise-ib-pset-encourage-response'
 const PSET_PROBLEM_CONTENT_CLASS = 'os-raise-ib-pset-problem-content'
+const PSET_ATTEMPTS_EXHAUSTED_CLASS = 'os-raise-ib-pset-attempts-exhausted-response'
 
 export const isInteractiveBlock = (element: HTMLElement): boolean => {
   return [
@@ -212,6 +216,21 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     return null
   }
 
+  const findEncouragementOverride = (htmlElem: HTMLElement): HTMLElement | null => {
+    const elems: NodeListOf<HTMLElement> = htmlElem.querySelectorAll(`.${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+    const allEncouragements = Array.from(elems).filter(element => element.dataset.answer === undefined)
+    return allEncouragements.length > 0 ? allEncouragements[0] : null
+  }
+  const findAnswerSpecificOverride = (htmlElem: HTMLElement): HTMLElement[] => {
+    const elems: NodeListOf<HTMLElement> = htmlElem.querySelectorAll(`.${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+    const allEncouragements = Array.from(elems).filter(element => element.dataset.answer !== undefined)
+    return allEncouragements
+  }
+
+  const buildAnswerSpecificOverridesObject = (responses: HTMLElement[]): AnswerSpecificResponse[] => {
+    return responses.map(elem => ({ answer: elem.dataset.answer as string, response: elem.innerHTML }))
+  }
+
   psetProblemElems.forEach(prob => {
     const htmlElem = prob as HTMLElement
     const problemType = htmlElem.dataset.problemType
@@ -219,8 +238,10 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     const problemComparator = htmlElem.dataset.problemComparator
     const solutionOptions = htmlElem.dataset.solutionOptions
     const maybeCorrectResponseOverride = htmlElem.querySelector(`.${PSET_CORRECT_RESPONSE_CLASS}`)
-    const maybeEncourageResponseOverride = htmlElem.querySelector(`.${PSET_ENCOURAGE_RESPONSE_CLASS}`)
+    const maybeEncourageResponseOverride = findEncouragementOverride(htmlElem)
     const maybeProblemContent = htmlElem.querySelector(`.${PSET_PROBLEM_CONTENT_CLASS}`)
+    const maybeAnswerSpecificResponses = findAnswerSpecificOverride(htmlElem)
+    const maybeAttemptsExhaustedResponse = htmlElem.querySelector(`.${PSET_ATTEMPTS_EXHAUSTED_CLASS}`)
 
     if (problemType === undefined ||
       solution === undefined ||
@@ -242,7 +263,9 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
       buttonText: maybeButtonText ?? 'Check',
       retryLimit: maybeRetryLimit === undefined ? 0 : parseInt(maybeRetryLimit),
       correctResponse: (maybeCorrectResponseOverride === null) ? psetCorrectResponseElem.innerHTML : maybeCorrectResponseOverride.innerHTML,
-      encourageResponse: (maybeEncourageResponseOverride === null) ? psetEncourageResponseElem.innerHTML : maybeEncourageResponseOverride.innerHTML
+      encourageResponse: (maybeEncourageResponseOverride === null) ? psetEncourageResponseElem.innerHTML : maybeEncourageResponseOverride.innerHTML,
+      answerResponses: buildAnswerSpecificOverridesObject(maybeAnswerSpecificResponses),
+      attemptsExhaustedResponse: (maybeAttemptsExhaustedResponse === null) ? NO_MORE_ATTEMPTS_MESSAGE : maybeAttemptsExhaustedResponse.innerHTML
     })
   })
 
