@@ -303,6 +303,12 @@ The following template provides an example with two CTA blocks and a terminal Co
 </div>
 ```
 
+#### Description
+
+The Desmos interactive block displays a graphing calculator. The user can see a graph and an optional expressions panel.
+Users can add expressions if the data-expressions attribute is set to true. The schema user can define where the graph
+viewport is using data-bottom, data-top, data-left, data-right attributes. 
+
 #### Schema definition
 
 The following template provides an example with a Desmos interactive graphing calculator block. 
