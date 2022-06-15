@@ -21,9 +21,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, expression
       renderCalculator()
       return
     }
-    void loadDesmos(() => {
-      setDesmosLoaded(true)
-    })
+    loadDesmos(() => {}).then(() => setDesmosLoaded(true)).catch(() => {})
   }, [desmosLoaded])
 
   const renderCalculator = (): void => {
