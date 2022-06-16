@@ -7,7 +7,7 @@ jest.mock('../lib/desmos.ts', () => ({
   loadDesmos: jest.fn(async () => {})
 }))
 
-test('Desmos block calls script', async () => {
+test('Desmos block calls script and grahing calcultor functions', async () => {
   const setExpression = jest.fn()
   const setMathBounds = jest.fn()
   const graphingCalculator = jest.fn(() => {
