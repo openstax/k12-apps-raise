@@ -1,16 +1,16 @@
-
 export const DESMOS_URL = 'https://www.desmos.com/api/v1.7/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6'
-export const loadDesmos = async (callback: () => void): Promise<void> => {
+export const loadDesmos = async (): Promise<void> => {
   const existingScript = document.getElementById('Desmos')
   let loadedPromise: Promise<void> | null = null
+
   if (existingScript == null) {
     const script = document.createElement('script')
     script.src = DESMOS_URL
     script.id = 'Desmos'
     document.body.appendChild(script)
-    loadedPromise = new Promise<void>(() => {
+    loadedPromise = new Promise<void>((resolve) => {
       script.onload = () => {
-        if (callback != null) callback()
+        resolve()
       }
     })
   } else {
@@ -29,7 +29,4 @@ export const loadDesmos = async (callback: () => void): Promise<void> => {
     })
   }
   await loadedPromise
-  if ((existingScript != null) && (callback != null)) {
-    callback()
-  }
 }
