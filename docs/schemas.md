@@ -303,17 +303,17 @@ The following template provides an example with two CTA blocks and a terminal Co
 </div>
 ```
 
+### Desmos Interactive block
+
 #### Description
 
-The Desmos interactive block displays a graphing calculator. The user can see a graph and an optional expressions panel.
-The user can add expressions if the data-expressions attribute is set to true. The schema user can define where the graph
-viewport is using data-bottom, data-top, data-left, data-right attributes. 
+The Desmos interactive block displays a Desmos graphing calculator. The user can add expressions if the `data-expressions` attribute is set to `true`. The schema user can define where the graph viewport is using `data-bottom`, `data-top`, `data-left`, and `data-right` attributes. The schema user can define the size of the Desmos interactive by passing an integer value into `data-width` and `data-height` attributes. The default is 400 pixles width and height. 
 
 #### Schema definition
 
 The following template provides an example with a Desmos interactive graphing calculator block. 
 
 ```html
-<div class="os-raise-ib-desmos" data-wait-for-event="eventnameY" data-expressions="false" data-height="500" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50"  data-equations="["(1,2)","x=5"]">
+<div class="os-raise-ib-desmos" data-wait-for-event="eventnameY"  data-height="500" data-width="600"  data-equations='["(1,2)","x=5"]' data-expressions="true" data-top="50" data-bottom="-50" data-left="-50" data-right="50">
 </div>
 ```
