@@ -156,7 +156,7 @@ test('renderCTABlocks parses and creates expected block', async () => {
 test('renderDesmosBlocks parses and creates expected block', async () => {
   const divElem = document.createElement('div')
   divElem.className = OS_RAISE_IB_DESMOS_CLASS
-  divElem.innerHTML = '<div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "(x=5)"]\'></div>'
+  divElem.innerHTML = '<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "(x=5)"]\'></div>'
   document.body.appendChild(divElem)
 
   renderDesmosBlocks(document.body)

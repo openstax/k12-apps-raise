@@ -300,7 +300,7 @@ test('attempts-exhausted response overrides answer-specific response', async ({ 
 })
 
 test('Desmos script loads', async ({ page }) => {
-  const htmlDesmosContent = '<div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
 
   await mockPageContentRequest(page, htmlDesmosContent)
   await page.goto('/')
@@ -308,8 +308,8 @@ test('Desmos script loads', async ({ page }) => {
   expect(await page.locator(`script[src="${DESMOS_URL}"]`).count()).toBe(1)
 })
 test('There is only one Desmos script for multiple calculators', async ({ page }) => {
-  const htmlDesmosContent = `<div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>
-  <div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>`
+  const htmlDesmosContent = `<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>
+  <div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>`
 
   await mockPageContentRequest(page, htmlDesmosContent)
   await page.goto('/')
@@ -317,7 +317,7 @@ test('There is only one Desmos script for multiple calculators', async ({ page }
   expect(await page.locator(`script[src="${DESMOS_URL}"]`).count()).toBe(1)
 })
 test('Desmos has equations and shows all in expressions panel.', async ({ page }) => {
-  const htmlDesmosContent = '<div class="os-raise-ib-desmos" data-expressions="true" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-expressions="true" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
   await mockPageContentRequest(page, htmlDesmosContent)
   await page.goto('/')
   await page.waitForSelector('.dcg-grapher')
@@ -326,7 +326,7 @@ test('Desmos has equations and shows all in expressions panel.', async ({ page }
 })
 
 test('Desmos expressions panel is not visible.', async ({ page }) => {
-  const htmlDesmosContent = '<div class="os-raise-ib-desmos" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
   await mockPageContentRequest(page, htmlDesmosContent)
   await page.goto('/')
   await page.waitForSelector('.dcg-grapher')
