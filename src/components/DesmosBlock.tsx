@@ -6,13 +6,13 @@ interface DesmosBlockProps {
   height: string
   waitForEvent?: string
   equations: string
-  expressions: string
+  disableExpressions: boolean
   scaleTop: string
   scaleBottom: string
   scaleLeft: string
   scaleRight: string
 }
-export function DesmosBlock({ width, height, waitForEvent, equations, expressions, scaleTop, scaleBottom, scaleLeft, scaleRight }: DesmosBlockProps): JSX.Element {
+export function DesmosBlock({ width, height, waitForEvent, equations, disableExpressions, scaleTop, scaleBottom, scaleLeft, scaleRight }: DesmosBlockProps): JSX.Element {
   const wrapperEl = useRef<HTMLDivElement | null>(null)
   const equationsArray: string[] = JSON.parse(equations)
   const [desmosLoaded, setDesmosLoaded] = useState(false)
@@ -29,7 +29,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, expression
     if (maybeWrapper === null) {
       return
     }
-    const options = { expressions: expressions?.toLocaleLowerCase().trim() === 'true' }
+    const options = { expressions: disableExpressions }
     maybeWrapper.style.width = `${width}px`
     maybeWrapper.style.height = `${height}px`
 
@@ -47,9 +47,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, expression
   }
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      <div className="os-raise-bootstrap">
         <div ref={wrapperEl}/>
-      </div>
     </EventControlledContent>
   )
 }
