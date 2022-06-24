@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { EventControlledContent } from './EventControlledContent'
 import { loadDesmos } from '../lib/desmos'
 interface DesmosBlockProps {
@@ -13,27 +13,25 @@ interface DesmosBlockProps {
   scaleRight: string
 }
 export function DesmosBlock({ width, height, waitForEvent, equations, disableExpressions, scaleTop, scaleBottom, scaleLeft, scaleRight }: DesmosBlockProps): JSX.Element {
-  const wrapperEl = useRef<HTMLDivElement | null>(null)
   const equationsArray: string[] = JSON.parse(equations)
   const [desmosLoaded, setDesmosLoaded] = useState(false)
-  useEffect(() => {
-    if (desmosLoaded) {
-      renderCalculator()
-      return
+
+  const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
+    if (node != null) {
+      if (desmosLoaded) {
+        renderCalculator(node)
+        return
+      }
+      loadDesmos().then(() => { setDesmosLoaded(true) }).catch((err) => { console.error(err) })
     }
-    loadDesmos().then(() => { setDesmosLoaded(true) }).catch((err) => { console.error(err) })
   }, [desmosLoaded])
 
-  const renderCalculator = (): void => {
-    const maybeWrapper = wrapperEl.current
-    if (maybeWrapper === null) {
-      return
-    }
+  const renderCalculator = (calculatorWrapper: HTMLDivElement): void => {
     const options = { expressions: disableExpressions }
-    maybeWrapper.style.width = `${width}px`
-    maybeWrapper.style.height = `${height}px`
+    calculatorWrapper.style.width = `${width}px`
+    calculatorWrapper.style.height = `${height}px`
 
-    const calculator = Desmos.GraphingCalculator(maybeWrapper, options)
+    const calculator = Desmos.GraphingCalculator(calculatorWrapper, options)
 
     equationsArray.forEach((str: string) => {
       calculator.setExpression({ latex: `${str}` })
@@ -47,7 +45,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
   }
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-        <div ref={wrapperEl}/>
+        <div ref={contentRefCallback}/>
     </EventControlledContent>
   )
 }
