@@ -27,7 +27,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
   }, [desmosLoaded])
 
   const renderCalculator = (calculatorWrapper: HTMLDivElement): void => {
-    const options = { expressions: disableExpressions }
+    const options = { expressions: !disableExpressions }
     calculatorWrapper.style.width = `${width}px`
     calculatorWrapper.style.height = `${height}px`
 
