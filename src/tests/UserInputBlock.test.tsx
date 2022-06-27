@@ -46,7 +46,7 @@ test('UserInputBlock does render if waitForEvent is fired', async () => {
   screen.getByRole('button')
 })
 
-test('UserInputBlock removes and adds expected content on valid submission', async () => {
+test('UserInputBlock disables, removes and, adds expected content on valid submission', async () => {
   render(
     <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText"/>
   )
@@ -58,8 +58,8 @@ test('UserInputBlock removes and adds expected content on valid submission', asy
 
   screen.getByText('Ack text')
   expect(screen.queryByText('Prompt text')).toBeNull()
-  expect(screen.queryByRole('textbox')).toBeNull()
-  expect(screen.queryByRole('button')).toBeNull()
+  expect(screen.queryByRole('textbox')).toBeDisabled()
+  expect(screen.queryByRole('button')).toBeDisabled()
 })
 
 test('UserInputBlock requires non-empty input', async () => {

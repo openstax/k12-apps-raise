@@ -48,9 +48,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
       )
 
-  const maybeInputForm = responseSubmitted
-    ? null
-    : (
+  const maybeInputForm = (
         <Formik
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
@@ -58,13 +56,13 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="response" as="textarea" disabled={isSubmitting} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
+              <Field name="response" as="textarea" disabled={isSubmitting || responseSubmitted} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="btn btn-outline-primary">{buttonText}</button>
             </Form>
           )}
         </Formik>
-      )
+  )
 
   const maybeAck = !responseSubmitted
     ? null
