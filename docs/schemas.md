@@ -288,7 +288,7 @@ Notes on schema:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * The height and width attributes are optional and the default is 400 by 400 pixels.
 * The default values for the optional `data-bottom`, `data-top`, `data-left`, and `data-right` attributes are 10 for the top and right and -10 for bottom and left. 
-* if you just want to render a graphing calculator with nothing pre-graphed you can do so with `<div class="os-raise-ib-desmos-gc"></div>`
+* if you just want to render a graphing calculator with nothing pre-graphed you can do so with `<div class="os-raise-ib-desmos-gc" data-schema-version="1.0"></div>`
 
 ## Content Templates
 
