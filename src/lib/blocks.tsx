@@ -292,7 +292,7 @@ export const parseDesmosBlock = (element: HTMLElement): JSX.Element | null => {
   const scaleRight = element.dataset.right
 
   return <DesmosBlock width={width ?? '400'} height={height ?? '400'}
-          waitForEvent={waitForEvent} equations={equations ?? '[""]'}
+          waitForEvent={waitForEvent} equations={equations ?? '[]'}
           disableExpressions={disableExpressions} scaleTop={scaleTop ?? '10'}
           scaleBottom={scaleBottom ?? '-10'} scaleRight={scaleRight ?? '10'}
           scaleLeft={scaleLeft ?? '-10'}

@@ -55,7 +55,7 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
   expect(setMathBounds).not.toBeCalled()
 })
 
-test('DesmosBlock calculator does render if waitForEvent does not fire', async () => {
+test('DesmosBlock calculator does render if waitForEvent does fire', async () => {
   const setExpression = jest.fn()
   const setMathBounds = jest.fn()
   const graphingCalculator = jest.fn(() => {
