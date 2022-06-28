@@ -92,8 +92,8 @@ When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
 * Remove the Prompt HTML
-* Disables the text input box
-* Disables the button
+* Disable the text input box
+* Disable the button
 * Display the acknowledgement HTML
 
 #### Schema definition
