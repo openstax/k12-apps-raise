@@ -3,7 +3,8 @@ import {
   renderContentOnlyBlocks,
   renderCTABlocks,
   renderProblemSetBlocks,
-  renderUserInputBlocks
+  renderUserInputBlocks,
+  renderDesmosBlocks
 } from './lib/blocks'
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
@@ -21,6 +22,7 @@ const processPage = (): void => {
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)
     renderProblemSetBlocks(document.body)
+    renderDesmosBlocks(document.body)
   }
 }
 
