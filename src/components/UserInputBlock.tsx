@@ -48,7 +48,17 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
       )
 
-  const maybeInputForm = (
+  const maybeAck = !responseSubmitted
+    ? null
+    : (
+      < div className='my-3' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
+      )
+
+  return (
+    <EventControlledContent waitForEvent={waitForEvent}>
+      <div className="os-raise-bootstrap">
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
+        {maybePrompt}
         <Formik
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
@@ -62,20 +72,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
             </Form>
           )}
         </Formik>
-  )
-
-  const maybeAck = !responseSubmitted
-    ? null
-    : (
-      < div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
-      )
-
-  return (
-    <EventControlledContent waitForEvent={waitForEvent}>
-      <div className="os-raise-bootstrap">
-        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
-        {maybePrompt}
-        {maybeInputForm}
         {maybeAck}
       </div>
     </EventControlledContent>
