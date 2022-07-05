@@ -46,7 +46,7 @@ const patchMoodleMathJaxFilterBreakage = (element: HTMLElement): void => {
   // to not be properly parsed, so we have to resort to modifying things as a
   // string
   const originalContent = element.innerHTML
-  let patchedContent = ''
+  const patchedContentLines: string[] = []
 
   // There are potential corner cases where this may not work or may have
   // unintended side effects, but to try and limit the scope of impact we
@@ -55,11 +55,13 @@ const patchMoodleMathJaxFilterBreakage = (element: HTMLElement): void => {
 
   originalContent.split('\n').forEach((contentLine) => {
     if (contentLine.includes('data-solution')) {
-      patchedContent += patchContent(contentLine)
+      patchedContentLines.push(patchContent(contentLine))
     } else {
-      patchedContent += contentLine
+      patchedContentLines.push(contentLine)
     }
   })
+
+  const patchedContent = patchedContentLines.join('\n')
 
   element.innerHTML = patchedContent
 }
