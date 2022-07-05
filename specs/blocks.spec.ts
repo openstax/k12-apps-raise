@@ -1,4 +1,5 @@
-import { test } from '@playwright/test'
+import { test, expect } from '@playwright/test'
+import { DESMOS_URL } from '../src/lib/desmos'
 import { mockPageContentRequest } from './utils'
 
 test('user input block is rendered with math and tooltip', async ({ page }) => {
@@ -296,4 +297,38 @@ test('attempts-exhausted response overrides answer-specific response', async ({ 
   await page.fill('input', ' 41')
   await page.locator('text=Check').click()
   await page.waitForSelector('#attemptsExhausted')
+})
+
+test('Desmos script loads', async ({ page }) => {
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+
+  await mockPageContentRequest(page, htmlDesmosContent)
+  await page.goto('/')
+  await page.waitForSelector('.dcg-grapher')
+  expect(await page.locator(`script[src="${DESMOS_URL}"]`).count()).toBe(1)
+})
+test('There is only one Desmos script for multiple calculators', async ({ page }) => {
+  const htmlDesmosContent = `<div class="os-raise-ib-desmos-gc" data-disable-expressions data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>
+  <div class="os-raise-ib-desmos-gc" data-disable-expressions data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations='["(1,2)", "x=5"]'></div>`
+
+  await mockPageContentRequest(page, htmlDesmosContent)
+  await page.goto('/')
+  await page.waitForSelector('.dcg-grapher')
+  expect(await page.locator(`script[src="${DESMOS_URL}"]`).count()).toBe(1)
+})
+test('Desmos has equations and shows all in expressions panel.', async ({ page }) => {
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+  await mockPageContentRequest(page, htmlDesmosContent)
+  await page.goto('/')
+  await page.waitForSelector('.dcg-grapher')
+  await page.waitForSelector('text=x=5')
+  await page.waitForSelector('text=(1,2)')
+})
+
+test('Desmos expressions panel is not visible.', async ({ page }) => {
+  const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-disable-expressions data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
+  await mockPageContentRequest(page, htmlDesmosContent)
+  await page.goto('/')
+  await page.waitForSelector('.dcg-grapher')
+  await expect(page.locator('text=x=5')).not.toBeVisible()
 })

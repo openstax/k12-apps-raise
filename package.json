@@ -27,6 +27,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.0",
     "@types/bootstrap": "^5.1.9",
+    "@types/desmos": "^1.6.0",
     "@types/jest": "^27.4.1",
     "@types/mathjax": "^0.0.37",
     "@types/react": "^18.0.0",

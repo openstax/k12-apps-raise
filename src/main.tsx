@@ -3,8 +3,9 @@ import {
   renderContentOnlyBlocks,
   renderCTABlocks,
   renderProblemSetBlocks,
-  renderUserInputBlocks
-} from './lib/blocks'
+  renderUserInputBlocks,
+  renderDesmosBlocks
+} from './lib/render-moodle'
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'
@@ -21,6 +22,7 @@ const processPage = (): void => {
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)
     renderProblemSetBlocks(document.body)
+    renderDesmosBlocks(document.body)
   }
 }
 

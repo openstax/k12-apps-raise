@@ -1,25 +1,16 @@
-import { createRoot } from 'react-dom/client'
 import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import {
-  blockifyHTML, isInteractiveBlock,
-  renderContentOnlyBlocks, renderCTABlocks,
-  renderUserInputBlocks,
+  blockifyHTML,
+  isInteractiveBlock,
   OS_RAISE_IB_CTA_CLASS,
   OS_RAISE_IB_CONTENT_CLASS,
   OS_RAISE_IB_INPUT_CLASS,
-  OS_RAISE_IB_PSET_CLASS,
-  renderProblemSetBlocks
+  OS_RAISE_IB_PSET_CLASS
 } from '../lib/blocks'
 import { UserInputBlock } from '../components/UserInputBlock'
 import { ProblemSetBlock } from '../components/ProblemSetBlock'
-
-const mockRender = jest.fn()
-
-jest.mock('react-dom/client', () => ({
-  createRoot: jest.fn(() => ({ render: mockRender }))
-}))
 
 test('isInteractiveBlock returns false on non-interactive block', async () => {
   const tmpDiv = document.createElement('div')
@@ -129,62 +120,4 @@ test('blockifyHTML handles problem set blocks', async () => {
   const components = blockifyHTML(htmlContent)
   expect(components.length).toBe(1)
   expect(components[0].props.children.type).toBe(ProblemSetBlock)
-})
-
-test('renderContentOnlyBlocks parses and creates expected block', async () => {
-  const divElem = document.createElement('div')
-  divElem.className = OS_RAISE_IB_CONTENT_CLASS
-  divElem.innerHTML = '<p>Content</p>'
-  document.body.appendChild(divElem)
-
-  renderContentOnlyBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
-})
-
-test('renderCTABlocks parses and creates expected block', async () => {
-  const divElem = document.createElement('div')
-  divElem.className = OS_RAISE_IB_CTA_CLASS
-  divElem.innerHTML = '<div class="os-raise-ib-cta-content"><p>Some Content</p></div><div class="os-raise-ib-cta-prompt"><p>Prompt</p></div>'
-  document.body.appendChild(divElem)
-
-  renderCTABlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
-})
-
-test('renderUserInputBlocks parses and creates expected block', async () => {
-  const divElem = document.createElement('div')
-  divElem.className = OS_RAISE_IB_INPUT_CLASS
-  divElem.innerHTML = `
-  <div class="os-raise-ib-input-content"></div>
-  <div class="os-raise-ib-input-prompt"></div>
-  <div class="os-raise-ib-input-ack"></div>
-  `
-  document.body.appendChild(divElem)
-
-  renderUserInputBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
-})
-
-test('renderProblemSetBlocks parses and creates expected block', async () => {
-  const divElem = document.createElement('div')
-  divElem.className = OS_RAISE_IB_PSET_CLASS
-  divElem.innerHTML = `
-  <div class="${OS_RAISE_IB_PSET_CLASS}" data-schema-version="1.0">
-    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
-      <div class="os-raise-ib-pset-problem-content"></div>
-    </div>
-    <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
-      <div class="os-raise-ib-pset-problem-content"></div>
-    </div>
-    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
-      <div class="os-raise-ib-pset-problem-content"></div>
-    </div>
-    <div class="os-raise-ib-pset-correct-response"></div>
-    <div class="os-raise-ib-pset-encourage-response"></div>
-  </div>
-  `
-  document.body.appendChild(divElem)
-
-  renderProblemSetBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
 })
