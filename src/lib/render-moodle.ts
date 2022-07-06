@@ -36,8 +36,8 @@ const patchMoodleMathJaxFilterBreakage = (element: HTMLElement): void => {
     result = result.replaceAll('<span class=" nolink"="">', '')
     result = result.replaceAll('</span>', '')
     result = result.replaceAll('&gt;', '>')
-    result = result.replaceAll('"\\\\(', '&quot;\\\\(')
-    result = result.replaceAll('\\\\)"', '\\\\)&quot;')
+    result = result.replaceAll('"[', "'[")
+    result = result.replaceAll(']"', "]'")
 
     return result
   }
