@@ -5,7 +5,7 @@ import {
   renderProblemSetBlocks,
   renderUserInputBlocks,
   renderDesmosBlocks
-} from './lib/blocks'
+} from './lib/render-moodle'
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'

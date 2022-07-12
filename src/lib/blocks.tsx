@@ -1,4 +1,3 @@
-import { createRoot } from 'react-dom/client'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import { DesmosBlock } from '../components/DesmosBlock'
@@ -298,45 +297,4 @@ export const parseDesmosBlock = (element: HTMLElement): JSX.Element | null => {
           scaleLeft={scaleLeft ?? '-10'}
 
   />
-}
-
-const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
-  element.innerHTML = ''
-
-  createRoot(element).render(
-    component
-  )
-}
-
-const renderContentBlocksByClass = (element: HTMLElement, contentClass: string, parser: (element: HTMLElement) => JSX.Element | null): void => {
-  const contentItems = element.querySelectorAll(`.${contentClass}`)
-
-  contentItems.forEach(elem => {
-    const htmlElem = elem as HTMLElement
-    const maybeContentOnlyBlock = parser(htmlElem)
-
-    if (maybeContentOnlyBlock === null) {
-      return
-    }
-    replaceElementWithBlock(htmlElem, maybeContentOnlyBlock)
-  })
-}
-
-export const renderCTABlocks = (element: HTMLElement): void => {
-  renderContentBlocksByClass(element, OS_RAISE_IB_CTA_CLASS, parseCTABlock)
-}
-
-export const renderContentOnlyBlocks = (element: HTMLElement): void => {
-  renderContentBlocksByClass(element, OS_RAISE_IB_CONTENT_CLASS, parseContentOnlyBlock)
-}
-
-export const renderUserInputBlocks = (element: HTMLElement): void => {
-  renderContentBlocksByClass(element, OS_RAISE_IB_INPUT_CLASS, parseUserInputBlock)
-}
-
-export const renderProblemSetBlocks = (element: HTMLElement): void => {
-  renderContentBlocksByClass(element, OS_RAISE_IB_PSET_CLASS, parseProblemSetBlock)
-}
-export const renderDesmosBlocks = (element: HTMLElement): void => {
-  renderContentBlocksByClass(element, OS_RAISE_IB_DESMOS_CLASS, parseDesmosBlock)
 }

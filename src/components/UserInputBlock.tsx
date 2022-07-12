@@ -48,28 +48,10 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
       )
 
-  const maybeInputForm = responseSubmitted
-    ? null
-    : (
-        <Formik
-          initialValues={{ response: '' }}
-          onSubmit={handleSubmit}
-          validationSchema={schema}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <Field name="response" as="textarea" disabled={isSubmitting} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
-              <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
-            </Form>
-          )}
-        </Formik>
-      )
-
   const maybeAck = !responseSubmitted
     ? null
     : (
-      < div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
+      < div className='my-3' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
   return (
@@ -77,7 +59,19 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       <div className="os-raise-bootstrap">
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
         {maybePrompt}
-        {maybeInputForm}
+        <Formik
+          initialValues={{ response: '' }}
+          onSubmit={handleSubmit}
+          validationSchema={schema}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Field name="response" as="textarea" disabled={isSubmitting || responseSubmitted} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
+              <ErrorMessage className="text-danger my-3" component="div" name="response" />
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="btn btn-outline-primary">{buttonText}</button>
+            </Form>
+          )}
+        </Formik>
         {maybeAck}
       </div>
     </EventControlledContent>
