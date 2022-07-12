@@ -27,8 +27,9 @@ export const renderContentElements = (): number => {
         <ContentLoader contentId={contentId}/>
       </React.StrictMode>
     )
-    sendEvent(pipelineId)
-      .catch(err => console.error(err))
+    if (pipelineId !== undefined) {
+      sendEvent(pipelineId, contentId).catch(err => console.error(err))
+    }
   })
 
   return osContentItems.length

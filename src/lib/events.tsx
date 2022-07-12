@@ -21,15 +21,14 @@ function getMoodlePluginMethodUrl(endpointMethod: string): string {
   return userUrl
 }
 
-async function sendEventMoodlePlugin(pipelineId: string): Promise<void> {
-  const contentId = 'moodle_test_content_via_moodle_direct'
+async function sendEventMoodlePlugin(contentId: string, pipelineId: string): Promise<void> {
   let endpoint, url
   if (pipelineId === PIPELINE_MOODLE_DIRECT) {
     endpoint = LOCAL_FE_EVENTS_DIRECT_FUNCTION_HANDLER
     url = getMoodlePluginMethodUrl(endpoint)
   } else {
     endpoint = LOCAL_FE_EVENTS_MOODLE_FUNCTION_HANDLER
-    url = getMoodlePluginMethodUrl(LOCAL_FE_EVENTS_MOODLE_FUNCTION_HANDLER)
+    url = getMoodlePluginMethodUrl(endpoint)
   }
 
   const request = {
@@ -43,17 +42,13 @@ async function sendEventMoodlePlugin(pipelineId: string): Promise<void> {
   const response = await fetch(url, { method: 'POST', body: JSON.stringify([request]) })
   if (response.ok) {
     const responseJson = await response.json()
-    console.log(responseJson)
-    if (responseJson.error === undefined) {
-      console.log('response success')
-    } else {
-      console.log('response ERROR: ' + String(responseJson))
+    if (responseJson[0].error === true) {
+      console.error(`Error from Moodle: ${JSON.stringify(responseJson[0])}`)
     }
   }
 }
 
-async function sendEventFeDirect(): Promise<void> {
-  const contentId = 'moodle_test_content_direct_from_fe'
+async function sendEventFeDirect(contentId: string): Promise<void> {
   const endpoint = LOCAL_USER_ID_FUNCTION_HANDLER
   const date = new Date()
 
@@ -76,22 +71,19 @@ async function sendEventFeDirect(): Promise<void> {
     timestamp: date.getTime()
   }
 
-  const response = await fetch(urlEventsAPI, {
+  await fetch(urlEventsAPI, {
     headers: {
       'content-type': 'application/json'
     },
     method: 'POST',
     body: JSON.stringify(eventRequest)
   })
-
-  console.log('Events Api Response:')
-  console.log(response)
 }
 
-export const sendEvent = async (pipelineId: string | undefined): Promise<void> => {
+export const sendEvent = async (pipelineId: string, contentId: string): Promise<void> => {
   if (pipelineId === PIPELINE_FE_DIRECT) {
-    await sendEventFeDirect()
+    await sendEventFeDirect(contentId)
   } else if (pipelineId === PIPELINE_MOODLE_EVENTS || pipelineId === PIPELINE_MOODLE_DIRECT) {
-    await sendEventMoodlePlugin(pipelineId)
+    await sendEventMoodlePlugin(contentId, pipelineId)
   }
 }

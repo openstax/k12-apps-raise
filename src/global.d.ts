@@ -10,9 +10,6 @@ declare global {
         sesskey: string
         wwwroot: string
       }
-      user: {
-        id: string
-      }
     }
   }
 }
