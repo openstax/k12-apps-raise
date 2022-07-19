@@ -12,8 +12,8 @@ test('Desmos block calls script and grahing calcultor functions', async () => {
   const setMathBounds = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
-      setExpression: setExpression,
-      setMathBounds: setMathBounds
+      setExpression,
+      setMathBounds
     }
   })
   window.Desmos = {
@@ -36,8 +36,8 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
   const setMathBounds = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
-      setExpression: setExpression,
-      setMathBounds: setMathBounds
+      setExpression,
+      setMathBounds
     }
   })
   window.Desmos = {
@@ -60,8 +60,8 @@ test('DesmosBlock calculator does render if waitForEvent does fire', async () =>
   const setMathBounds = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
-      setExpression: setExpression,
-      setMathBounds: setMathBounds
+      setExpression,
+      setMathBounds
     }
   })
   window.Desmos = {
