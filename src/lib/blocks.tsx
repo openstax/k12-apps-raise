@@ -256,9 +256,9 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     problems.push({
       type: problemType,
       content: maybeProblemContent.innerHTML,
-      solution: solution,
+      solution,
       comparator: htmlElem.dataset.problemComparator,
-      solutionOptions: solutionOptions,
+      solutionOptions,
       buttonText: maybeButtonText ?? 'Check',
       retryLimit: maybeRetryLimit === undefined ? 0 : parseInt(maybeRetryLimit),
       correctResponse: (maybeCorrectResponseOverride === null) ? psetCorrectResponseElem.innerHTML : maybeCorrectResponseOverride.innerHTML,

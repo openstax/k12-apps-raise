@@ -7,6 +7,9 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     build: {
       sourcemap: true
+    },
+    server: {
+      port: 3000
     }
   }
 

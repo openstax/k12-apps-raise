@@ -9,6 +9,7 @@
   @import "bootstrap/scss/functions";
   @import "bootstrap/scss/variables";
   @import "bootstrap/scss/mixins";
+  @import "bootstrap/scss/maps";
   @import "bootstrap/scss/root";
   @import "bootstrap/scss/reboot";
 
@@ -33,6 +34,7 @@
   --bs-green: #198754;
   --bs-teal: #20c997;
   --bs-cyan: #0dcaf0;
+  --bs-black: #000;
   --bs-white: #fff;
   --bs-gray: #6c757d;
   --bs-gray-dark: #343a40;
@@ -66,7 +68,7 @@
   --bs-body-color-rgb: 33, 37, 41;
   --bs-body-bg-rgb: 255, 255, 255;
   /* stylelint-disable-next-line max-line-length */
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto, "Helvetica Neue", arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --bs-font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
   --bs-gradient: linear-gradient(180deg, rgb(255 255 255 / 15%), rgb(255 255 255 / 0%));
   --bs-body-font-family: var(--bs-font-sans-serif);
@@ -75,6 +77,20 @@
   --bs-body-line-height: 1.5;
   --bs-body-color: #212529;
   --bs-body-bg: #fff;
+  --bs-border-width: 1px;
+  --bs-border-style: solid;
+  --bs-border-color: #dee2e6;
+  --bs-border-color-translucent: rgb(0 0 0 / 17.5%);
+  --bs-border-radius: 0.375rem;
+  --bs-border-radius-sm: 0.25rem;
+  --bs-border-radius-lg: 0.5rem;
+  --bs-border-radius-xl: 1rem;
+  --bs-border-radius-2xl: 2rem;
+  --bs-border-radius-pill: 50rem;
+  --bs-link-color: #0d6efd;
+  --bs-link-hover-color: #0a58ca;
+  --bs-code-color: #d63384;
+  --bs-highlight-bg: #fff3cd;
 
   .os-form-select {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
