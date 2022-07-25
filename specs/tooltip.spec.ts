@@ -7,6 +7,6 @@ test('tooltip renders on hover', async ({ page }) => {
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   await page.locator('text=absolute value').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
 })
