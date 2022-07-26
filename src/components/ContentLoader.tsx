@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { blockifyHTML } from '../lib/blocks'
 import { ENV } from '../lib/env'
 
-interface ContentResponse {
+export interface ContentResponse {
   id: string
   content: Array<{ variant: string, html: string }>
 }
