@@ -26,14 +26,16 @@ test('user input block is rendered with math and tooltip', async ({ page }) => {
   await page.waitForSelector('#prompt .MathJax')
   await page.fill('textarea', 'Response text')
   await page.locator('text=absolute value').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
+  await page.locator('text=Content text with math').hover() // Hover away to remove tooltip
   await page.locator('text=binomial').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
+  await page.locator('text=Content text with math').hover() // Hover away to remove tooltip
   await page.locator('text=ButtonText').click()
   await page.locator('text=annuity').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
   await page.waitForSelector('#ack .MathJax')
 })
@@ -57,10 +59,11 @@ test('math and tooltip is rendered in cta blocks', async ({ page }) => {
   await page.waitForSelector('#content .MathJax')
   await page.waitForSelector('#prompt .MathJax')
   await page.locator('text=absolute value').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
+  await page.locator('text=Content text with math').hover() // Hover away to remove tooltip
   await page.locator('text=binomial').hover()
-  await page.waitForSelector('text=Coming soon!')
+  await page.waitForSelector('role=tooltip')
   await page.waitForSelector('.MathJax')
 })
 
