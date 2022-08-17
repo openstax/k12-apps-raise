@@ -1,0 +1,27 @@
+version: 0.2
+
+env:
+  shell: bash
+  secrets-manager:
+    SLACK_WEBHOOKURL: "slack:k12stream"
+phases:
+  install:
+    commands:
+      - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+      - export NVM_DIR="$HOME/.nvm"
+      - cd /tmp && . "$NVM_DIR/nvm.sh" && cd $CODEBUILD_SRC_DIR && nvm install
+  pre_build:
+    commands:
+      - npm install
+  build:
+    commands:
+      - npm run build:authoring
+  post_build:
+    commands:
+      - aws s3 cp --recursive dist/assets/ "s3://$CONTENT_S3_BUCKET/apps/raise/"
+      - ls dist/assets/ > assets.txt
+      - export SLACK_MESSAGE="k12-apps-raise authoring pipeline completed for commit $COMMIT_ID and generated \n $(cat assets.txt)"
+      - "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"'\"$SLACK_MESSAGE\"'\"}' $SLACK_WEBHOOKURL"
+artifacts:
+  files:
+    - assets.txt
