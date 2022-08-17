@@ -152,7 +152,11 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
 
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      {children}
+      <div className="os-raise-bootstrap">
+        <div className="mb-3">
+          {children}
+        </div>
+      </div>
     </EventControlledContent>
   )
 }
