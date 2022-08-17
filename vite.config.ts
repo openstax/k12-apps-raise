@@ -21,6 +21,13 @@ export default defineConfig(({ mode }) => {
         entryFileNames: 'assets/[name].js'
       }
     }
+  } else if (mode == 'authoring') { 
+    config.build['rollupOptions'] = {
+      output: {
+        assetFileNames: 'assets/[name].authoring.[hash][extname]',
+        entryFileNames: 'assets/[name].authoring.[hash].js'
+      }
+    }
   }
 
   return config

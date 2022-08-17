@@ -13,7 +13,8 @@
     "postinstall": "patch-package",
     "build": "tsc && vite build",
     "watch": "vite build -m development -w",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:authoring":"tsc && vite build -m authoring"
   },
   "dependencies": {
     "bootstrap": "^5.2.0",
