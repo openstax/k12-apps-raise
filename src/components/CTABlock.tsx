@@ -33,7 +33,7 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
     if (!clicked) {
       return (<>
       <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
-      <button onClick={clickHandler} type="button" className="btn btn-outline-primary">{buttonText}</button></>)
+      <button onClick={clickHandler} type="button" className="btn btn-outline-primary mb-3">{buttonText}</button></>)
     } else {
       return <></>
     }

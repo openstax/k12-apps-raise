@@ -5,7 +5,7 @@ import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { tooltipify } from '../lib/tooltip'
 
-const DEFAULT_TEXTAREA_ROWS = 3
+const DEFAULT_TEXTAREA_ROWS = 2
 
 interface UserInputBlockProps {
   content: string
