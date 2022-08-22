@@ -88,8 +88,7 @@
   "independent variable": "A variable representing the input of a function.",
   "infinite geometric series": "An infinite geometric series is an infinite sum infinite geometric sequence.",
   "infinite sequence": "A sequence whose domain is all counting numbers and there is an infinite number of counting numbers.",
-  "infinity": "",
-  "integers": "The whole numbers and their opposites are called the integers.",
+    "integers": "The whole numbers and their opposites are called the integers.",
   "intercepts of a line": "The points where a line crosses the <em>x</em>-axis and the <em>y</em>-axis are called the intercepts of the line.",
   "interval notation": "Notation using brackets or parenthesis to represent a solution interval.",
   "inverse (function)": "Two functions are inverses to each other if their input-output pairs are reversed.",
@@ -220,8 +219,5 @@
   "zero (of a function)": "A zero of a function is an input that yields an output of zero. If other words, if \\( f(a) = 0 \\) then \\( a \\) is a zero of \\( f \\).",
   "Zero Exponent Property": "According to the Zero Exponent Property, <em>a</em> to the zero is 1 as long as <em>a</em> is not zero.",
   "zero of the function": "A value of \\( x \\) where the function is 0, is called a zero of the function.",
-  "Zero Product Property": "The Zero Product Property says that if the product of two quantities is zero, then at least one of the quantities is zero.",
-  "Parent Function": "",
-  "transformation": "",
-  "Vertical shift": ""
+  "Zero Product Property": "The Zero Product Property says that if the product of two quantities is zero, then at least one of the quantities is zero."
 }
