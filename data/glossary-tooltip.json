@@ -219,5 +219,10 @@
   "zero (of a function)": "A zero of a function is an input that yields an output of zero. If other words, if \\( f(a) = 0 \\) then \\( a \\) is a zero of \\( f \\).",
   "Zero Exponent Property": "According to the Zero Exponent Property, <em>a</em> to the zero is 1 as long as <em>a</em> is not zero.",
   "zero of the function": "A value of \\( x \\) where the function is 0, is called a zero of the function.",
-  "Zero Product Property": "The Zero Product Property says that if the product of two quantities is zero, then at least one of the quantities is zero."
+  "Zero Product Property": "The Zero Product Property says that if the product of two quantities is zero, then at least one of the quantities is zero.",
+  "Parent Function": "The parent function the simplest function that still satisfies the definition of the particular type of function.",
+  "transformation": "A transformation moves a parent function vertically, horiztonally, through reflections and stretches and compressions.",
+  "Vertical shift": "A vertial shift is a type of transformation that moves a parent function up or down.",
+  "output": "The value that results from putting the input into a function.",
+  "input": "The value put into a function. "
 }
