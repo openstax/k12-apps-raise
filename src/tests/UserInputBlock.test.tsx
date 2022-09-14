@@ -57,7 +57,6 @@ test('UserInputBlock disables, removes and, adds expected content on valid submi
   })
 
   screen.getByText('Ack text')
-  expect(screen.queryByText('Prompt text')).toBeNull()
   expect(screen.queryByRole('textbox')).toBeDisabled()
   expect(screen.queryByRole('button')).toBeDisabled()
 })
