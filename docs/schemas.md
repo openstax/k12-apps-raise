@@ -91,7 +91,6 @@ The User input block provides a `<textarea>` for user input and is intended to p
 When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
-* Remove the Prompt HTML
 * Disable the text input box
 * Disable the button
 * Display the acknowledgement HTML
