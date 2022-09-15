@@ -55,7 +55,6 @@ The Call-to-action (CTA) block encapsulates the following components:
 When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
-* Remove the Prompt HTML
 * Remove the button
 
 #### Schema definition

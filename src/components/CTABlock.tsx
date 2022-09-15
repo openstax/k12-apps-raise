@@ -29,10 +29,9 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
     }
   }, [])
 
-  const maybePromptAndButton = (): JSX.Element => {
+  const maybeButton = (): JSX.Element => {
     if (!clicked) {
       return (<>
-      <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
       <button onClick={clickHandler} type="button" className="btn btn-outline-primary mb-3">{buttonText}</button></>)
     } else {
       return <></>
@@ -43,7 +42,8 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
     <EventControlledContent waitForEvent={waitForEvent}>
       <div className="os-raise-bootstrap">
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
-      {maybePromptAndButton()}
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
+      {maybeButton()}
       </div>
     </EventControlledContent>
   )
