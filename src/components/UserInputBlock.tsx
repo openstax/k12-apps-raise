@@ -6,6 +6,7 @@ import * as Yup from 'yup'
 import { tooltipify } from '../lib/tooltip'
 
 const DEFAULT_TEXTAREA_ROWS = 2
+export const MAX_CHARACTER_INPUT_BLOCK_LENGTH = 5000
 
 interface UserInputBlockProps {
   content: string
@@ -24,7 +25,10 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const [responseSubmitted, setResponseSubmitted] = useState(false)
 
   const schema = Yup.object({
-    response: Yup.string().trim().required('Please provide valid input')
+    response: Yup.string()
+      .trim()
+      .required('Please provide valid input')
+      .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, 'Input is too long')
   })
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {

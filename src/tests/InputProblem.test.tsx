@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { InputProblem } from '../components/InputProblem'
+import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH } from '../components/InputProblem'
 import '@testing-library/jest-dom'
 
 test('InputProblem renders with content, input and button', async () => {
@@ -128,6 +128,78 @@ test('InputProblem textbox is expecting Integer but input was text.', async () =
     screen.getByRole('button').click()
   })
   await screen.findByText('Please provide an Integer')
+})
+
+test('InputProblem integer text was too long', async () => {
+  render(
+          <InputProblem
+          solvedCallback={() => {}}
+          exhaustedCallback={() => {}}
+          allowedRetryCallback={() => {}}
+          content={'Content'}
+          correctResponse={''}
+          encourageResponse={''}
+          retryLimit={0}
+          solution={' 5 '}
+          buttonText={'Submit'}
+          comparator={'integer'}
+          attemptsExhaustedResponse={''}
+          answerResponses={[]}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '1'.repeat(MAX_CHARACTER_INPUT_PROBLEM_LENGTH + 2) } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Input is too long')
+})
+
+test('InputProblem float text was too long', async () => {
+  render(
+          <InputProblem
+          solvedCallback={() => {}}
+          exhaustedCallback={() => {}}
+          allowedRetryCallback={() => {}}
+          content={'Content'}
+          correctResponse={''}
+          encourageResponse={''}
+          retryLimit={0}
+          solution={' 5 '}
+          buttonText={'Submit'}
+          comparator={'float'}
+          attemptsExhaustedResponse={''}
+          answerResponses={[]}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '1'.repeat(MAX_CHARACTER_INPUT_PROBLEM_LENGTH + 2) } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Input is too long')
+})
+
+test('InputProblem string text was too long', async () => {
+  render(
+          <InputProblem
+          solvedCallback={() => {}}
+          exhaustedCallback={() => {}}
+          allowedRetryCallback={() => {}}
+          content={'Content'}
+          correctResponse={''}
+          encourageResponse={''}
+          retryLimit={0}
+          solution={' a '}
+          buttonText={'Submit'}
+          comparator={'string'}
+          attemptsExhaustedResponse={''}
+          answerResponses={[]}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'a'.repeat(MAX_CHARACTER_INPUT_PROBLEM_LENGTH + 2) } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('Input is too long')
 })
 
 test('InputProblem button click with wrong answer should evaluate to incorrect', async () => {
