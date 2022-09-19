@@ -1,4 +1,4 @@
-import * as variantMappings from '../../data/variant-mapping.json'
+import variantMappings from '../../data/variant-mapping.json'
 import type { ContentVariant } from '../components/ContentLoader'
 
 export const loadScriptTag = async (srcValue: string): Promise<void> => {
@@ -55,7 +55,7 @@ function getVariantMappings(host: string | undefined, courseId: string | undefin
   }
 
   const mappingData = variantMappings as any
-  const maybeDataMapping = mappingData.default[host]?.courses[courseId]
+  const maybeDataMapping = mappingData[host]?.courses[courseId]
   if (maybeDataMapping !== undefined) {
     return maybeDataMapping
   }
