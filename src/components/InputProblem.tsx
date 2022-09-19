@@ -34,15 +34,13 @@ export const InputProblem = ({
           .integer('Please provide an Integer')
           .typeError('Please provide an Integer')
           .required('Please provide an Integer')
-          .test('len', 'Input is too long', (val) => val === undefined || val.toString().length <= MAX_CHARACTER_INPUT_PROBLEM_LENGTH)
       })
     }
     if (comparator.toLowerCase() === 'float') {
       return Yup.object({
         response: Yup.number()
-          .typeError('Please provide an number')
+          .typeError('Please provide a number')
           .required('Please provide a number')
-          .test('len', 'Input is too long', (val) => val === undefined || val.toString().length <= MAX_CHARACTER_INPUT_PROBLEM_LENGTH)
       })
     }
     return Yup.object({
