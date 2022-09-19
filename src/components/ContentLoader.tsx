@@ -12,8 +12,6 @@ export interface ContentVariant {
   variant: string
   html: string
 }
-// pull this out
-// Array<{ variant: string, html: string }>
 
 enum FetchStatus {
   Unfetched,
