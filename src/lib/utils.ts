@@ -1,5 +1,5 @@
 import * as variantMappings from '../../data/variant-mapping.json'
-import { ContentVariant } from '../components/ContentLoader'
+import type { ContentVariant } from '../components/ContentLoader'
 
 export const loadScriptTag = async (srcValue: string): Promise<void> => {
   const head = document.getElementsByTagName('head')[0]
