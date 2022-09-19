@@ -26,20 +26,23 @@ export const InputProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
+  const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
+  const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
 
   const schema = (): Yup.SchemaOf<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
-        response: Yup.number().integer('Please provide an Integer').typeError('Please provide an Integer').required('Please provide an Integer')
+        response: Yup.number().integer(NUMERIC_INPUT_ERROR).typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
       })
     }
     if (comparator.toLowerCase() === 'float') {
       return Yup.object({
-        response: Yup.number().typeError('Please provide a number').required('Please provide a number')
+        response: Yup.number().typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
       })
     }
     return Yup.object({
-      response: Yup.string().trim().required('Please provide valid input').max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, 'Input is too long')
+      response: Yup.string().trim().required(NON_EMPTY_VALUE_ERROR).max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
     })
   }
 
