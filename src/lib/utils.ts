@@ -38,46 +38,39 @@ export const loadScriptTag = async (srcValue: string): Promise<void> => {
   await loadedPromise
 }
 
-export const getUserVariables = (): {userId: string, courseId: string, instance: string} | null => {
-  const userId = '2'
+export const getCurrentContext = (): {courseId: string | undefined, host: string | undefined} => {
   const courseId = window.M?.cfg.courseId
-  const instance = window.location.host
-  if (userId === undefined || courseId === undefined || instance === undefined) {
-    return null
-  }
+  const host = window.location.host
   return {
-    userId,
     courseId,
-    instance
+    host
   }
 }
 
-function getVariantMappings(host: string, courseid: string): string {
+function getVariantMappings(host: string | undefined, courseId: string | undefined): string {
+  const defaultVariant = 'main'
+
+  if (courseId === undefined || host === undefined) {
+    return defaultVariant
+  }
+
   const mappingData = variantMappings as any
-  const maybeDataMapping = mappingData.default[host]?.courses[courseid]
+  const maybeDataMapping = mappingData.default[host]?.courses[courseId]
   if (maybeDataMapping !== undefined) {
     return maybeDataMapping
-  } else {
-    return 'main'
   }
+  return defaultVariant
 }
 
-export const getVariant = (variants: ContentVariant[]): string => {
-  const userValues = getUserVariables()
-  let varName = 'main'
-  if (userValues != null) {
-    varName = getVariantMappings(userValues.instance, userValues.courseId)
-    console.log('VarName: ' + varName)
-  }
+export const getVariant = (variants: ContentVariant[]): string | undefined => {
+  const currentContext = getCurrentContext()
 
-  let html
-  variants.forEach(item => {
-    if (item.variant === varName) {
-      html = item.html
-    }
-  })
-  if (html === undefined) {
-    html = variants[0].html // return whatever variant exists
+  const varName = getVariantMappings(currentContext.host, currentContext.courseId)
+
+  const maybeMatch = variants.find(item => item.variant === varName)
+  if (maybeMatch === undefined) {
+    return maybeMatch
+  } else {
+    return maybeMatch.html
   }
-  return html
 }

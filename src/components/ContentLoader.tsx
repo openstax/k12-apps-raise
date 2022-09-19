@@ -40,6 +40,11 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
       const data = await response.json() as ContentResponse
       const htmlContent = getVariant(data.content)
 
+      if (htmlContent === undefined) {
+        setFetchStatus(FetchStatus.FetchFailure)
+        return
+      }
+
       setChildren(blockifyHTML(htmlContent))
       setFetchStatus(FetchStatus.FetchSuccess)
     } catch {
