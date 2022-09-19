@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 
-export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 10
+export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 50
 
 interface InputProblemProps extends BaseProblemProps {
   comparator: string

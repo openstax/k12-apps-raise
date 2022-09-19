@@ -151,7 +151,7 @@ test('InputProblem integer text was too long', async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '1'.repeat(MAX_CHARACTER_INPUT_PROBLEM_LENGTH + 2) } })
     screen.getByRole('button').click()
   })
-  await screen.findByText('Input is too long')
+  await screen.findByText('Please provide an Integer')
 })
 
 test('InputProblem float text was too long', async () => {

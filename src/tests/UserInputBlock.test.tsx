@@ -104,7 +104,7 @@ test('UserInputBlock input isnt over the max length', async () => {
   screen.getByText('Please provide valid input')
 
   await act(async () => {
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: new Array(MAX_CHARACTER_INPUT_BLOCK_LENGTH + 2).join('a') } })
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'a'.repeat(MAX_CHARACTER_INPUT_BLOCK_LENGTH + 2) } })
   })
 
   screen.getByText('Input is too long')
