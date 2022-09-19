@@ -55,7 +55,6 @@ The Call-to-action (CTA) block encapsulates the following components:
 When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
-* Remove the Prompt HTML
 * Remove the button
 
 #### Schema definition
@@ -92,7 +91,6 @@ The User input block provides a `<textarea>` for user input and is intended to p
 When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
-* Remove the Prompt HTML
 * Disable the text input box
 * Disable the button
 * Display the acknowledgement HTML
@@ -286,7 +284,7 @@ The following template provides an example with a Desmos graphing calculator blo
 Notes on schema:
 
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
-* The height and width attributes are optional and the default is 400 by 400 pixels.
+* The height and width attributes are optional and the default is 500 by 400 pixels.
 * The default values for the optional `data-bottom`, `data-top`, `data-left`, and `data-right` attributes are 10 for the top and right and -10 for bottom and left. 
 * if you just want to render a graphing calculator with nothing pre-graphed you can do so with `<div class="os-raise-ib-desmos-gc" data-schema-version="1.0"></div>`
 
