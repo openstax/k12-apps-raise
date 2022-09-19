@@ -8,7 +8,7 @@ import { ContentLoader } from '../components/ContentLoader'
 const server = setupServer(
   rest.get('http://contentapi/contents/test-content.json', (req, res, ctx) => {
     return res(ctx.json({
-      content: [{ html: '<p>Test content</p>' }]
+      content: [{ variant: 'main', html: '<p>Test content</p>' }]
     }))
   }),
   rest.get('http://contentapi/contents/test-content-404.json', (req, res, ctx) => {
