@@ -30,7 +30,7 @@ test('CTABlock fires event', async () => {
   expect(eventHandler).toHaveBeenCalled()
 })
 
-test('CTABlock button and prompt disappear on click', async () => {
+test('CTABlock button disappears on click, prompt remains', async () => {
   render(
       <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
   )
@@ -38,7 +38,7 @@ test('CTABlock button and prompt disappear on click', async () => {
   fireEvent.click(screen.getByText('Click me!'))
   expect(screen.queryByText('Click me!')).toBeNull()
   screen.getByText('String')
-  expect(screen.queryByText('Prompt')).toBeNull()
+  expect(screen.queryByText('Prompt'))
 })
 
 test('CTABlock does not render if waitForEvent does not fire', async () => {
