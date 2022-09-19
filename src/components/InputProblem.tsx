@@ -24,16 +24,17 @@ export const InputProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
 
   const schema = (): Yup.SchemaOf<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
-        response: Yup.number().integer('Please provide an Integer').typeError('Please provide an Integer').required('Please provide an Integer')
+        response: Yup.number().integer(NUMERIC_INPUT_ERROR).typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
       })
     }
     if (comparator.toLowerCase() === 'float') {
       return Yup.object({
-        response: Yup.number().typeError('Please provide an number').required('Please provide a number')
+        response: Yup.number().typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
       })
     }
     return Yup.object({
