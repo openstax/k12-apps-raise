@@ -80,7 +80,7 @@ test('InputProblem button click with no input should show warning', async () => 
   await act(async () => {
     screen.getByRole('button').click()
   })
-  await screen.findByText('Please provide an Integer')
+  await screen.findByText('Enter numeric values only')
 })
 test('InputProblem textbox is expecting float but got text.', async () => {
   render(
@@ -103,7 +103,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Wrong input' } })
     screen.getByRole('button').click()
   })
-  await screen.findByText('Please provide an number')
+  await screen.findByText('Enter numeric values only')
 })
 
 test('InputProblem textbox is expecting Integer but input was text.', async () => {
@@ -127,7 +127,7 @@ test('InputProblem textbox is expecting Integer but input was text.', async () =
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Wrong input!' } })
     screen.getByRole('button').click()
   })
-  await screen.findByText('Please provide an Integer')
+  await screen.findByText('Enter numeric values only')
 })
 
 test('InputProblem button click with wrong answer should evaluate to incorrect', async () => {
