@@ -5,7 +5,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 
-export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 50
+export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
   comparator: string
@@ -30,24 +30,16 @@ export const InputProblem = ({
   const schema = (): Yup.SchemaOf<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
-        response: Yup.number()
-          .integer('Please provide an Integer')
-          .typeError('Please provide an Integer')
-          .required('Please provide an Integer')
+        response: Yup.number().integer('Please provide an Integer').typeError('Please provide an Integer').required('Please provide an Integer')
       })
     }
     if (comparator.toLowerCase() === 'float') {
       return Yup.object({
-        response: Yup.number()
-          .typeError('Please provide a number')
-          .required('Please provide a number')
+        response: Yup.number().typeError('Please provide a number').required('Please provide a number')
       })
     }
     return Yup.object({
-      response: Yup.string()
-        .trim()
-        .required('Please provide valid input')
-        .max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, 'Input is too long')
+      response: Yup.string().trim().required('Please provide valid input').max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, 'Input is too long')
     })
   }
 
