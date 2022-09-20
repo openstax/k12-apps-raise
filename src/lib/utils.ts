@@ -65,9 +65,12 @@ function getVariantMappings(host: string | undefined, courseId: string | undefin
 export const getVariant = (variants: ContentVariant[]): string | undefined => {
   const currentContext = getCurrentContext()
 
-  const varName = getVariantMappings(currentContext.host, currentContext.courseId)
+  const courseVariant = getVariantMappings(currentContext.host, currentContext.courseId)
+  const defaultVariant = getVariantMappings(currentContext.host, undefined)
 
-  const maybeMatch = variants.find(item => item.variant === varName)
+  // Try to find content for mapped variant and fall back to trying to find default variant
+  const maybeMatch = variants.find(item => item.variant === courseVariant) ?? variants.find(item => item.variant === defaultVariant)
+
   if (maybeMatch === undefined) {
     return maybeMatch
   } else {
