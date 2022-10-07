@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { UserInputBlock } from '../components/UserInputBlock'
+import { UserInputBlock, MAX_CHARACTER_INPUT_BLOCK_LENGTH } from '../components/UserInputBlock'
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import '@testing-library/jest-dom'
 
@@ -86,6 +86,33 @@ test('UserInputBlock requires non-empty input', async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'S' } })
   })
   expect(screen.queryByText('Please provide valid input')).toBeNull()
+})
+
+test('UserInputBlock input isnt over the max length', async () => {
+  render(
+    <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="CustomButtonText"/>
+  )
+
+  await act(async () => {
+    screen.getByRole('button').click()
+  })
+
+  screen.getByText('Content text')
+  screen.getByText('Prompt text')
+  screen.getByRole('textbox')
+  screen.getByRole('button')
+  screen.getByText('Please provide valid input')
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'a'.repeat(MAX_CHARACTER_INPUT_BLOCK_LENGTH + 1) } })
+  })
+
+  screen.getByText('Input is too long')
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'S' } })
+  })
+  expect(screen.queryByText('Input is too long')).toBeNull()
 })
 
 test('UserInputBlock from parseUserInputBlock renders on namespaced event', async () => {
