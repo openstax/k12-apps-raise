@@ -1,18 +1,8 @@
 {
-    "qa.raiselearning.org": {
-      "courses": {
-          "57": "main",
-          "58": "main"
-       },
-       "userid": {
-        "abcd": "main",
-        "efgh": "main"
-       }
-    },
-    "localhost:8000": {
+    "localhost:3001": {
         "courses": {
-            "57": "variant1",
-            "58": "main"
+            "1": "main",
+            "2": "variant1"
          }
       }
   }

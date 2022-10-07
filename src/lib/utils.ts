@@ -49,7 +49,7 @@ export const getCurrentContext = (): {courseId: string | undefined, host: string
 
 function getVariantMappings(host: string | undefined, courseId: string | undefined): string {
   const defaultVariant = 'main'
-
+  console.log(courseId, host)
   if (courseId === undefined || host === undefined) {
     return defaultVariant
   }
