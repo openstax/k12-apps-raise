@@ -3,17 +3,12 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { ContentLoader, ContentVariant } from '../components/ContentLoader'
-
-const MOCK_CONTENTS = [
-  { variant: 'main', html: '<p>Test content</p>' },
-  { variant: 'variant1', html: '<p>Variant content</p>' }
-]
+import { ContentLoader } from '../components/ContentLoader'
 
 const server = setupServer(
   rest.get('http://contentapi/contents/test-content.json', (req, res, ctx) => {
     return res(ctx.json({
-      content: MOCK_CONTENTS
+      content: [{ html: '<p>Test content</p>' }]
     }))
   }),
   rest.get('http://contentapi/contents/test-content-404.json', (req, res, ctx) => {
@@ -30,6 +25,10 @@ jest.mock('../lib/env.ts', () => ({
   }
 }))
 
+jest.mock('../lib/utils', () => ({
+  getVariant: jest.fn(x => '<p>Variant content</p>')
+}))
+
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
@@ -42,10 +41,6 @@ test('content is fetched and rendered on success', async () => {
 })
 
 test('variant content is fetched and rendered on success', async () => {
-  jest.mock('../lib/utils', () => ({
-    getVariant: jest.fn(x => '<p>Variant content</p>')
-  }))
-
   render(
     <ContentLoader contentId='test-content'/>
   )
