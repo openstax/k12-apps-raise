@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { mockVariantContentRequest } from './utils'
 
-test('user input block is rendered with math and tooltip', async ({ page }) => {
+test('variant content is shown when course ID is switched to variant course', async ({ page }) => {
   const mainContent = '<p>Main content</p>'
   const variantContent = '<p>Variant content</p>'
 

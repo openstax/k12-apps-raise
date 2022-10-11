@@ -1,4 +1,4 @@
-import variantMappings from '../../data/variant-mapping.json'
+import variantMappings from '../../data/variant-mappings.json'
 import type { ContentVariant } from '../components/ContentLoader'
 
 export const loadScriptTag = async (srcValue: string): Promise<void> => {
@@ -47,9 +47,8 @@ export const getCurrentContext = (): {courseId: string | undefined, host: string
   }
 }
 
-function getVariantMappings(host: string | undefined, courseId: string | undefined): string {
+function getVariantMapping(host: string | undefined, courseId: string | undefined): string {
   const defaultVariant = 'main'
-  console.log(courseId, host)
   if (courseId === undefined || host === undefined) {
     return defaultVariant
   }
@@ -65,7 +64,7 @@ function getVariantMappings(host: string | undefined, courseId: string | undefin
 export const getVariant = (variants: ContentVariant[]): string | undefined => {
   const currentContext = getCurrentContext()
 
-  const varName = getVariantMappings(currentContext.host, currentContext.courseId)
+  const varName = getVariantMapping(currentContext.host, currentContext.courseId)
 
   const maybeMatch = variants.find(item => item.variant === varName)
   if (maybeMatch === undefined) {
