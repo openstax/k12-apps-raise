@@ -1,7 +1,6 @@
 {
     "localhost:3001": {
         "courses": {
-            "1": "main",
             "2": "variant1"
          }
       }
