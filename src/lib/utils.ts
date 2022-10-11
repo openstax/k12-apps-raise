@@ -1,3 +1,6 @@
+import variantMappings from '../../data/variant-mappings.json'
+import type { ContentVariant } from '../components/ContentLoader'
+
 export const loadScriptTag = async (srcValue: string): Promise<void> => {
   const head = document.getElementsByTagName('head')[0]
   const maybeExistingScript = head.querySelector(`script[src="${srcValue}"]`)
@@ -33,4 +36,40 @@ export const loadScriptTag = async (srcValue: string): Promise<void> => {
   }
 
   await loadedPromise
+}
+
+export const getCurrentContext = (): {courseId: string | undefined, host: string | undefined} => {
+  const courseId = window.M?.cfg.courseId
+  const host = window.location.host
+  return {
+    courseId,
+    host
+  }
+}
+
+function getVariantMapping(host: string | undefined, courseId: string | undefined): string {
+  const defaultVariant = 'main'
+  if (courseId === undefined || host === undefined) {
+    return defaultVariant
+  }
+
+  const mappingData = variantMappings as any
+  const maybeDataMapping = mappingData[host]?.courses[courseId]
+  if (maybeDataMapping !== undefined) {
+    return maybeDataMapping
+  }
+  return defaultVariant
+}
+
+export const getVariant = (variants: ContentVariant[]): string | undefined => {
+  const currentContext = getCurrentContext()
+
+  const varName = getVariantMapping(currentContext.host, currentContext.courseId)
+
+  const maybeMatch = variants.find(item => item.variant === varName)
+  if (maybeMatch === undefined) {
+    return maybeMatch
+  } else {
+    return maybeMatch.html
+  }
 }

@@ -5,6 +5,11 @@ declare global {
       // Reference: https://clarle.github.io/yui3/yui/docs/api/classes/YUI.html#method_use
       use: (module: string, callback: () => void) => void
     }
+    M?: {
+      cfg: {
+        courseId: string
+      }
+    }
   }
 }
 

@@ -1,10 +1,16 @@
 import { useEffect, useState } from 'react'
+import { getVariant } from '../lib/utils'
 import { blockifyHTML } from '../lib/blocks'
 import { ENV } from '../lib/env'
 
 export interface ContentResponse {
   id: string
-  content: Array<{ variant: string, html: string }>
+  content: ContentVariant[]
+}
+
+export interface ContentVariant {
+  variant: string
+  html: string
 }
 
 enum FetchStatus {
@@ -32,7 +38,12 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
       }
 
       const data = await response.json() as ContentResponse
-      const htmlContent = data.content[0].html
+      const htmlContent = getVariant(data.content)
+
+      if (htmlContent === undefined) {
+        setFetchStatus(FetchStatus.FetchFailure)
+        return
+      }
 
       setChildren(blockifyHTML(htmlContent))
       setFetchStatus(FetchStatus.FetchSuccess)
