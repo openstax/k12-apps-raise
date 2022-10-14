@@ -1,7 +1,17 @@
 {
-    "localhost:3001": {
-        "courses": {
-            "2": "variant1"
-         }
-      }
+  "raiselearning.org": {
+    "courses": {
+      "125": "wsic"
+    }
+  },
+  "staging.raiselearning.org": {
+    "courses": {
+      "70": "wsic"
+    }
+  },
+  "localhost:3001": {
+    "courses": {
+      "2": "variant1"
+    }
   }
+}
