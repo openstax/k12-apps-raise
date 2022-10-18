@@ -366,5 +366,4 @@ test('Table using os-raise-standardtable has border and padding style', async ({
   expect(await table.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('border')
   })).toBe('1px solid rgb(0, 0, 0)')
-
 })
