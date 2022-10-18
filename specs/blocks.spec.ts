@@ -343,11 +343,14 @@ test('Graybox class styles content correctly', async ({ page }) => {
   const elem = await page.waitForSelector('text=Hello')
   expect(await elem.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('border')
-  })).toBe('1px solid rgb(0, 0, 0)')
+  })).toBe('1px solid rgb(217, 217, 217)')
   expect(await elem.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('padding')
   })).toBe('5px')
   expect(await elem.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('background-color')
-  })).toBe('rgb(242, 242, 242)')
+  })).toBe('rgb(245, 245, 245)')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('border-radius')
+  })).toBe('5px')
 })
