@@ -337,8 +337,8 @@ test('Desmos expressions panel is not visible.', async ({ page }) => {
 })
 
 test('Indentation class indents content correctly', async ({ page }) => {
-  const htmlDesmosContent = '<p class="os-raise-indent">Hello</p>'
-  await mockPageContentRequest(page, htmlDesmosContent)
+  const htmlContent = '<p class="os-raise-indent">Hello</p>'
+  await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   const elem = await page.waitForSelector('text=Hello')
   expect(await elem.evaluate((el) => {
@@ -347,11 +347,11 @@ test('Indentation class indents content correctly', async ({ page }) => {
 })
 
 test('Un-Indentation class for ordered lists unindents content.', async ({ page }) => {
-  const htmlDesmosContent = `
+  const htmlContent = `
 <ol class="os-raise-noindent">
   <li>First</li>
 </ol>`
-  await mockPageContentRequest(page, htmlDesmosContent)
+  await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   const elem = await page.waitForSelector('text=First')
 
