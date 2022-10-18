@@ -335,3 +335,19 @@ test('Desmos expressions panel is not visible.', async ({ page }) => {
   await page.waitForSelector('.dcg-grapher')
   await expect(page.locator('text=x=5')).not.toBeVisible()
 })
+
+test('Graybox class styles content correctly', async ({ page }) => {
+  const htmlContent = '<p class="os-raise-graybox">Hello</p>'
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('text=Hello')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('border')
+  })).toBe('1px solid rgb(0, 0, 0)')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('padding')
+  })).toBe('5px')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('background-color')
+  })).toBe('rgb(242, 242, 242)')
+})
