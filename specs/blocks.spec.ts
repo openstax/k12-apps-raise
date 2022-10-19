@@ -345,17 +345,3 @@ test('Indentation class indents content correctly', async ({ page }) => {
     return window.getComputedStyle(el).getPropertyValue('padding-left')
   })).toBe('32px')
 })
-
-test('Un-Indentation class for ordered lists unindents content.', async ({ page }) => {
-  const htmlContent = `
-<ol class="os-raise-noindent">
-  <li>First</li>
-</ol>`
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  const elem = await page.waitForSelector('text=First')
-
-  expect(await elem.evaluate((el) => {
-    return window.getComputedStyle(el).getPropertyValue('list-style-position')
-  })).toBe('inside')
-})
