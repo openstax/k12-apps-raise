@@ -4,13 +4,18 @@ In order to maintain consistency and reliability across all RAISE content, the s
 
 RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below. Content Developers 
 
-## Styling Classes: 
 
-### Gray Box (os-raise-graybox)
+## Gray Box (os-raise-graybox)
 Add a Gray box around your element
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/graybox.png" width="350">
+</div>
 
 **Availability**
 Any top level element: ie, an interactive block, paragraph, or div element.
+
 
 **Usage** 
 ```html 
@@ -23,9 +28,15 @@ Any top level element: ie, an interactive block, paragraph, or div element.
 </div>
 ```
 
-### Indent (os-raise-indent)
+## Indent (os-raise-indent)
 
 Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 2rem
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/indent.png" width="300">
+</div>
+
 
 **Availability**
 
@@ -37,9 +48,15 @@ Any element
 <p class="os-raise-indent">Text in a box</p>
 ```
 
-### No-Indent (os-raise-noindent)
+## No-Indent (os-raise-noindent)
 
 Remove the indent inherent in an ordered list. 
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/noindent.png" width="300">
+</div>
+
 
 **Availability**
 
