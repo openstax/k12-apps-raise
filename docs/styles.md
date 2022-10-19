@@ -22,3 +22,30 @@ Any top level element: ie, an interactive block, paragraph, or div element.
     <img src="www.link.com"></img>
 </div>
 ```
+
+### Indent (os-raise-indent)
+Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 32px
+**Example**
+
+**Availiability**
+Any element
+**Usage**
+```html 
+<p class="os-raise-indent">Text in a box</p>
+```
+
+### No-Indent (os-raise-noindent)
+Remove the indent inherent in an ordered list. 
+**Example**
+
+**Avilibility**
+Ordered list objects
+
+**Usage**
+```html
+<ol class="os-raise-noindent">
+    <li>Item A</li>
+    <li>Item B</li>
+    <li>Item C</li>
+</ol>
+```
