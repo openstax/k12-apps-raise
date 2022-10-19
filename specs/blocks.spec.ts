@@ -335,13 +335,3 @@ test('Desmos expressions panel is not visible.', async ({ page }) => {
   await page.waitForSelector('.dcg-grapher')
   await expect(page.locator('text=x=5')).not.toBeVisible()
 })
-
-test('Indentation class indents content correctly', async ({ page }) => {
-  const htmlContent = '<p class="os-raise-indent">Hello</p>'
-  await mockPageContentRequest(page, htmlContent)
-  await page.goto('/')
-  const elem = await page.waitForSelector('text=Hello')
-  expect(await elem.evaluate((el) => {
-    return window.getComputedStyle(el).getPropertyValue('padding-left')
-  })).toBe('32px')
-})
