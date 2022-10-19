@@ -8,7 +8,7 @@ RAISE Style classes are either written for specific elements, or can be applied 
 
 ### Indent (os-raise-indent)
 
-Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 32px
+Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 2rem
 
 **Availibility**
 
