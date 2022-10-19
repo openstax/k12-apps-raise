@@ -7,24 +7,29 @@ RAISE Style classes are either written for specific elements, or can be applied 
 ## Style Classes 
 
 ### Indent (os-raise-indent)
-Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 32px
-**Example**
 
-**Availiability**
+Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 32px
+
+**Availibility**
+
 Any element
+
 **Usage**
+
 ```html 
 <p class="os-raise-indent">Text in a box</p>
 ```
 
 ### No-Indent (os-raise-noindent)
+
 Remove the indent inherent in an ordered list. 
-**Example**
 
 **Avilibility**
+
 Ordered list objects
 
 **Usage**
+
 ```html
 <ol class="os-raise-noindent">
     <li>Item A</li>
