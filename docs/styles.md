@@ -24,7 +24,7 @@ Any element
 
 Remove the indent inherent in an ordered list. 
 
-**Avilibility**
+**Availability**
 
 Ordered list objects
 
