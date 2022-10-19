@@ -10,11 +10,11 @@ Add a Gray box around your element
 
 **Example**
 <div style="text-align: center;">
-    <img src="./static/graybox.png" width="350">
+    <img src="./static/graybox.png" width="450">
 </div>
 
 **Availability**
-Any top level element: ie, an interactive block, paragraph, or div element.
+Grayboxes should be used in div elements only
 
 
 **Usage** 
