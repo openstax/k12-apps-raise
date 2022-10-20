@@ -2,16 +2,19 @@
 
 In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`.
 
-RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below. Content Developers
+RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below.
 
 ***
 
-## Styling Classes 
+## Standard Table 
 
-### Standard Table (os-raise-standardtable)
-Add a border of 1px and padding of 5px to your table.
+Add a border of `1px solid black` and padding of `5px` to your table.
 
 **Example**
+<div style="text-align: left;">
+    <img src="./static/table.png" width="300">
+</div>
+
 
 **Aviliability**
 Add as a class to a table html tag. 
