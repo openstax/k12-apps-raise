@@ -1,8 +1,6 @@
 # Styling content for RAISE
 
-In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. 
-
-RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below. Content Developers 
+In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below. 
 
 
 ## Gray Box (os-raise-graybox)
