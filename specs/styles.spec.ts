@@ -23,3 +23,23 @@ test('Un-Indentation class for ordered lists unindents content.', async ({ page 
     return window.getComputedStyle(el).getPropertyValue('list-style-position')
   })).toBe('inside')
 })
+
+test('Graybox class styles content correctly', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-graybox">Hello</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('text=Hello')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('border')
+  })).toBe('1px solid rgb(217, 217, 217)')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('padding')
+  })).toBe('5px')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('background-color')
+  })).toBe('rgb(245, 245, 245)')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('border-radius')
+  })).toBe('5px')
+})
