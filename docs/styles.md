@@ -5,9 +5,8 @@ In order to maintain consistency and reliability across all RAISE content, the s
 
 ***
 
-## Style Classes 
 
-### Standard Table 
+## Standard Table 
 
 Add a border of `1px solid black` and padding of `5px` to your table.
 
@@ -44,7 +43,7 @@ Add as a class atribute to a table html tag.
 
 ***
 
-### Gray Box (os-raise-graybox)
+## Gray Box (os-raise-graybox)
 
 Add a Gray box around your element
 
@@ -67,7 +66,7 @@ Grayboxes should be used in div elements only
 
 ***
 
-### Indent (os-raise-indent)
+## Indent (os-raise-indent)
 
 Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 2rem
 
@@ -89,7 +88,7 @@ Any element
 
 ***
 
-### No-Indent (os-raise-noindent)
+## No-Indent (os-raise-noindent)
 
 Remove the indent inherent in an ordered list. 
 
@@ -112,3 +111,5 @@ Ordered list objects
     <li>Item C</li>
 </ol>
 ```
+
+***

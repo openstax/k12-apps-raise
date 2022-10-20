@@ -16,3 +16,11 @@ div.os-raise-graybox {
   background-color: $raise-graybox;
   border-radius: 5px;
 }
+
+table.os-raise-standardtable {
+  th,
+  td {
+    border: 1px solid black;
+    padding: 5px;
+  }
+}
