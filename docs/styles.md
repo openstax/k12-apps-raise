@@ -18,9 +18,6 @@ Grayboxes should be used in div elements only
 
 
 **Usage** 
-```html 
-<p class="os-raise-graybox">Text in a box</p>
-```
 ```html
 <div class="os-raise-graybox">
     <p> Image Title</p>
