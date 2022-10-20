@@ -6,7 +6,9 @@ RAISE Style classes are either written for specific elements, or can be applied 
 
 ***
 
-## Standard Table 
+## Style Classes 
+
+### Standard Table 
 
 Add a border of `1px solid black` and padding of `5px` to your table.
 
@@ -17,7 +19,7 @@ Add a border of `1px solid black` and padding of `5px` to your table.
 
 
 **Aviliability**
-Add as a class to a table html tag. 
+Add as a class atribute to a table html tag. 
 
 **Usage** 
 
@@ -39,4 +41,36 @@ Add as a class to a table html tag.
     <td>Mexico</td>
   </tr>
 </table>
+```
+
+### Indent (os-raise-indent)
+
+Add a padding to the left side of an element. If the element already includes a left padding (like an ordered list) the indent will get set to exactly 2rem
+
+**Availability**
+
+Any element
+
+**Usage**
+
+```html 
+<p class="os-raise-indent">Text in a box</p>
+```
+
+### No-Indent (os-raise-noindent)
+
+Remove the indent inherent in an ordered list. 
+
+**Availability**
+
+Ordered list objects
+
+**Usage**
+
+```html
+<ol class="os-raise-noindent">
+    <li>Item A</li>
+    <li>Item B</li>
+    <li>Item C</li>
+</ol>
 ```
