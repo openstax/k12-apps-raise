@@ -38,7 +38,7 @@ export const loadScriptTag = async (srcValue: string): Promise<void> => {
   await loadedPromise
 }
 
-export const getCurrentContext = (): {courseId: string | undefined, host: string | undefined} => {
+export const getCurrentContext = (): { courseId: string | undefined, host: string | undefined } => {
   const courseId = window.M?.cfg.courseId
   const host = window.location.host
   return {
