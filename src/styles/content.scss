@@ -12,7 +12,7 @@ ol.os-raise-noindent {
 
 div.os-raise-graybox {
   border: 1px solid $raise-graybox-border;
-  padding: 5px;
+  padding: 16px;
   background-color: $raise-graybox;
   border-radius: 5px;
 }
@@ -21,6 +21,6 @@ table.os-raise-standardtable {
   th,
   td {
     border: 1px solid black;
-    padding: 5px;
+    padding: 8px 16px;
   }
 }
