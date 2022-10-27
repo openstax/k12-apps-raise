@@ -27,7 +27,7 @@ test('Table using os-raise-standardtable has border and padding style', async ({
   const table = await page.waitForSelector('text=Company')
   expect(await table.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('padding')
-  })).toBe('5px')
+  })).toBe('8px 16px')
   expect(await table.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('border')
   })).toBe('1px solid rgb(0, 0, 0)')
@@ -67,7 +67,7 @@ test('Graybox class styles content correctly', async ({ page }) => {
   })).toBe('1px solid rgb(217, 217, 217)')
   expect(await elem.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('padding')
-  })).toBe('5px')
+  })).toBe('16px')
   expect(await elem.evaluate((el) => {
     return window.getComputedStyle(el).getPropertyValue('background-color')
   })).toBe('rgb(245, 245, 245)')
