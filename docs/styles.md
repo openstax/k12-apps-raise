@@ -1,14 +1,14 @@
 # Styling content for RAISE
 
-In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below. 
+In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below.
 
 
 ***
 
 
-## Standard Table 
+## Standard Table
 
-Add a border of `1px solid black` and padding of `5px` to your table.
+Adds a solid border and padding to a table.
 
 **Example**
 <div style="text-align: center;">
@@ -17,9 +17,9 @@ Add a border of `1px solid black` and padding of `5px` to your table.
 
 
 **Aviliability**
-Add as a class atribute to a table html tag. 
+Add as a class atribute to a table html tag.
 
-**Usage** 
+**Usage**
 
 ```html
   <table class="os-raise-standardtable">
@@ -56,7 +56,7 @@ Add a Gray box around your element
 Grayboxes should be used in div elements only
 
 
-**Usage** 
+**Usage**
 ```html
 <div class="os-raise-graybox">
     <p> Image Title</p>
@@ -82,7 +82,7 @@ Any element
 
 **Usage**
 
-```html 
+```html
 <p class="os-raise-indent">Text in a box</p>
 ```
 
@@ -90,7 +90,7 @@ Any element
 
 ## No-Indent (os-raise-noindent)
 
-Remove the indent inherent in an ordered list. 
+Remove the indent inherent in an ordered list.
 
 **Example**
 <div style="text-align: center;">
