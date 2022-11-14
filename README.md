@@ -71,7 +71,7 @@ If you want to modify the language or location of the client code, modify the ar
 ```bash
 $ cd k12-apps-raise
 $ docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
-  -i http://events.raiselearning.org/openapi.json \
+  -i https://events.raiselearning.org/openapi.json \
   -g typescript-fetch \
   -o local/src/eventsapi
 ```
