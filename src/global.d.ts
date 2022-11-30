@@ -8,6 +8,8 @@ declare global {
     M?: {
       cfg: {
         courseId: string
+        wwwroot: string
+        sesskey: string
       }
     }
   }

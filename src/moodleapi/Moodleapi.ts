@@ -1,36 +1,39 @@
+interface Response {
+  uuid: string
+  jwt: string
+}
 export class Moodleapi {
-    endpoint = 'local_raise_get_user'
-    // pass in host and session key. 
-    constructor( sessionKey?: string){
-        if (sessionKey){
+  endpoint = 'local_raise_get_user'
 
-        }
+  async getUser(): Promise<Response> {
+    const userRequest = {
+      index: 0,
+      methodname: this.endpoint,
+      args: {
+      }
     }
-
-    async getUser(){
-        const userRequest = {
-            index: 0,
-            methodname: this.endpoint,
-            args: {
-            }
-          }
-        const url = this.getMoodlePluginMethodUrl(this.endpoint)
-
-        let response = await fetch(url, {method: 'POST', body: JSON.stringify([userRequest])})
-
-        const userID = await response.json()
-        return userID[0].data['uuid']
+    const url = this.getMoodlePluginMethodUrl(this.endpoint)
+    if (url === '') {
+      console.log('Invalid environment variables')
     }
+    const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
+    const returnObject = await response.json()
 
-    getMoodlePluginMethodUrl(endpointMethod: string): string {
-        if (window.M === undefined) {
-          console.log('moodle variables not found')
-          return ''
-        }
-        let userUrl: string
-        userUrl = String(window.M.cfg.wwwroot)
-        userUrl += '/lib/ajax/service.php?sesskey='
-        userUrl += String(window.M.cfg.sesskey)
-        userUrl += '&info=' + endpointMethod
-        return userUrl
-      }}
+    return {
+      uuid: returnObject[0].data.uuid,
+      jwt: returnObject[0].data.jwt
+    }
+  }
+
+  getMoodlePluginMethodUrl(endpointMethod: string): string {
+    if (window.M === undefined) {
+      return ''
+    }
+    let userUrl: string
+    userUrl = String(window.M.cfg.wwwroot)
+    userUrl += '/lib/ajax/service.php?sesskey='
+    userUrl += String(window.M.cfg.sesskey)
+    userUrl += '&info=' + endpointMethod
+    return userUrl
+  }
+}
