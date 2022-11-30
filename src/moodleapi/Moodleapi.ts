@@ -17,11 +17,11 @@ export class Moodleapi {
       console.log('Invalid environment variables')
     }
     const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
-    const returnObject = await response.json()
+    const responseJSON = await response.json()
 
     return {
-      uuid: returnObject[0].data.uuid,
-      jwt: returnObject[0].data.jwt
+      uuid: responseJSON[0].data.uuid,
+      jwt: responseJSON[0].data.jwt
     }
   }
 
