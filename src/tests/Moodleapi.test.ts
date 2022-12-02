@@ -1,5 +1,5 @@
 import 'whatwg-fetch'
-import { Moodleapi } from '../moodleapi/Moodleapi'
+import { MoodleApi } from '../moodleapi'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
@@ -19,14 +19,7 @@ afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
 test('Test getuser', async () => {
-  const moodleApi = new Moodleapi()
-  window.M = {
-    cfg: {
-      wwwroot: 'http://moodle',
-      sesskey: '12345'
-    }
-  } as any
-
+  const moodleApi = new MoodleApi('http://moodle', '12345')
   const res = await moodleApi.getUser()
   expect(res.uuid === 'uuid')
   expect(res.jwt === 'jwt')

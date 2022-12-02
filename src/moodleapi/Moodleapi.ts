@@ -1,23 +1,34 @@
-interface Response {
+interface GetUserResponse {
   uuid: string
   jwt: string
 }
-export class Moodleapi {
-  endpoint = 'local_raise_get_user'
 
-  async getUser(): Promise<Response> {
+export class MoodleApi {
+  private readonly wwwroot: string
+  private readonly sesskey: string
+
+  constructor(wwwroot: string, sesskey: string) {
+    this.wwwroot = wwwroot
+    this.sesskey = sesskey
+  }
+
+  async getUser(): Promise<GetUserResponse> {
+    const methodname = 'local_raise_get_user'
     const userRequest = {
       index: 0,
-      methodname: this.endpoint,
+      methodname: methodname,
       args: {
       }
     }
-    const url = this.getMoodlePluginMethodUrl(this.endpoint)
-    if (url === '') {
-      console.log('Invalid environment variables')
-    }
+    const url = this.getMoodleAjaxUrl(methodname)
     const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
     const responseJSON = await response.json()
+
+    if (responseJSON.error !== undefined) {
+      console.log('ERROR in response json')
+      console.log(responseJSON.error)
+      throw new Error(responseJSON.error)
+    }
 
     return {
       uuid: responseJSON[0].data.uuid,
@@ -25,14 +36,11 @@ export class Moodleapi {
     }
   }
 
-  getMoodlePluginMethodUrl(endpointMethod: string): string {
-    if (window.M === undefined) {
-      return ''
-    }
+  getMoodleAjaxUrl(endpointMethod: string): string {
     let userUrl: string
-    userUrl = String(window.M.cfg.wwwroot)
+    userUrl = this.wwwroot
     userUrl += '/lib/ajax/service.php?sesskey='
-    userUrl += String(window.M.cfg.sesskey)
+    userUrl += this.sesskey
     userUrl += '&info=' + endpointMethod
     return userUrl
   }
