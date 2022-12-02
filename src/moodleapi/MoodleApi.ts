@@ -13,14 +13,14 @@ export class MoodleApi {
   }
 
   async getUser(): Promise<GetUserResponse> {
-    const methodname = 'local_raise_get_user'
+    const methodName = 'local_raise_get_user'
     const userRequest = {
       index: 0,
-      methodname: methodname,
+      methodname: methodName,
       args: {
       }
     }
-    const url = this.getMoodleAjaxUrl(methodname)
+    const url = this.getMoodleAjaxUrl(methodName)
     const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
     const responseJSON = await response.json()
 
