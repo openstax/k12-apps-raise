@@ -25,8 +25,6 @@ export class MoodleApi {
     const responseJSON = await response.json()
 
     if (responseJSON.error !== undefined) {
-      console.log('ERROR in response json')
-      console.log(responseJSON.error)
       throw new Error(responseJSON.error)
     }
 

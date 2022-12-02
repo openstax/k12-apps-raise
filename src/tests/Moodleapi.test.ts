@@ -1,5 +1,5 @@
 import 'whatwg-fetch'
-import { MoodleApi } from '../moodleapi'
+import { MoodleApi } from '../moodleapi/MoodleApi'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
