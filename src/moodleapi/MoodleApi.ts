@@ -23,7 +23,6 @@ export class MoodleApi {
     const url = this.getMoodleAjaxUrl(methodName)
     const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
     const responseJSON = await response.json()
-
     if (responseJSON.error !== undefined) {
       throw new Error(responseJSON.error)
     }
@@ -34,7 +33,7 @@ export class MoodleApi {
     }
   }
 
-  getMoodleAjaxUrl(endpointMethod: string): string {
+  private getMoodleAjaxUrl(endpointMethod: string): string {
     let userUrl: string
     userUrl = this.wwwroot
     userUrl += '/lib/ajax/service.php?sesskey='
