@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getVariant } from '../lib/utils'
+import { getVariant, getVariantName } from '../lib/utils'
 import { blockifyHTML } from '../lib/blocks'
 import { ENV } from '../lib/env'
 
@@ -21,11 +21,14 @@ enum FetchStatus {
 
 interface ContentLoaderProps {
   contentId: string
+  onContentLoad: (contentID: string, variant: string) => void
+  onContentLoadFailure: (error: string, contentID: string) => void
 }
 
-export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element => {
+export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
+  const [variantName, setVariantName] = useState<string>('')
 
   const fetchContent = async (): Promise<void> => {
     const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${contentId}.json`)
@@ -39,6 +42,7 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
 
       const data = await response.json() as ContentResponse
       const htmlContent = getVariant(data.content)
+      setVariantName(getVariantName())
 
       if (htmlContent === undefined) {
         setFetchStatus(FetchStatus.FetchFailure)
@@ -57,6 +61,7 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
   }, [])
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
+    onContentLoad(contentId, variantName)
     return (
       <>
         {children}
@@ -65,6 +70,7 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
   }
 
   if (fetchStatus === FetchStatus.FetchFailure) {
+    onContentLoadFailure('Fetch failure', contentId)
     return (
       <div className="os-raise-bootstrap">
         <div className="text-center">
