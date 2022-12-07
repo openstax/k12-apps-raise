@@ -97,7 +97,9 @@ class EventManager {
 
     this.getAccessToken().then((jwt) => {
       const parameters: ConfigurationParameters = {
-        accessToken: jwt
+        accessToken: jwt,
+        basePath: 'http://localhost:8888',
+        headers: {'Access-Control-Allow-Origin': 'http://localhost:8888'}
       }
       const config = new Configuration(parameters)
       this.eventApi = new DefaultApi(config)
@@ -120,7 +122,7 @@ class EventManager {
     if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
       return
     }
-    const requestInit = { keepalive: true,  headers: [['Access-Control-Allow-Origin', 'http://localhost:8000']]  }
+    const requestInit = { keepalive: true }
     const eventsRequest: CreateEventsV1EventsPostRequest = {
       eventsInner: this.eventQueue
     }
