@@ -71,31 +71,20 @@ export const createContentLoadFailedV1 = (error: string, contentID: string): Con
 class EventManager {
   private static instance: EventManager
   protected eventQueue: EventsInner[] = []
-  protected eventApi: DefaultApi
-  protected moodleApi: MoodleApi
+  protected static eventApi: DefaultApi | undefined
+  protected static moodleApi: MoodleApi | undefined
 
   private constructor() {
-    if (window.M?.cfg.wwwroot === undefined) {
-      throw new Error('wwwroot env variable is undefined.')
-    }
-    this.moodleApi = new MoodleApi(window.M?.cfg.wwwroot, window.M?.cfg.sesskey)
-    this.getToken().then((jwt) => {
-      const parameters: ConfigurationParameters = {
-        accessToken: jwt
-      }
-      const config = new Configuration(parameters)
-      this.eventApi = new DefaultApi(config)
-      console.log('Setup complete')
-    }).catch(() => {
-      throw new Error('moodleAPI failiure')
-    })
-
     setTimeout(() => {
       void this.flushEvents()
     }, 3000)
   }
 
-  private async getToken(): Promise<string> {
+  private static async getAccessToken(): Promise<string> {
+    if (window.M?.cfg.wwwroot === undefined) {
+      throw new Error('wwwroot env variable is undefined.')
+    }
+    this.moodleApi = new MoodleApi(window.M?.cfg.wwwroot, window.M?.cfg.sesskey)
     const res = await this.moodleApi.getUser()
     return res.jwt
   }
@@ -105,6 +94,19 @@ class EventManager {
       this.instance = new EventManager()
       console.log('NEW EVENT MANAGER!!')
     }
+
+    this.getAccessToken().then((jwt) => {
+      const parameters: ConfigurationParameters = {
+        accessToken: jwt
+      }
+      const config = new Configuration(parameters)
+      this.eventApi = new DefaultApi(config)
+      console.log('Setup complete')
+    }).catch(() => {
+      this.eventApi = undefined
+      this.moodleApi = undefined
+    })
+
     return this.instance
   }
 
@@ -114,11 +116,14 @@ class EventManager {
   }
 
   private async flushEvents(): Promise<T> {
-    console.log("FLUSH")
+    console.log('FLUSH')
+    if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
+      return
+    }
     const RequestInit = { keepalive: true }
     const eventsRequest: CreateEventsV1EventsPostRequest = {
       eventsInner: this.eventQueue
     }
-    await this.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
+    await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
   }
 }
