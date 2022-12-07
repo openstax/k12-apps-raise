@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
 import { EventsInner, ContentLoadedV1, ContentLoadFailedV1 } from '../eventsapi'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 const impressionID = uuidv4()
-
 
 export const renderContentElements = (): number => {
   const osContentItems = document.querySelectorAll(`.${OS_RAISE_CONTENT_CLASS}`)
@@ -22,7 +21,6 @@ export const renderContentElements = (): number => {
     if (htmlElem.hasChildNodes()) {
       console.log('WARNING: Found non-empty os-raise-content')
     }
-
     createRoot(htmlElem).render(
       <React.StrictMode>
         <ContentLoader contentId={contentId} onContentLoad={(contentID: string, variant: string) => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }}
@@ -34,48 +32,45 @@ export const renderContentElements = (): number => {
   return osContentItems.length
 }
 
-export const createContentLoadV1Event = (contentID: string, variant: string): ContentLoadedV1 => {
-
+const collectCourseID = (): number => {
   const courseID = window.M?.cfg.courseId
   if (courseID === undefined) {
-    throw new Error('No course ID')
+    throw new Error('Error Collecting CourseID')
   }
+  return parseInt(courseID)
+}
+
+export const createContentLoadV1Event = (contentID: string, variant: string): ContentLoadedV1 => {
   const event: ContentLoadedV1 = {
-    courseId: parseInt(courseID),
+    courseId: collectCourseID(),
     impressionId: impressionID,
     sourceUri: window.location.toString(),
-    timestamp: 1234,
+    timestamp: Date.now(),
     eventname: 'content_loaded_v1',
     contentId: contentID,
-    variant: variant
+    variant
   }
   return event
 }
 
 export const createContentLoadFailedV1 = (error: string, contentID: string): ContentLoadFailedV1 => {
-  const courseID = window.M?.cfg.courseId
-  if (courseID === undefined) {
-    throw new Error('No course ID')
-  }
   const event: ContentLoadFailedV1 = {
-    courseId: parseInt(courseID),
+    courseId: collectCourseID(),
     impressionId: impressionID,
     sourceUri: window.location.toString(),
-    timestamp: 1234,
+    timestamp: Date.now(),
     eventname: 'content_load_failed_v1',
     contentId: contentID,
-    error: error
+    error
   }
   return event
 }
 
 class EventManager {
-
   private static instance: EventManager
-  private eventQueue: EventsInner[] = []
+  private readonly eventQueue: EventsInner[] = []
 
   private constructor() {
-
   }
 
   // Static method to retreive the singleton instance
@@ -84,11 +79,15 @@ class EventManager {
       this.instance = new EventManager()
       console.log('NEW EVENT MANAGER!!')
     }
-    return this.instance;
+    return this.instance
   }
-  queueEvent(event: EventsInner) {
+
+  queueEvent(event: EventsInner): void {
     this.eventQueue.push(event)
     console.log(this.eventQueue)
   }
 
+  flushEvents(): void {
+    DefaultApi.createEventsV1EventsPost(this.eventQueue)
+  }
 }
