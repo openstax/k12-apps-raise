@@ -22,6 +22,7 @@ export const renderContentElements = (): number => {
     if (htmlElem.hasChildNodes()) {
       console.log('WARNING: Found non-empty os-raise-content')
     }
+
     createRoot(htmlElem).render(
       <React.StrictMode>
         <ContentLoader contentId={contentId} onContentLoad={(contentID: string, variant: string) => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }}
@@ -69,30 +70,36 @@ export const createContentLoadFailedV1 = (error: string, contentID: string): Con
 
 class EventManager {
   private static instance: EventManager
-  private eventQueue: EventsInner[] = []
-  private eventApi: DefaultApi; 
-  private moodleApi: MoodleApi; 
+  protected eventQueue: EventsInner[] = []
+  protected eventApi: DefaultApi
+  protected moodleApi: MoodleApi
 
   private constructor() {
-    if(window.M?.cfg.wwwroot === undefined){
+    if (window.M?.cfg.wwwroot === undefined) {
       throw new Error('wwwroot env variable is undefined.')
     }
     this.moodleApi = new MoodleApi(window.M?.cfg.wwwroot, window.M?.cfg.sesskey)
-    this.getToken().then( (jwt) => {
+    this.getToken().then((jwt) => {
       const parameters: ConfigurationParameters = {
         accessToken: jwt
       }
       const config = new Configuration(parameters)
       this.eventApi = new DefaultApi(config)
-
+      console.log('Setup complete')
+    }).catch(() => {
+      throw new Error('moodleAPI failiure')
     })
 
+    setTimeout(() => {
+      void this.flushEvents()
+    }, 3000)
   }
-  async getToken(): Promise<string>{
+
+  private async getToken(): Promise<string> {
     const res = await this.moodleApi.getUser()
     return res.jwt
   }
-  // Static method to retreive the singleton instance
+
   static getInstance(): EventManager {
     if (!this.instance) {
       this.instance = new EventManager()
@@ -106,13 +113,12 @@ class EventManager {
     console.log(this.eventQueue)
   }
 
-  flushEvents(): void {
-    const RequestInit = {'keepalive': true}
-
-    const eventsRequest : CreateEventsV1EventsPostRequest = {
+  private async flushEvents(): Promise<T> {
+    console.log("FLUSH")
+    const RequestInit = { keepalive: true }
+    const eventsRequest: CreateEventsV1EventsPostRequest = {
       eventsInner: this.eventQueue
     }
-
-    this.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
+    await this.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
   }
 }
