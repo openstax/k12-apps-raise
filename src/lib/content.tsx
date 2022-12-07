@@ -77,7 +77,7 @@ class EventManager {
   private constructor() {
     setTimeout(() => {
       void this.flushEvents()
-    }, 3000)
+    }, 1000)
   }
 
   private static async getAccessToken(): Promise<string> {
@@ -115,15 +115,15 @@ class EventManager {
     console.log(this.eventQueue)
   }
 
-  private async flushEvents(): Promise<T> {
+  private async flushEvents(): Promise<void> {
     console.log('FLUSH')
     if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
       return
     }
-    const RequestInit = { keepalive: true }
+    const requestInit = { keepalive: true,  headers: [['Access-Control-Allow-Origin', 'http://localhost:8000']]  }
     const eventsRequest: CreateEventsV1EventsPostRequest = {
       eventsInner: this.eventQueue
     }
-    await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
+    await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
   }
 }
