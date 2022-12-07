@@ -1,8 +1,9 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
-import { EventsInner, ContentLoadedV1, ContentLoadFailedV1 } from '../eventsapi'
+import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
+import { MoodleApi } from '../moodleapi'
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 const impressionID = uuidv4()
 
@@ -68,11 +69,29 @@ export const createContentLoadFailedV1 = (error: string, contentID: string): Con
 
 class EventManager {
   private static instance: EventManager
-  private readonly eventQueue: EventsInner[] = []
+  private eventQueue: EventsInner[] = []
+  private eventApi: DefaultApi; 
+  private moodleApi: MoodleApi; 
 
   private constructor() {
-  }
+    if(window.M?.cfg.wwwroot === undefined){
+      throw new Error('wwwroot env variable is undefined.')
+    }
+    this.moodleApi = new MoodleApi(window.M?.cfg.wwwroot, window.M?.cfg.sesskey)
+    this.getToken().then( (jwt) => {
+      const parameters: ConfigurationParameters = {
+        accessToken: jwt
+      }
+      const config = new Configuration(parameters)
+      this.eventApi = new DefaultApi(config)
 
+    })
+
+  }
+  async getToken(): Promise<string>{
+    const res = await this.moodleApi.getUser()
+    return res.jwt
+  }
   // Static method to retreive the singleton instance
   static getInstance(): EventManager {
     if (!this.instance) {
@@ -88,6 +107,12 @@ class EventManager {
   }
 
   flushEvents(): void {
-    DefaultApi.createEventsV1EventsPost(this.eventQueue)
+    const RequestInit = {'keepalive': true}
+
+    const eventsRequest : CreateEventsV1EventsPostRequest = {
+      eventsInner: this.eventQueue
+    }
+
+    this.eventApi.createEventsV1EventsPost(eventsRequest, RequestInit)
   }
 }

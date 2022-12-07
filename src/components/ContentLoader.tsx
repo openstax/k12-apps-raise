@@ -39,7 +39,7 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
         setFetchStatus(FetchStatus.FetchFailure)
         return
       }
-
+      onContentLoad(contentId, variantName)
       const data = await response.json() as ContentResponse
       const htmlContent = getVariant(data.content)
       setVariantName(getVariantName())
@@ -48,7 +48,6 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
         setFetchStatus(FetchStatus.FetchFailure)
         return
       }
-
       setChildren(blockifyHTML(htmlContent))
       setFetchStatus(FetchStatus.FetchSuccess)
     } catch {
@@ -61,7 +60,6 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
   }, [])
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
-    onContentLoad(contentId, variantName)
     return (
       <>
         {children}

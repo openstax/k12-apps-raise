@@ -56,3 +56,5 @@ test('error is displayed on network error when fetching content', async () => {
   )
   await screen.findByText('There was an error loading content. Please try refreshing the page.')
 })
+// oncontentload is called
+// oncontentfail is called
