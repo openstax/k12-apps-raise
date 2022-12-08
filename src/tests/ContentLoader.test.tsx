@@ -25,11 +25,25 @@ jest.mock('../lib/env.ts', () => ({
   }
 }))
 
-const mockOnLoad = jest.fn((contentID: string, variant: string) => {})
+const mockOnLoad = jest.fn((contentID: string, variant: string) => {
+  console.log('call!')
+})
 // eslint-disable-next-line n/handle-callback-err
 const mockOnLoadFailed = jest.fn((error: string, contentID: string) => {})
 
-beforeAll(() => server.listen())
+beforeAll(() => {
+  server.listen()
+  window.M = {
+    cfg: {
+      courseId: 5
+    }
+  } as any
+  const oldWindowLocation = window.location
+  delete ? window.location
+  // window.location.host = 'localhost:8000'
+  // console.log(window.location.host)
+})
+
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
@@ -65,16 +79,18 @@ test('OnContentLoad is called', async () => {
   render(
     <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  const x = mockOnLoad
-  console.log(x)
+  // expect(mockOnLoad.mock.calls.length).toBe(1)
+  // expect(mockOnLoadFailed.mock.calls.length).toBe(0)
   await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(1))
   await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(0))
 })
 
-test('error is displayed on response error when fetching content', async () => {
+test('OnContentLadFailed is called when error loading content', async () => {
   render(
     <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
+  // expect(mockOnLoad.mock.calls.length).toBe(0)
+  // expect(mockOnLoadFailed.mock.calls.length).toBe(1)
   await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
   await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
 })

@@ -17,8 +17,10 @@ afterAll(() => server.close())
 
 test('Test EventManager', async () => {
   window.location.host = 'localhost:8000'
-  const eventFailed = EventsInnerFromJSON({ eventname: 'content_loaded_v1' })
+  const eventLoaded = EventsInnerFromJSON({ eventname: 'content_loaded_v1' })
+  const eventFailed = EventsInnerFromJSON({ eventname: 'content_load_failed_v1' })
   const em = EventManager.getInstance()
+  em.queueEvent(eventLoaded)
   em.queueEvent(eventFailed)
   em.flushEvents().then((ret) => {
     expect(ret.detail).toBe('Success!')
