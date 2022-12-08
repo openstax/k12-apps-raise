@@ -1,18 +1,16 @@
 import 'whatwg-fetch'
-import { MoodleApi } from '../moodleapi'
+import { EventManager } from '../lib/content'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 import { createContentLoadFailedV1, createContentLoadV1Event } from '../lib/content'
 import {validate} from 'uuid'
-const server = setupServer(
-  rest.post('http://moodle/lib/ajax/service.php?sesskey=12345&info=local_raise_get_user', (req, res, ctx) => {
-    return res(ctx.json([{
-      data: {
-        uuid: 'uuid',
-        jwt: 'jwt'
-      }
+import { EventsInnerFromJSON } from '../eventsapi'
 
-    }]))
+const server = setupServer(
+  rest.post('http://localhost:8888/v1/events', (req, res, ctx) => {
+    return res(ctx.json({
+      detail: 'Success!'
+    }))
   }))
 
 beforeAll(() => server.listen())
@@ -66,4 +64,13 @@ test('Test createContentLoadV1Event', async () => {
   expect(contentLoaded.sourceUri).toBe('http://localhost/')
   expect(contentLoaded.error).toBe('error string')
 
+})
+test('Test EventManager', async () => {
+  window.location.host = 'localhost:8000'
+  const eventFailed = EventsInnerFromJSON({ eventname: 'content_loaded_v1' })
+  const em = EventManager.getInstance()
+  em.queueEvent(eventFailed)
+  em.flushEvents().then((ret) => {
+    expect(ret.detail).toBe('Success!')
+  }).catch(() => {})
 })
