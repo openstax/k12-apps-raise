@@ -77,7 +77,7 @@ test('error is displayed on network error when fetching content', async () => {
 
 test('OnContentLoad is called', async () => {
   render(
-    <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
+    <ContentLoader contentId='test-content' onContentLoad={() => mockOnLoad} onContentLoadFailure={ () => mockOnLoadFailed}/>
   )
   // expect(mockOnLoad.mock.calls.length).toBe(1)
   // expect(mockOnLoadFailed.mock.calls.length).toBe(0)
