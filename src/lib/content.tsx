@@ -10,7 +10,7 @@ const ENV_PRODUCTION = 'raiselearning.org'
 const ENV_LOCAL = 'localhost:8000'
 const API_ENDPOINT_PROD = 'https://k12.openstax.org/contents/raise'
 const API_ENDPOINT_LOCAL = 'http://localhost:8888'
-const EVENT_FLUSH_PERIOD = 60000
+const EVENT_FLUSH_PERIOD = 2000
 const impressionID = uuidv4()
 
 export const renderContentElements = (): number => {
@@ -147,7 +147,7 @@ class EventManager {
 
   private async flushEvents(): Promise<void> {
     console.log('FLUSH')
-    if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
+    if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
       console.log('Events API Not Instantiated')
     } else if (this.eventQueue.length === 0) {
       console.log('NO EVENTS')
