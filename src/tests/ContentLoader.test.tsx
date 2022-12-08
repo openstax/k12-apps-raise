@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ContentLoader } from '../components/ContentLoader'
 
@@ -65,14 +65,16 @@ test('OnContentLoad is called', async () => {
   render(
     <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  expect(mockOnLoad.mock.calls.length).toBe(1)
-  expect(mockOnLoadFailed.mock.calls.length).toBe(0)
+  const x = mockOnLoad
+  console.log(x)
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(1))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(0))
 })
 
 test('error is displayed on response error when fetching content', async () => {
   render(
     <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  expect(mockOnLoad.mock.calls.length).toBe(1)
-  expect(mockOnLoadFailed.mock.calls.length).toBe(0)
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
 })

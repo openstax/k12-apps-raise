@@ -1,9 +1,10 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
-import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest } from '../eventsapi'
+import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest, DetailMessage } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
+import { response } from 'msw'
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 const ENV_STAGING = 'staging.raiselearing.org'
 const ENV_PRODUCTION = 'raiselearning.org'
@@ -30,10 +31,10 @@ export const renderContentElements = (): number => {
     }
 
     createRoot(htmlElem).render(
-      <React.StrictMode>
+      // <React.StrictMode>
         <ContentLoader contentId={contentId} onContentLoad={(contentID: string, variant: string) => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }}
           onContentLoadFailure={(error: string) => { EventManager.getInstance().queueEvent(createContentLoadFailedV1(error, contentId)) }} />
-      </React.StrictMode>
+      // </React.StrictMode>
     )
   })
 
@@ -74,7 +75,7 @@ export const createContentLoadFailedV1 = (error: string, contentID: string): Con
   return event
 }
 
-class EventManager {
+export class EventManager {
   private static instance: EventManager
   protected eventQueue: EventsInner[] = []
   protected static eventApi: DefaultApi | undefined
@@ -145,9 +146,10 @@ class EventManager {
     console.log(this.eventQueue)
   }
 
-  private async flushEvents(): Promise<void> {
+  async flushEvents(): Promise<DetailMessage> {
     console.log('FLUSH')
-    if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
+    let ret: DetailMessage = { detail: 'No Flush' }
+    if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
       console.log('Events API Not Instantiated')
     } else if (this.eventQueue.length === 0) {
       console.log('NO EVENTS')
@@ -156,13 +158,15 @@ class EventManager {
       const eventsRequest: CreateEventsV1EventsPostRequest = {
         eventsInner: this.eventQueue
       }
-      const ret = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
-      if (ret.detail === 'Success!') {
+      const response = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
+      if (response.detail === 'Success!') {
         this.eventQueue = []
       }
+      ret = response
     }
     setTimeout(() => {
       void this.flushEvents()
     }, EVENT_FLUSH_PERIOD)
+    return ret
   }
 }
