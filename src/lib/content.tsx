@@ -148,11 +148,13 @@ export class EventManager {
 
   async flushEvents(): Promise<DetailMessage> {
     console.log('FLUSH')
-    let ret: DetailMessage = { detail: 'No Flush' }
+    let ret: DetailMessage
     if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
       console.log('Events API Not Instantiated')
+      ret = { detail: 'EVENTS API NOT INSTANTIATED' }
     } else if (this.eventQueue.length === 0) {
       console.log('NO EVENTS')
+      ret = { detail: 'NO EVENTS QUEUED' }
     } else {
       const requestInit = { keepalive: true }
       const eventsRequest: CreateEventsV1EventsPostRequest = {
