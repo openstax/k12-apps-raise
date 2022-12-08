@@ -5,6 +5,12 @@ import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configur
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
+const ENV_STAGING = 'staging.raiselearing.org'
+const ENV_PRODUCTION = 'raiselearning.org'
+const ENV_LOCAL = 'localhost:8000'
+const API_ENDPOINT_PROD = 'https://k12.openstax.org/contents/raise'
+const API_ENDPOINT_LOCAL = 'http://localhost:8888'
+const EVENT_FLUSH_PERIOD = 60000
 const impressionID = uuidv4()
 
 export const renderContentElements = (): number => {
@@ -77,7 +83,13 @@ class EventManager {
   private constructor() {
     setTimeout(() => {
       void this.flushEvents()
-    }, 1000)
+    }, EVENT_FLUSH_PERIOD)
+
+    document.onvisibilitychange = () => {
+      if (document.visibilityState === 'hidden') {
+        void this.flushEvents()
+      }
+    }
   }
 
   private static async getAccessToken(): Promise<string> {
@@ -89,17 +101,33 @@ class EventManager {
     return res.jwt
   }
 
+  private static getApiPath(envRoot: string): string {
+    if (envRoot === ENV_PRODUCTION || envRoot === ENV_STAGING) {
+      return API_ENDPOINT_PROD
+    } else {
+      return API_ENDPOINT_LOCAL
+    }
+  }
+
   static getInstance(): EventManager {
+    const envRoot = window.location.host.toString()
+    if (envRoot !== ENV_PRODUCTION && envRoot !== ENV_STAGING && envRoot !== ENV_LOCAL) {
+      this.eventApi = undefined
+      this.moodleApi = undefined
+      return new EventManager()
+    }
+
     if (!this.instance) {
       this.instance = new EventManager()
       console.log('NEW EVENT MANAGER!!')
     }
 
     this.getAccessToken().then((jwt) => {
+      const eventApiPath = EventManager.getApiPath(envRoot)
       const parameters: ConfigurationParameters = {
         accessToken: jwt,
-        basePath: 'http://localhost:8888',
-        headers: {'Access-Control-Allow-Origin': 'http://localhost:8888'}
+        basePath: eventApiPath,
+        headers: { 'Access-Control-Allow-Origin': eventApiPath }
       }
       const config = new Configuration(parameters)
       this.eventApi = new DefaultApi(config)
@@ -120,12 +148,21 @@ class EventManager {
   private async flushEvents(): Promise<void> {
     console.log('FLUSH')
     if (EventManager.eventApi === undefined || EventManager.eventApi === undefined) {
-      return
+      console.log('Events API Not Instantiated')
+    } else if (this.eventQueue.length === 0) {
+      console.log('NO EVENTS')
+    } else {
+      const requestInit = { keepalive: true }
+      const eventsRequest: CreateEventsV1EventsPostRequest = {
+        eventsInner: this.eventQueue
+      }
+      const ret = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
+      if (ret.detail === 'Success!') {
+        this.eventQueue = []
+      }
     }
-    const requestInit = { keepalive: true }
-    const eventsRequest: CreateEventsV1EventsPostRequest = {
-      eventsInner: this.eventQueue
-    }
-    await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
+    setTimeout(() => {
+      void this.flushEvents()
+    }, EVENT_FLUSH_PERIOD)
   }
 }

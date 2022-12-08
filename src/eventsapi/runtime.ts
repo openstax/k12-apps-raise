@@ -115,7 +115,6 @@ export class BaseAPI {
 
     protected async request(context: RequestOpts, initOverrides?: RequestInit | InitOverrideFunction): Promise<Response> {
         const { url, init } = await this.createFetchParams(context, initOverrides);
-        console.log(url)
         const response = await this.fetchApi(url, init);
         if (response && (response.status >= 200 && response.status < 300)) {
             return response;
@@ -169,7 +168,6 @@ export class BaseAPI {
     }
 
     private fetchApi = async (url: string, init: RequestInit) => {
-        console.log(url)
         let fetchParams = { url, init };
         for (const middleware of this.middleware) {
             if (middleware.pre) {
