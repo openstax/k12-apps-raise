@@ -21,8 +21,8 @@ enum FetchStatus {
 
 interface ContentLoaderProps {
   contentId: string
-  onContentLoad: (contentID: string, variant: string) => void
-  onContentLoadFailure: (error: string, contentID: string) => void
+  onContentLoad?: (contentID: string, variant: string) => void
+  onContentLoadFailure?: (contentID: string, errorMessage?: string) => void
 }
 
 export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
@@ -34,16 +34,20 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
     const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${contentId}.json`)
 
     try {
+      console.log('creating request')
       const response = await fetch(request)
+      console.log('request sent')
       if (!response.ok) {
         setFetchStatus(FetchStatus.FetchFailure)
         return
       }
-      onContentLoad(contentId, variantName)
+      if (onContentLoad !== undefined) {
+        onContentLoad(contentId, variantName)
+      }
+      console.log('Just Sent OnContentLoad')
       const data = await response.json() as ContentResponse
       const htmlContent = getVariant(data.content)
       setVariantName(getVariantName())
-
       if (htmlContent === undefined) {
         setFetchStatus(FetchStatus.FetchFailure)
         return
@@ -51,6 +55,9 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
       setChildren(blockifyHTML(htmlContent))
       setFetchStatus(FetchStatus.FetchSuccess)
     } catch {
+      if (onContentLoadFailure !== undefined) {
+        onContentLoadFailure(contentId, 'Fetch failure')
+      }
       setFetchStatus(FetchStatus.FetchFailure)
     }
   }
@@ -68,7 +75,6 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
   }
 
   if (fetchStatus === FetchStatus.FetchFailure) {
-    onContentLoadFailure('Fetch failure', contentId)
     return (
       <div className="os-raise-bootstrap">
         <div className="text-center">

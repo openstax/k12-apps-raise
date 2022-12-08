@@ -81,8 +81,8 @@ export const getVariantName = (): string => {
   const currentContext = getCurrentContext()
 
   const courseVariant = getVariantMapping(currentContext.host, currentContext.courseId)
-  if (courseVariant === 'undefined'){
-    throw new Error(`getVariantName() error`);
+  if (courseVariant === 'undefined') {
+    throw new Error('getVariantName() error')
   }
   return courseVariant
 }
