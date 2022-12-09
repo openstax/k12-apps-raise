@@ -1,3 +1,4 @@
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
 import { EventManager, createContentLoadFailedV1, createContentLoadV1Event } from './events'
@@ -21,10 +22,10 @@ export const renderContentElements = (): number => {
     }
 
     createRoot(htmlElem).render(
-      // <React.StrictMode>
+      <React.StrictMode>
         <ContentLoader contentId={contentId} onContentLoad={(contentID: string, variant: string) => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }}
           onContentLoadFailure={(error: string) => { EventManager.getInstance().queueEvent(createContentLoadFailedV1(error, contentId)) }} />
-      // </React.StrictMode>
+      </React.StrictMode>
     )
   })
 

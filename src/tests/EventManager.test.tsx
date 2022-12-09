@@ -17,7 +17,6 @@ beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
-// Replace with EventsManager Test
 test('Test createContentLoadV1Event', async () => {
   const contentID = '1234'
   const variant = 'main'
@@ -47,7 +46,7 @@ test('Test createContentLoadV1Event', async () => {
       courseId: '1'
     }
   } as any
-  const contentLoaded = createContentLoadFailedV1(error, contentID)
+  const contentLoaded = createContentLoadFailedV1(contentID, error)
   expect(contentLoaded.contentId).toBe('1234')
   expect(contentLoaded.eventname).toBe('content_load_failed_v1')
   expect(contentLoaded.courseId).toBe(1)
@@ -63,7 +62,5 @@ test('Test EventManager', async () => {
   const em = EventManager.getInstance()
   em.queueEvent(eventLoaded)
   em.queueEvent(eventFailed)
-  em.flushEvents().then((response) => {
-    expect(response.detail).toBe('Success!')
-  }).catch(() => {})
+  expect(em.flushEvents())
 })

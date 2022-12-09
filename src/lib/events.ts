@@ -2,13 +2,7 @@
 import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest, DetailMessage } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
-
-const ENV_STAGING = 'staging.raiselearing.org'
-const ENV_PRODUCTION = 'raiselearning.org'
-const ENV_LOCAL = 'localhost:8000'
-const API_ENDPOINT_PROD = 'https://k12.openstax.org/contents/raise'
-const API_ENDPOINT_LOCAL = 'http://localhost:8888'
-const EVENT_FLUSH_PERIOD = 30000
+import * as settings from './settings'
 const impressionID = uuidv4()
 
 const collectCourseID = (): number => {
@@ -53,12 +47,12 @@ export class EventManager {
 
   private constructor() {
     setTimeout(() => {
-      const response = this.flushEvents()
-    }, EVENT_FLUSH_PERIOD)
+      this.flushEvents()
+    }, settings.EVENT_FLUSH_PERIOD)
 
     document.onvisibilitychange = () => {
       if (document.visibilityState === 'hidden') {
-        const response = this.flushEvents()
+        this.flushEvents()
       }
     }
   }
@@ -73,24 +67,24 @@ export class EventManager {
   }
 
   private static getApiPath(envRoot: string): string {
-    if (envRoot === ENV_PRODUCTION || envRoot === ENV_STAGING) {
-      return API_ENDPOINT_PROD
+    if (envRoot === settings.ENV_PRODUCTION || envRoot === settings.ENV_STAGING) {
+      return settings.API_ENDPOINT_PROD
     } else {
-      return API_ENDPOINT_LOCAL
+      return settings.API_ENDPOINT_LOCAL
     }
   }
 
   static getInstance(): EventManager {
     const envRoot = window.location.host.toString()
-    if (envRoot !== ENV_PRODUCTION && envRoot !== ENV_STAGING && envRoot !== ENV_LOCAL) {
+    if (envRoot !== settings.ENV_PRODUCTION && envRoot !== settings.ENV_STAGING && envRoot !== settings.ENV_LOCAL) {
       this.eventApi = undefined
       this.moodleApi = undefined
       return new EventManager()
     }
 
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (!this.instance) {
       this.instance = new EventManager()
-      console.log('NEW EVENT MANAGER!!')
     }
 
     this.getAccessToken().then((jwt) => {
@@ -115,15 +109,24 @@ export class EventManager {
     console.log(this.eventQueue)
   }
 
-  async flushEvents(): Promise<DetailMessage> {
+  flushEvents(): boolean {
     console.log('FLUSH')
+    this.flushEventsAsync().then((response) => {
+      if (response.detail !== 'Success!') {
+        console.log(response.detail)
+        return false
+      }
+      return true
+    }).catch(() => { return false })
+    return false
+  }
+
+  private async flushEventsAsync(): Promise<DetailMessage> {
     let ret: DetailMessage
     if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
-      console.log('Events API Not Instantiated')
-      ret = { detail: 'EVENTS API NOT INSTANTIATED' }
+      ret = { detail: 'EventsApi not instantiated' }
     } else if (this.eventQueue.length === 0) {
-      console.log('NO EVENTS')
-      ret = { detail: 'NO EVENTS QUEUED' }
+      ret = { detail: 'No Events in Queue to Flush' }
     } else {
       const requestInit = { keepalive: true }
       const eventsRequest: CreateEventsV1EventsPostRequest = {
@@ -136,8 +139,8 @@ export class EventManager {
       ret = response
     }
     setTimeout(() => {
-      const response = this.flushEvents()
-    }, EVENT_FLUSH_PERIOD)
+      this.flushEvents()
+    }, settings.EVENT_FLUSH_PERIOD)
     return ret
   }
 }
