@@ -34,9 +34,7 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
     const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${contentId}.json`)
 
     try {
-      console.log('creating request')
       const response = await fetch(request)
-      console.log('request sent')
       if (!response.ok) {
         setFetchStatus(FetchStatus.FetchFailure)
         return
@@ -44,7 +42,6 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
       if (onContentLoad !== undefined) {
         onContentLoad(contentId, variantName)
       }
-      console.log('Just Sent OnContentLoad')
       const data = await response.json() as ContentResponse
       const htmlContent = getVariant(data.content)
       setVariantName(getVariantName())

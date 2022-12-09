@@ -21,10 +21,13 @@ export const renderContentElements = (): number => {
       console.log('WARNING: Found non-empty os-raise-content')
     }
 
+    const contentLoadCallback = (contentID: string, variant: string): void => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }
+    const contentLoadFailedCallback = (error: string): void => { EventManager.getInstance().queueEvent(createContentLoadFailedV1(error, contentId)) }
+
     createRoot(htmlElem).render(
       <React.StrictMode>
-        <ContentLoader contentId={contentId} onContentLoad={(contentID: string, variant: string) => { EventManager.getInstance().queueEvent(createContentLoadV1Event(contentID, variant)) }}
-          onContentLoadFailure={(error: string) => { EventManager.getInstance().queueEvent(createContentLoadFailedV1(error, contentId)) }} />
+        <ContentLoader contentId={contentId} onContentLoad={contentLoadCallback}
+          onContentLoadFailure={contentLoadFailedCallback} />
       </React.StrictMode>
     )
   })

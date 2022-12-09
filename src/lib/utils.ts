@@ -86,3 +86,11 @@ export const getVariantName = (): string => {
   }
   return courseVariant
 }
+
+export const collectCourseID = (): number => {
+  const courseID = window.M?.cfg.courseId
+  if (courseID === undefined) {
+    throw new Error('Error Collecting CourseID')
+  }
+  return parseInt(courseID)
+}

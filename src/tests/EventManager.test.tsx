@@ -1,4 +1,3 @@
-import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 import { createContentLoadFailedV1, createContentLoadV1Event, EventManager } from '../lib/events'

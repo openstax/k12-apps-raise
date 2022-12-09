@@ -25,20 +25,7 @@ jest.mock('../lib/env.ts', () => ({
   }
 }))
 
-beforeAll(() => {
-  server.listen()
-  // window.M = {
-  //   cfg: {
-  //     courseId: 5
-  //   }
-  // } as any
-  // window.location = { host: 'localhost:8000' } as any
-  // const oldWindowLocation = window.location
-  // delete ? window.location
-  // window.location.host = 'localhost:8000'
-  // console.log(window.location.host)
-})
-
+beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
@@ -71,24 +58,22 @@ test('error is displayed on network error when fetching content', async () => {
 })
 
 test('OnContentLoad is called', async () => {
-  const mockOnLoadNew = jest.fn(() => { console.log('INSIDE CALLBACK') })
-  const mockOnLoadFailedNew = jest.fn(() => {})
-
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn(() => {})
   render(
-    <ContentLoader contentId='test-content' onContentLoad={mockOnLoadNew} onContentLoadFailure={mockOnLoadFailedNew}/>
+    <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
 
-  await waitFor(() => expect(mockOnLoadNew.mock.calls.length).toBe(1))
-  await waitFor(() => expect(mockOnLoadFailedNew.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(1))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(0))
 })
 
 test('OnContentLadFailed is called when error loading content', async () => {
-  const mockOnLoad2 = jest.fn((contentID: string, variant: string) => {})
-
-  const mockOnLoadFailed2 = jest.fn((error: string) => { console.log(error) })
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn()
   render(
-    <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad2} onContentLoadFailure={mockOnLoadFailed2}/>
+    <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  await waitFor(() => expect(mockOnLoad2.mock.calls.length).toBe(0))
-  await waitFor(() => expect(mockOnLoadFailed2.mock.calls.length).toBe(1))
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
 })

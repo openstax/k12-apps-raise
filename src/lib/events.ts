@@ -2,16 +2,9 @@
 import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest, DetailMessage } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
+import { collectCourseID } from './utils'
 import * as settings from './settings'
 const impressionID = uuidv4()
-
-const collectCourseID = (): number => {
-  const courseID = window.M?.cfg.courseId
-  if (courseID === undefined) {
-    throw new Error('Error Collecting CourseID')
-  }
-  return parseInt(courseID)
-}
 
 export const createContentLoadV1Event = (contentID: string, variant: string): ContentLoadedV1 => {
   const event: ContentLoadedV1 = {
@@ -88,14 +81,11 @@ export class EventManager {
     }
 
     this.getAccessToken().then((jwt) => {
-      const eventApiPath = EventManager.getApiPath(envRoot)
       const parameters: ConfigurationParameters = {
         accessToken: jwt,
-        basePath: eventApiPath
+        basePath: EventManager.getApiPath(envRoot)
       }
-      const config = new Configuration(parameters)
-      this.eventApi = new DefaultApi(config)
-      console.log('Setup complete')
+      this.eventApi = new DefaultApi(new Configuration(parameters))
     }).catch(() => {
       this.eventApi = undefined
       this.moodleApi = undefined
@@ -106,41 +96,35 @@ export class EventManager {
 
   queueEvent(event: EventsInner): void {
     this.eventQueue.push(event)
-    console.log(this.eventQueue)
   }
 
   flushEvents(): boolean {
-    console.log('FLUSH')
     this.flushEventsAsync().then((response) => {
       if (response.detail !== 'Success!') {
-        console.log(response.detail)
         return false
       }
+      this.eventQueue = []
       return true
     }).catch(() => { return false })
     return false
   }
 
   private async flushEventsAsync(): Promise<DetailMessage> {
-    let ret: DetailMessage
+    let result: DetailMessage
     if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
-      ret = { detail: 'EventsApi not instantiated' }
+      result = { detail: 'EventsApi not instantiated' }
     } else if (this.eventQueue.length === 0) {
-      ret = { detail: 'No Events in Queue to Flush' }
+      result = { detail: 'No events in queue to flush' }
     } else {
       const requestInit = { keepalive: true }
       const eventsRequest: CreateEventsV1EventsPostRequest = {
         eventsInner: this.eventQueue
       }
-      const response = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
-      if (response.detail === 'Success!') {
-        this.eventQueue = []
-      }
-      ret = response
+      result = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
     }
     setTimeout(() => {
       this.flushEvents()
     }, settings.EVENT_FLUSH_PERIOD)
-    return ret
+    return result
   }
 }
