@@ -68,6 +68,7 @@ export class EventManager {
   }
 
   static getInstance(): EventManager {
+    // Check Environment
     const envRoot = window.location.host.toString()
     if (envRoot !== settings.ENV_PRODUCTION && envRoot !== settings.ENV_STAGING && envRoot !== settings.ENV_LOCAL) {
       this.eventApi = undefined
@@ -80,6 +81,7 @@ export class EventManager {
       this.instance = new EventManager()
     }
 
+    // Authenticate with EventsApi
     this.getAccessToken().then((jwt) => {
       const parameters: ConfigurationParameters = {
         accessToken: jwt,
