@@ -72,11 +72,3 @@ export const getVariant = (variants: ContentVariant[]): ContentVariant | undefin
 
   return maybeMatch
 }
-
-export const collectCourseID = (): number => {
-  const courseID = window.M?.cfg.courseId
-  if (courseID === undefined) {
-    return -1
-  }
-  return parseInt(courseID)
-}

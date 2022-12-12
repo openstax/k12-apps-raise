@@ -11,7 +11,6 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
 import { getCurrentContext } from './utils'
-import * as settings from './settings'
 import { ENV } from './env'
 const impressionId = uuidv4()
 
@@ -59,7 +58,7 @@ export class EventManager {
   private constructor() {
     setTimeout(() => {
       this.flushEvents()
-    }, settings.EVENT_FLUSH_PERIOD)
+    }, ENV.EVENT_FLUSH_PERIOD)
 
     document.onvisibilitychange = () => {
       if (document.visibilityState === 'hidden') {
@@ -146,7 +145,7 @@ export class EventManager {
     }
     setTimeout(() => {
       this.flushEvents()
-    }, settings.EVENT_FLUSH_PERIOD)
+    }, ENV.EVENT_FLUSH_PERIOD)
     return result
   }
 }
