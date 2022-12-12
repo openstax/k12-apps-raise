@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
-import { EventManager, createContentLoadFailedV1Event, createContentLoadedV1Event } from './events'
+import { EventManager, queueContentLoadedV1Event, queueContentLoadFailedV1Event } from './events'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 
@@ -21,24 +21,23 @@ export const renderContentElements = (): number => {
       console.log('WARNING: Found non-empty os-raise-content')
     }
 
-    const contentLoadCallback = (contentId: string, variant: string): void => {
-      const event = createContentLoadedV1Event(contentId, variant)
-      if (event !== null) {
-        EventManager.getInstance().queueEvent(event)
-      }
+    const contentLoadedCallback = (contentId: string, variant: string): void => {
+      queueContentLoadedV1Event(contentId, variant).catch((err) => {
+        console.error(err)
+      })
     }
+
     const contentLoadFailedCallback = (contentId: string, error?: string): void => {
-      const event = createContentLoadFailedV1Event(contentId, error)
-      if (event !== null) {
-        EventManager.getInstance().queueEvent(event)
-      }
+      queueContentLoadFailedV1Event(contentId, error).catch((err) => {
+        console.error(err)
+      })
     }
 
     createRoot(htmlElem).render(
       <React.StrictMode>
         <ContentLoader
           contentId={contentId}
-          onContentLoad={contentLoadCallback}
+          onContentLoad={contentLoadedCallback}
           onContentLoadFailure={contentLoadFailedCallback} />
       </React.StrictMode>
     )

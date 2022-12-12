@@ -12,140 +12,132 @@ import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
 import { getCurrentContext } from './utils'
 import { ENV } from './env'
-const impressionId = uuidv4()
 
-export const createContentLoadedV1Event = (contentId: string, variant: string): ContentLoadedV1 | null => {
-  const ctx = getCurrentContext()
-  if (ctx.courseId === undefined) {
-    return null
-  }
-  const event: ContentLoadedV1 = {
-    courseId: parseInt(ctx.courseId),
-    impressionId,
-    sourceUri: window.location.toString(),
-    timestamp: Date.now(),
-    eventname: 'content_loaded_v1',
-    contentId,
-    variant
-  }
-  return event
+export const queueContentLoadedV1Event = async (contentId: string, variant: string): Promise<void> => {
+  const eventManager = await EventManager.getInstance()
+  eventManager.queueContentLoadedV1Event(contentId, variant)
 }
 
-export const createContentLoadFailedV1Event = (contentId: string, error?: string): ContentLoadFailedV1 | null => {
-  const ctx = getCurrentContext()
-
-  if (ctx.courseId === undefined) {
-    return null
-  }
-  const event: ContentLoadFailedV1 = {
-    courseId: parseInt(ctx.courseId),
-    impressionId,
-    sourceUri: window.location.toString(),
-    timestamp: Date.now(),
-    eventname: 'content_load_failed_v1',
-    contentId,
-    error
-  }
-  return event
+export const queueContentLoadFailedV1Event = async (contentId: string, error?: string): Promise<void> => {
+  const eventManager = await EventManager.getInstance()
+  eventManager.queueContentLoadFailedV1Event(contentId, error)
 }
 
-export class EventManager {
+interface EventManagerConfig {
+  eventsApi: EventsApi,
+  flushPeriod: number,
+  impressionId: string,
+  courseId: number
+}
+class EventManager {
   private static instance: EventManager
-  protected eventQueue: ApiEvent[] = []
-  protected static eventApi: EventsApi | undefined
-  protected static moodleApi: MoodleApi | undefined
+  private static impressionId = uuidv4()
+  private readonly config: EventManagerConfig | undefined
+  private readonly eventQueue: ApiEvent[] = []
+  private timer: number | undefined;
+  private constructor(config?: EventManagerConfig) {
+    this.config = config
 
-  private constructor() {
-    setTimeout(() => {
-      this.flushEvents()
-    }, ENV.EVENT_FLUSH_PERIOD)
-
-    document.onvisibilitychange = () => {
-      if (document.visibilityState === 'hidden') {
+    document.addEventListener('visibilitychange', () =>{
+      if (document.visibilityState === 'hidden'){
         this.flushEvents()
       }
-    }
+    })
   }
 
-  private static async getAccessToken(): Promise<string> {
-    if (window.M?.cfg.wwwroot === undefined) {
-      throw new Error('wwwroot env variable is undefined.')
+  static async getInstance(): Promise<EventManager> {
+    if(this.instance !== undefined){
+      return this.instance
     }
-    this.moodleApi = new MoodleApi(window.M?.cfg.wwwroot, window.M?.cfg.sesskey)
-    const res = await this.moodleApi.getUser()
-    return res.jwt
-  }
-
-  private static getApiPath(envRoot: string): string {
+    this.impressionId = this.impressionId ?? uuidv4()
+    const context = getCurrentContext()
     const eventsEndpointMapper = ENV.OS_RAISE_EVENTSAPI_URL_MAP as { [key: string]: string | undefined }
     const eventsEndpoint = eventsEndpointMapper[window.location.host]
-    if (eventsEndpoint !== undefined) {
-      return eventsEndpoint
-    } else {
-      throw new Error('Environment data not availiable')
-    }
-  }
 
-  static getInstance(): EventManager {
-    // Check Environment
-    const envRoot = window.location.host.toString()
-    if (envRoot !== settings.ENV_PRODUCTION && envRoot !== settings.ENV_STAGING && envRoot !== settings.ENV_LOCAL) {
-      this.eventApi = undefined
-      this.moodleApi = undefined
-      return new EventManager()
-    }
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    if (!this.instance) {
+    if (context.courseId === undefined || eventsEndpoint === undefined || window.M === undefined){
       this.instance = new EventManager()
+      return this.instance
     }
-
-    // Authenticate with EventsApi
-    this.getAccessToken().then((jwt) => {
-      const parameters: ConfigurationParameters = {
-        accessToken: jwt,
-        basePath: EventManager.getApiPath(envRoot)
+    const moodleApi = new MoodleApi(window.M.cfg.wwwroot, window.M.cfg.sesskey)
+    const user = await moodleApi.getUser()
+    const parameters: ConfigurationParameters = {
+      accessToken: user.jwt,
+      basePath: eventsEndpoint
       }
-      this.eventApi = new EventsApi(new Configuration(parameters))
-    }).catch(() => {
-      this.eventApi = undefined
-      this.moodleApi = undefined
-    })
 
+    const eventsApi = new EventsApi(new Configuration(parameters))
+
+    this.instance =  new EventManager({
+      eventsApi: eventsApi,
+      impressionId: this.impressionId,
+      courseId: parseInt(context.courseId),
+      flushPeriod: ENV.EVENT_FLUSH_PERIOD
+    })
     return this.instance
   }
-
-  queueEvent(event: ApiEvent): void {
-    this.eventQueue.push(event)
-  }
-
-  flushEvents(): boolean {
-    this.flushEventsAsync().then((response) => {
-      if (response.detail !== 'Success!') {
-        return false
-      }
-      this.eventQueue = []
-      return true
-    }).catch(() => { return false })
-    return false
-  }
-
-  private async flushEventsAsync(): Promise<DetailMessage> {
-    let result: DetailMessage
-    if (EventManager.eventApi === undefined || EventManager.moodleApi === undefined) {
-      result = { detail: 'EventsApi not instantiated' }
-    } else if (this.eventQueue.length === 0) {
-      result = { detail: 'No events in queue to flush' }
-    } else {
-      const requestInit = { keepalive: true }
-      const eventsRequest: CreateEventsV1EventsPostRequest = {
-        eventsInner: this.eventQueue
-      }
-      result = await EventManager.eventApi.createEventsV1EventsPost(eventsRequest, requestInit)
+  
+  flushEvents(): void {
+    window.clearTimeout(this.timer)
+    this.timer = undefined
+    if (this.config === undefined) {
+      return
     }
-    setTimeout(() => {
-      this.flushEvents()
-    }, ENV.EVENT_FLUSH_PERIOD)
-    return result
+    const events = this.eventQueue.splice(0)
+    if (events.length === 0){
+      return
+    }
+    const requestInit = { keepalive: true }
+    const eventsRequest: CreateEventsV1EventsPostRequest = {
+      eventsInner: events
+    }
+    this.config.eventsApi.createEventsV1EventsPost(eventsRequest, requestInit).catch( (err) => {
+      console.error(err)
+    })
+
   }
+
+  private flushLater(): void {
+    if (this.config === undefined || this.timer !== undefined) {
+      return
+    }
+    this.timer = window.setTimeout(() => {
+      this.flushEvents()
+    }, this.config.flushPeriod)
+  }
+  queueContentLoadedV1Event(contentId: string, variant: string): void {
+    if( this.config === undefined){
+      return
+    }
+    const event: ContentLoadedV1 = {
+      courseId: this.config.courseId,
+      impressionId: this.config.impressionId,
+      sourceUri: window.location.toString(),
+      timestamp: Date.now(),
+      eventname: 'content_loaded_v1',
+      contentId,
+      variant
+    }
+    this.eventQueue.push(event)
+    this.flushLater()
+  }
+
+  queueContentLoadFailedV1Event(contentId: string, error?: string): void{
+    if( this.config === undefined){
+      return
+    }
+    const event: ContentLoadFailedV1 = {
+      courseId: this.config.courseId,
+      impressionId: this.config.impressionId,
+      sourceUri: window.location.toString(),
+      timestamp: Date.now(),
+      eventname: 'content_load_failed_v1',
+      contentId,
+      error
+    }
+    this.eventQueue.push(event)
+    this.flushLater()
+
+  }
+  
+  
 }
