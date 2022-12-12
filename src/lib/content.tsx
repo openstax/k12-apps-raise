@@ -1,7 +1,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
-import { EventManager, queueContentLoadedV1Event, queueContentLoadFailedV1Event } from './events'
+import { queueContentLoadedV1Event, queueContentLoadFailedV1Event } from './events'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
 
