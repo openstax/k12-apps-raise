@@ -4,7 +4,7 @@ import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
 const server = setupServer(
-  rest.post('http://moodle/lib/ajax/service.php?sesskey=12345&info=local_raise_get_user', (req, res, ctx) => {
+  rest.post('http://moodle/lib/ajax/service.php', (req, res, ctx) => {
     return res(ctx.json([{
       data: {
         uuid: 'uuid',
