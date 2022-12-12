@@ -61,7 +61,7 @@ function getVariantMapping(host: string | undefined, courseId: string | undefine
   return defaultVariant
 }
 
-export const getVariant = (variants: ContentVariant[]): string | undefined => {
+export const getVariant = (variants: ContentVariant[]): ContentVariant | undefined => {
   const currentContext = getCurrentContext()
 
   const courseVariant = getVariantMapping(currentContext.host, currentContext.courseId)
@@ -70,21 +70,7 @@ export const getVariant = (variants: ContentVariant[]): string | undefined => {
   // Try to find content for mapped variant and fall back to trying to find default variant
   const maybeMatch = variants.find(item => item.variant === courseVariant) ?? variants.find(item => item.variant === defaultVariant)
 
-  if (maybeMatch === undefined) {
-    return maybeMatch
-  } else {
-    return maybeMatch.html
-  }
-}
-
-export const getVariantName = (): string => {
-  const currentContext = getCurrentContext()
-
-  const courseVariant = getVariantMapping(currentContext.host, currentContext.courseId)
-  if (courseVariant === 'undefined') {
-    throw new Error('getVariantName() error')
-  }
-  return courseVariant
+  return maybeMatch
 }
 
 export const collectCourseID = (): number => {

@@ -1,32 +1,50 @@
-
-import { EventsInner, ContentLoadedV1, ContentLoadFailedV1, DefaultApi, Configuration, ConfigurationParameters, CreateEventsV1EventsPostRequest, DetailMessage } from '../eventsapi'
+import {
+  EventsInner as ApiEvent,
+  ContentLoadedV1,
+  ContentLoadFailedV1,
+  DefaultApi as EventsApi,
+  Configuration,
+  ConfigurationParameters,
+  CreateEventsV1EventsPostRequest,
+  DetailMessage
+} from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi } from '../moodleapi'
-import { collectCourseID } from './utils'
+import { getCurrentContext } from './utils'
 import * as settings from './settings'
-const impressionID = uuidv4()
+import { ENV } from './env'
+const impressionId = uuidv4()
 
-export const createContentLoadV1Event = (contentID: string, variant: string): ContentLoadedV1 => {
+export const createContentLoadedV1Event = (contentId: string, variant: string): ContentLoadedV1 | null => {
+  const ctx = getCurrentContext()
+  if (ctx.courseId === undefined) {
+    return null
+  }
   const event: ContentLoadedV1 = {
-    courseId: collectCourseID(),
-    impressionId: impressionID,
+    courseId: parseInt(ctx.courseId),
+    impressionId,
     sourceUri: window.location.toString(),
     timestamp: Date.now(),
     eventname: 'content_loaded_v1',
-    contentId: contentID,
+    contentId,
     variant
   }
   return event
 }
 
-export const createContentLoadFailedV1 = (contentID: string, error?: string): ContentLoadFailedV1 => {
+export const createContentLoadFailedV1Event = (contentId: string, error?: string): ContentLoadFailedV1 | null => {
+  const ctx = getCurrentContext()
+
+  if (ctx.courseId === undefined) {
+    return null
+  }
   const event: ContentLoadFailedV1 = {
-    courseId: collectCourseID(),
-    impressionId: impressionID,
+    courseId: parseInt(ctx.courseId),
+    impressionId,
     sourceUri: window.location.toString(),
     timestamp: Date.now(),
     eventname: 'content_load_failed_v1',
-    contentId: contentID,
+    contentId,
     error
   }
   return event
@@ -34,8 +52,8 @@ export const createContentLoadFailedV1 = (contentID: string, error?: string): Co
 
 export class EventManager {
   private static instance: EventManager
-  protected eventQueue: EventsInner[] = []
-  protected static eventApi: DefaultApi | undefined
+  protected eventQueue: ApiEvent[] = []
+  protected static eventApi: EventsApi | undefined
   protected static moodleApi: MoodleApi | undefined
 
   private constructor() {
@@ -60,10 +78,12 @@ export class EventManager {
   }
 
   private static getApiPath(envRoot: string): string {
-    if (envRoot === settings.ENV_PRODUCTION || envRoot === settings.ENV_STAGING) {
-      return settings.API_ENDPOINT_PROD
+    const eventsEndpointMapper = ENV.OS_RAISE_EVENTSAPI_URL_MAP as { [key: string]: string | undefined }
+    const eventsEndpoint = eventsEndpointMapper[window.location.host]
+    if (eventsEndpoint !== undefined) {
+      return eventsEndpoint
     } else {
-      return settings.API_ENDPOINT_LOCAL
+      throw new Error('Environment data not availiable')
     }
   }
 
@@ -87,7 +107,7 @@ export class EventManager {
         accessToken: jwt,
         basePath: EventManager.getApiPath(envRoot)
       }
-      this.eventApi = new DefaultApi(new Configuration(parameters))
+      this.eventApi = new EventsApi(new Configuration(parameters))
     }).catch(() => {
       this.eventApi = undefined
       this.moodleApi = undefined
@@ -96,7 +116,7 @@ export class EventManager {
     return this.instance
   }
 
-  queueEvent(event: EventsInner): void {
+  queueEvent(event: ApiEvent): void {
     this.eventQueue.push(event)
   }
 

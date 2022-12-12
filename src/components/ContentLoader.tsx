@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getVariant, getVariantName } from '../lib/utils'
+import { getVariant } from '../lib/utils'
 import { blockifyHTML } from '../lib/blocks'
 import { ENV } from '../lib/env'
 
@@ -21,14 +21,13 @@ enum FetchStatus {
 
 interface ContentLoaderProps {
   contentId: string
-  onContentLoad?: (contentID: string, variant: string) => void
-  onContentLoadFailure?: (contentID: string, errorMessage?: string) => void
+  onContentLoad?: (contentId: string, variant: string) => void
+  onContentLoadFailure?: (contentId: string, error?: string) => void
 }
 
 export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
-  const [variantName, setVariantName] = useState<string>('')
 
   const fetchContent = async (): Promise<void> => {
     const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${contentId}.json`)
@@ -36,24 +35,24 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
     try {
       const response = await fetch(request)
       if (!response.ok) {
-        setFetchStatus(FetchStatus.FetchFailure)
-        return
-      }
-      if (onContentLoad !== undefined) {
-        onContentLoad(contentId, variantName)
+        throw new Error(`Request for content returned ${response.status}`)
       }
       const data = await response.json() as ContentResponse
-      const htmlContent = getVariant(data.content)
-      setVariantName(getVariantName())
-      if (htmlContent === undefined) {
-        setFetchStatus(FetchStatus.FetchFailure)
-        return
+      const selectedVariant = getVariant(data.content)
+
+      if (selectedVariant === undefined) {
+        throw new Error('Could not resolve content variant')
       }
-      setChildren(blockifyHTML(htmlContent))
+
+      if (onContentLoad !== undefined) {
+        onContentLoad(contentId, selectedVariant.variant)
+      }
+
+      setChildren(blockifyHTML(selectedVariant.html))
       setFetchStatus(FetchStatus.FetchSuccess)
-    } catch {
+    } catch (error) {
       if (onContentLoadFailure !== undefined) {
-        onContentLoadFailure(contentId, 'Fetch failure')
+        onContentLoadFailure(contentId, String(error))
       }
       setFetchStatus(FetchStatus.FetchFailure)
     }

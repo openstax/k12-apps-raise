@@ -1,6 +1,6 @@
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
-import { createContentLoadFailedV1, createContentLoadV1Event, EventManager } from '../lib/events'
+import { createContentLoadFailedV1Event, createContentLoadedV1Event, EventManager } from '../lib/events'
 import { validate } from 'uuid'
 import { EventsInnerFromJSON } from '../eventsapi'
 
@@ -11,6 +11,12 @@ const server = setupServer(
     }))
   })
 )
+
+jest.mock('../lib/env.ts', () => ({
+  ENV: {
+    OS_RAISE_CONTENT_URL_PREFIX: 'http://contentapi/contents'
+  }
+}))
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
@@ -26,7 +32,10 @@ test('Test createContentLoadV1Event', async () => {
       courseId: '1'
     }
   } as any
-  const contentLoaded = createContentLoadV1Event(contentID, variant)
+  const contentLoaded = createContentLoadedV1Event(contentID, variant)
+  if (contentLoaded === null) {
+    throw new Error('Invalid event creation')
+  }
   expect(contentLoaded.contentId).toBe('1234')
   expect(contentLoaded.eventname).toBe('content_loaded_v1')
   expect(contentLoaded.courseId).toBe(1)
@@ -45,7 +54,10 @@ test('Test createContentLoadV1Event', async () => {
       courseId: '1'
     }
   } as any
-  const contentLoaded = createContentLoadFailedV1(contentID, error)
+  const contentLoaded = createContentLoadFailedV1Event(contentID, error)
+  if (contentLoaded === null) {
+    throw new Error('Invalid event creation')
+  }
   expect(contentLoaded.contentId).toBe('1234')
   expect(contentLoaded.eventname).toBe('content_load_failed_v1')
   expect(contentLoaded.courseId).toBe(1)
