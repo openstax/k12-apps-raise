@@ -12,14 +12,14 @@ import { MoodleApi } from '../moodleapi'
 import { getCurrentContext } from './utils'
 import { ENV } from './env'
 
-export const queueContentLoadedV1Event = async (contentId: string, variant: string): Promise<void> => {
+export const queueContentLoadedV1Event = async (timestamp: number, contentId: string, variant: string): Promise<void> => {
   const eventManager = await EventManager.getInstance()
-  eventManager.queueContentLoadedV1Event(contentId, variant)
+  eventManager.queueContentLoadedV1Event(timestamp, contentId, variant)
 }
 
-export const queueContentLoadFailedV1Event = async (contentId: string, error?: string): Promise<void> => {
+export const queueContentLoadFailedV1Event = async (timestamp: number, contentId: string, error?: string): Promise<void> => {
   const eventManager = await EventManager.getInstance()
-  eventManager.queueContentLoadFailedV1Event(contentId, error)
+  eventManager.queueContentLoadFailedV1Event(timestamp, contentId, error)
 }
 
 interface EventManagerConfig {
@@ -108,7 +108,7 @@ class EventManager {
     this.flushLater()
   }
 
-  queueContentLoadedV1Event(contentId: string, variant: string): void {
+  queueContentLoadedV1Event(timestamp: number, contentId: string, variant: string): void {
     if (this.config === undefined) {
       return
     }
@@ -116,7 +116,7 @@ class EventManager {
       courseId: this.config.courseId,
       impressionId: this.config.impressionId,
       sourceUri: window.location.toString(),
-      timestamp: Date.now(),
+      timestamp,
       eventname: 'content_loaded_v1',
       contentId,
       variant
@@ -124,7 +124,7 @@ class EventManager {
     this.queueEvent(event)
   }
 
-  queueContentLoadFailedV1Event(contentId: string, error?: string): void {
+  queueContentLoadFailedV1Event(timestamp: number, contentId: string, error?: string): void {
     if (this.config === undefined) {
       return
     }
@@ -132,7 +132,7 @@ class EventManager {
       courseId: this.config.courseId,
       impressionId: this.config.impressionId,
       sourceUri: window.location.toString(),
-      timestamp: Date.now(),
+      timestamp,
       eventname: 'content_load_failed_v1',
       contentId,
       error

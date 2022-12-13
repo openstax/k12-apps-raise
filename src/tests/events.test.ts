@@ -69,7 +69,7 @@ afterAll(() => server.close())
 
 test('Test queueContentLoadedV1Event', async () => {
   const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
-  await queueContentLoadedV1Event('1234', 'main')
+  await queueContentLoadedV1Event(1, '1234', 'main')
   const req = await pendingRequest
   const jsonData = await req.json()
   expect(jsonData[0].content_id).toBe('1234')
@@ -81,7 +81,7 @@ test('Test queueContentLoadedV1Event', async () => {
 
 test('Test queueContentLoadFailedV1Event', async () => {
   const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
-  await queueContentLoadFailedV1Event('1234', 'error')
+  await queueContentLoadFailedV1Event(1, '1234', 'error')
   const req = await pendingRequest
   const jsonData = await req.json()
   expect(jsonData[0].content_id).toBe('1234')
@@ -92,8 +92,8 @@ test('Test queueContentLoadFailedV1Event', async () => {
 })
 
 test('Test timer', async () => {
-  await queueContentLoadFailedV1Event('1234', 'error')
+  await queueContentLoadFailedV1Event(1, '1234', 'error')
   await waitForRequest('POST', 'http://localhost:8888/v1/events')
-  await queueContentLoadFailedV1Event('12345', 'error2')
+  await queueContentLoadFailedV1Event(1, '12345', 'error2')
   await waitForRequest('POST', 'http://localhost:8888/v1/events')
 })

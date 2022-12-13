@@ -22,13 +22,13 @@ export const renderContentElements = (): number => {
     }
 
     const contentLoadedCallback = (contentId: string, variant: string): void => {
-      queueContentLoadedV1Event(contentId, variant).catch((err) => {
+      queueContentLoadedV1Event(Date.now(), contentId, variant).catch((err) => {
         console.error(err)
       })
     }
 
     const contentLoadFailedCallback = (contentId: string, error?: string): void => {
-      queueContentLoadFailedV1Event(contentId, error).catch((err) => {
+      queueContentLoadFailedV1Event(Date.now(), contentId, error).catch((err) => {
         console.error(err)
       })
     }
