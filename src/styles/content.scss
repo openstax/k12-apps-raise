@@ -1,5 +1,7 @@
 $raise-graybox: #f5f5f5;
 $raise-graybox-border: #d9d9d9;
+$raise-motivation-box: #f0f6fb;
+$raise-motivation-boarder: #a9c9e4;
 
 ol.os-raise-noindent {
   padding-left: 0;
@@ -15,6 +17,21 @@ div.os-raise-graybox {
   padding: 16px;
   background-color: $raise-graybox;
   border-radius: 5px;
+}
+
+div.os-raise-motivation {
+  font: bold;
+  border: 1px solid $raise-motivation-box;
+  padding: 16px;
+  background: $raise-motivation-box;
+  border-radius: 8px;
+  background-image: url("https://api.iconify.design/ic/twotone-auto-graph.svg");
+  background-repeat: no-repeat;
+  background-position: left center;
+  background-size: 60px;
+  padding-top: 20px;
+  padding-left: 90px;
+  font-weight: bold;
 }
 
 table.os-raise-standardtable {
