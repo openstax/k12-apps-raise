@@ -37,11 +37,13 @@ class EventManager {
   private constructor(config?: EventManagerConfig) {
     this.config = config
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') {
-        this.flushEvents()
-      }
-    })
+    if (this.config !== undefined) {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') {
+          this.flushEvents()
+        }
+      })
+    }
   }
 
   static async getInstance(): Promise<EventManager> {
@@ -78,11 +80,8 @@ class EventManager {
   flushEvents(): void {
     window.clearTimeout(this.timer)
     this.timer = undefined
-    if (this.config === undefined) {
-      return
-    }
     const events = this.eventQueue.splice(0)
-    if (events.length === 0) {
+    if ((this.config === undefined) || (events.length === 0)) {
       return
     }
     const requestInit = { keepalive: true }
@@ -98,9 +97,15 @@ class EventManager {
     if (this.config === undefined || this.timer !== undefined) {
       return
     }
-    this.timer = window.setTimeout(() => {
-      this.flushEvents()
-    }, this.config.flushPeriod)
+    this.timer = window.setTimeout(
+      () => { this.flushEvents() },
+      this.config.flushPeriod
+    )
+  }
+
+  private queueEvent(event: ApiEvent): void {
+    this.eventQueue.push(event)
+    this.flushLater()
   }
 
   queueContentLoadedV1Event(contentId: string, variant: string): void {
@@ -116,8 +121,7 @@ class EventManager {
       contentId,
       variant
     }
-    this.eventQueue.push(event)
-    this.flushLater()
+    this.queueEvent(event)
   }
 
   queueContentLoadFailedV1Event(contentId: string, error?: string): void {
@@ -133,7 +137,6 @@ class EventManager {
       contentId,
       error
     }
-    this.eventQueue.push(event)
-    this.flushLater()
+    this.queueEvent(event)
   }
 }
