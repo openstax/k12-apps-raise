@@ -21,9 +21,11 @@ enum FetchStatus {
 
 interface ContentLoaderProps {
   contentId: string
+  onContentLoad?: (contentId: string, variant: string) => void
+  onContentLoadFailure?: (contentId: string, error?: string) => void
 }
 
-export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element => {
+export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
 
@@ -33,21 +35,25 @@ export const ContentLoader = ({ contentId }: ContentLoaderProps): JSX.Element =>
     try {
       const response = await fetch(request)
       if (!response.ok) {
-        setFetchStatus(FetchStatus.FetchFailure)
-        return
+        throw new Error(`Request for content returned ${response.status}`)
       }
-
       const data = await response.json() as ContentResponse
-      const htmlContent = getVariant(data.content)
+      const selectedVariant = getVariant(data.content)
 
-      if (htmlContent === undefined) {
-        setFetchStatus(FetchStatus.FetchFailure)
-        return
+      if (selectedVariant === undefined) {
+        throw new Error('Could not resolve content variant')
       }
 
-      setChildren(blockifyHTML(htmlContent))
+      if (onContentLoad !== undefined) {
+        onContentLoad(contentId, selectedVariant.variant)
+      }
+
+      setChildren(blockifyHTML(selectedVariant.html))
       setFetchStatus(FetchStatus.FetchSuccess)
-    } catch {
+    } catch (error) {
+      if (onContentLoadFailure !== undefined) {
+        onContentLoadFailure(contentId, String(error))
+      }
       setFetchStatus(FetchStatus.FetchFailure)
     }
   }
