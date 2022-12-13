@@ -32,7 +32,7 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
   const maybeButton = (): JSX.Element => {
     if (!clicked) {
       return (<>
-      <button onClick={clickHandler} type="button" className="btn btn-outline-primary mb-3">{buttonText}</button></>)
+      <button onClick={clickHandler} type="button" className="btn btn-outline-primary my-3 ">{buttonText}</button></>)
     } else {
       return <></>
     }
