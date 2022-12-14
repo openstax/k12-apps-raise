@@ -22,8 +22,6 @@ div.os-raise-graybox {
 div.os-raise-motivation {
   @extend %os-background;
   @extend %os-box-formatting;
-
-  display: flex;
 }
 
 %os-background {
