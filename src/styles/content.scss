@@ -1,7 +1,6 @@
 $raise-graybox: #f5f5f5;
 $raise-graybox-border: #d9d9d9;
 $raise-motivation-box: #f0f6fb;
-$raise-motivation-boarder: #a9c9e4;
 
 ol.os-raise-noindent {
   padding-left: 0;
@@ -22,6 +21,9 @@ div.os-raise-graybox {
 div.os-raise-motivation {
   @extend %os-background;
   @extend %os-box-formatting;
+
+  display: flex;
+  align-items: center;
 }
 
 %os-background {
@@ -30,16 +32,16 @@ div.os-raise-motivation {
   background-image: url("https://k12.openstax.org/contents/raise/resources/c4c17785a634fd81884f3e2f43dc073ad2285ced");
   background-repeat: no-repeat;
   background-position: -10px 50%;
-  background-size: 110px;
+  background-size: 104px;
 }
 
 %os-box-formatting {
   border: 1px solid $raise-motivation-box;
-  padding: 16px;
-  padding-top: 20px;
-  padding-left: 90px;
+  /* stylelint-disable-next-line length-zero-no-unit */
+  padding: 16px 16px 0px 90px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
+  min-height: 80px;
 }
 
 table.os-raise-standardtable {
