@@ -113,3 +113,24 @@ Ordered list objects
 ```
 
 ***
+
+## Motivational Content (os-raise-motivation)
+
+Add a styled motivational message into the content
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/motivation.png" width="600">
+</div>
+
+**Availability**
+
+Div objects only
+
+**Usage**
+
+```html
+<div class="os-raise-motivation">
+    <p>You got this! If you believe that you can figure it out you can!</p>
+</div>
+```
