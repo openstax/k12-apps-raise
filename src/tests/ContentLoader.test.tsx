@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import { rest } from 'msw'
 import { setupServer } from 'msw/node'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ContentLoader } from '../components/ContentLoader'
 
@@ -16,6 +16,11 @@ const server = setupServer(
   }),
   rest.get('http://contentapi/contents/test-content-failure.json', (req, res, ctx) => {
     throw new Error('This is a fake network error')
+  }),
+  rest.get('http://contentapi/contents/test-nomain-content.json', (req, res, ctx) => {
+    return res(ctx.json({
+      content: [{ variant: 'nomain', html: '<p>Test content</p>' }]
+    }))
   })
 )
 
@@ -55,4 +60,53 @@ test('error is displayed on network error when fetching content', async () => {
     <ContentLoader contentId='test-content-failure'/>
   )
   await screen.findByText('There was an error loading content. Please try refreshing the page.')
+})
+
+test('OnContentLoad is called', async () => {
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn(() => {})
+  render(
+    <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
+  )
+
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(1))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(0))
+  expect(mockOnLoad.mock.calls[0][0]).toBe('test-content')
+  expect(mockOnLoad.mock.calls[0][1]).toBe('main')
+})
+
+test('OnContentLadFailed is called when error loading content', async () => {
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn()
+  render(
+    <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
+  )
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-failure')
+  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('TypeError: Network request failed')
+})
+
+test('OnContentLadFailed is called when there is a 404 error', async () => {
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn()
+  render(
+    <ContentLoader contentId='test-content-404' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
+  )
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-404')
+  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('Error: Request for content returned 404')
+})
+
+test('OnContentLadFailed is called when variant cannot be found', async () => {
+  const mockOnLoad = jest.fn()
+  const mockOnLoadFailed = jest.fn()
+  render(
+    <ContentLoader contentId='test-nomain-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
+  )
+  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
+  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-nomain-content')
+  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('Error: Could not resolve content variant')
 })
