@@ -19,7 +19,7 @@ div.os-raise-graybox {
   border-radius: 5px;
 }
 
-.complete-motivation {
+.os-raise-motivation {
   @extend .os-background;
   @extend .os-box-formatting;
 
@@ -29,10 +29,10 @@ div.os-raise-graybox {
 .os-background {
   background: $raise-motivation-box;
   border-radius: 8px;
-  background-image: url("https://api.iconify.design/ic/twotone-auto-graph.svg");
+  background-image: url("https://k12.openstax.org/contents/raise/resources/c4c17785a634fd81884f3e2f43dc073ad2285ced");
   background-repeat: no-repeat;
-  background-position: 15px 50%;
-  background-size: 60px;
+  background-position: 3px 50%;
+  background-size: 85px;
 }
 
 .os-box-formatting {
@@ -41,6 +41,7 @@ div.os-raise-graybox {
   padding-top: 20px;
   padding-left: 90px;
   font-weight: bold;
+  margin-bottom: 10px;
 }
 
 table.os-raise-standardtable {
