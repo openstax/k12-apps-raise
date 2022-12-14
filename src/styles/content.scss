@@ -19,14 +19,14 @@ div.os-raise-graybox {
   border-radius: 5px;
 }
 
-.os-raise-motivation {
-  @extend .os-background;
-  @extend .os-box-formatting;
+div.os-raise-motivation {
+  @extend %os-background;
+  @extend %os-box-formatting;
 
   display: flex;
 }
 
-.os-background {
+%os-background {
   background: $raise-motivation-box;
   border-radius: 8px;
   background-image: url("https://k12.openstax.org/contents/raise/resources/c4c17785a634fd81884f3e2f43dc073ad2285ced");
@@ -35,7 +35,7 @@ div.os-raise-graybox {
   background-size: 85px;
 }
 
-.os-box-formatting {
+%os-box-formatting {
   border: 1px solid $raise-motivation-box;
   padding: 16px;
   padding-top: 20px;
