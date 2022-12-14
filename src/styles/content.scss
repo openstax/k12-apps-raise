@@ -19,16 +19,25 @@ div.os-raise-graybox {
   border-radius: 5px;
 }
 
-div.os-raise-motivation {
-  font: bold;
-  border: 1px solid $raise-motivation-box;
-  padding: 16px;
+.complete-motivation {
+  @extend .os-background;
+  @extend .os-box-formatting;
+
+  display: flex;
+}
+
+.os-background {
   background: $raise-motivation-box;
   border-radius: 8px;
   background-image: url("https://api.iconify.design/ic/twotone-auto-graph.svg");
   background-repeat: no-repeat;
-  background-position: left center;
+  background-position: 15px 50%;
   background-size: 60px;
+}
+
+.os-box-formatting {
+  border: 1px solid $raise-motivation-box;
+  padding: 16px;
   padding-top: 20px;
   padding-left: 90px;
   font-weight: bold;
