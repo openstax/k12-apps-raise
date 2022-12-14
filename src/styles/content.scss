@@ -37,8 +37,7 @@ div.os-raise-motivation {
 
 %os-box-formatting {
   border: 1px solid $raise-motivation-box;
-  /* stylelint-disable-next-line length-zero-no-unit */
-  padding: 16px 16px 0px 90px;
+  padding: 16px 16px 0 90px;
   font-weight: bold;
   margin-bottom: 1rem;
   min-height: 80px;
