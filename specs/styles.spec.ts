@@ -75,3 +75,77 @@ test('Graybox class styles content correctly', async ({ page }) => {
     return window.getComputedStyle(el).getPropertyValue('border-radius')
   })).toBe('5px')
 })
+
+test('Test flexbox style', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-d-flex">
+<p>P1</p>
+<p>P2</p>
+</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-d-flex')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('display')
+  })).toBe('flex')
+
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('flex-wrap')
+  })).toBe('wrap')
+})
+
+test('align items center', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-d-flex os-raise-align-items-center">
+<p>P1</p>
+<p>P2</p>
+</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-d-flex')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('align-items')
+  })).toBe('center')
+})
+
+test('justify content center style test', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-d-flex os-raise-justify-content-center">
+<p>P1</p>
+<p>P2</p>
+</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-d-flex')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('justify-content')
+  })).toBe('center')
+})
+
+test('justify content between', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-d-flex os-raise-justify-content-between">
+<p>P1</p>
+<p>P2</p>
+</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-d-flex')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('justify-content')
+  })).toBe('space-between')
+})
+
+test('justify content evenly', async ({ page }) => {
+  const htmlContent = `
+<div class="os-raise-d-flex os-raise-justify-content-evenly">
+<p>P1</p>
+<p>P2</p>
+</div>`
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-d-flex')
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('justify-content')
+  })).toBe('space-evenly')
+})
