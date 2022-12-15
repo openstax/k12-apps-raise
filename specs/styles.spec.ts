@@ -80,7 +80,7 @@ test('Test flexbox style', async ({ page }) => {
   const htmlContent = `
 <div class="os-raise-d-flex">
 <p>P1</p>
-<p>P2</p>
+<h2>H2</h2>
 </div>`
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
@@ -98,7 +98,7 @@ test('align items center', async ({ page }) => {
   const htmlContent = `
 <div class="os-raise-d-flex os-raise-align-items-center">
 <p>P1</p>
-<p>P2</p>
+<h2>H2</h2>
 </div>`
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
