@@ -134,3 +134,35 @@ Div objects only
     <p>You got this! If you believe that you can figure it out you can!</p>
 </div>
 ```
+
+***
+
+## Side by side (os-raise-d-flex)
+
+Add to any tag surrounding side by side content.
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/sidebyside.png" width="600">
+</div>
+
+**Availability**
+
+Any element
+
+**Usage**
+
+You can append the additional styles to class attribute to add more styling to 
+the side by side content. 
+
+ - `os-raise-align-items-center` centers the side by side content vertically. 
+ - `os-raise-justify-content-center` centers the grid horizontally. 
+ - `os-raise-justify-content-between` adds even spacing between content starting after the first element and ending before the last. 
+ - `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element. 
+```html
+<div class="os-raise-d-flex os-raise-align-items-center">
+    <p>Element 1</p>
+    <p>Element 2</p>
+    <p>Element 3</p>
+</div>
+```

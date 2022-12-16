@@ -50,3 +50,24 @@ table.os-raise-standardtable {
     padding: 8px 16px;
   }
 }
+
+.os-raise-d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.os-raise-align-items-center {
+  align-items: center;
+}
+
+.os-raise-justify-content-center {
+  justify-content: center;
+}
+
+.os-raise-justify-content-between {
+  justify-content: space-between;
+}
+
+.os-raise-justify-content-evenly {
+  justify-content: space-evenly;
+}
