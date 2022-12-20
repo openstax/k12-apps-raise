@@ -7,7 +7,7 @@ declare global {
     }
     M?: {
       cfg: {
-        courseId: string
+        courseId: number
         wwwroot: string
         sesskey: string
       }
