@@ -71,7 +71,7 @@ class EventManager {
     this.instance = new EventManager({
       eventsApi,
       impressionId: this.impressionId,
-      courseId: parseInt(context.courseId),
+      courseId: context.courseId,
       flushPeriod: ENV.EVENT_FLUSH_PERIOD
     })
     return this.instance

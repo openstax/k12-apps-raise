@@ -58,7 +58,7 @@ beforeAll(() => {
     cfg: {
       wwwroot: 'http://moodle',
       sesskey: '12345',
-      courseId: '1'
+      courseId: 1
     }
   }
   server.listen()
