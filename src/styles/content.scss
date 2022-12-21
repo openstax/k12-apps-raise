@@ -44,11 +44,18 @@ div.os-raise-motivation {
 }
 
 table.os-raise-standardtable {
-  th,
+  th{
+    border: 1px solid black;
+    vertical-align: bottom;
+    padding: 8px 16px;
+  }
+
   td {
+    vertical-align: top;  
     border: 1px solid black;
     padding: 8px 16px;
   }
+
 }
 
 .os-raise-d-flex {
