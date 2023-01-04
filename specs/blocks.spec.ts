@@ -328,6 +328,23 @@ test('Desmos has equations and shows all in expressions panel.', async ({ page }
   await page.waitForSelector('text=(1,2)')
 })
 
+test('Desmos has equations and tables shows all in expressions panel', async ({ page }) => {
+  const htmlDesmosContent = `<div class="os-raise-ib-desmos-gc" data-height="500" data-width="600" data-equations='["(1,2)", "x=5"]' data-tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "x_2", "values": [125, 204]}],[{"variable": "x_3", "values": [543, 2]},{"variable": "x_4", "values": [1, 2]}]]'
+ data-top="100" data-bottom="-100" data-left="-10" data-right="10" data-schema-version="1.0"></div>`
+  await mockPageContentRequest(page, htmlDesmosContent)
+  await page.goto('/')
+  await page.waitForSelector('.dcg-grapher')
+  await page.waitForSelector('text=x=5')
+  await page.waitForSelector('text=(1,2)')
+  await page.waitForSelector('.dcg-table-container')
+  await page.waitForSelector('text=x1')
+  await page.waitForSelector('text=x2')
+  await page.waitForSelector('text=x3')
+  await page.waitForSelector('text=x4')
+  await page.waitForSelector('text=125')
+  await page.waitForSelector('text=543')
+})
+
 test('Desmos expressions panel is not visible.', async ({ page }) => {
   const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-disable-expressions data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
   await mockPageContentRequest(page, htmlDesmosContent)
