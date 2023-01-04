@@ -270,14 +270,21 @@ A Content tooltip block is an in-line block which allows content developers to a
 
 #### Description
 
-The Desmos graphing calculator block displays a graph and an expressions panel. Add expressions to the graph by passing a JSON array into the optional `data-equations` attribute, where each element represents a new equation or point that will be added to the expressions panel. The `data-bottom`, `data-top`, `data-left`, and `data-right` attributes take number values and define where the graph viewport sits. If only the graph is needed, the expressions panel can be removed by passing the optional `data-disable-expressions` attribute. The size of the Desmos interactive can be set by passing an integer value into the `data-width` and `data-height` attributes. 
+The Desmos graphing calculator block displays a graph and an expressions panel. Add expressions to the graph by passing a JSON array into the optional `data-equations` attribute, where each element represents a new equation or point that will be added to the expressions panel. Tables can be added to the expressions panel by adding a JSON array to the `data-tables` attribute. The `data-bottom`, `data-top`, `data-left`, and `data-right` attributes take number values and define where the graph viewport sits. If only the graph is needed, the expressions panel can be removed by passing the optional `data-disable-expressions` attribute. The size of the Desmos interactive can be set by passing an integer value into the `data-width` and `data-height` attributes. 
 
 #### Schema definition
 
 The following template provides an example with a Desmos graphing calculator block. 
 
 ```html
-<div class="os-raise-ib-desmos-gc" data-wait-for-event="eventnameY"  data-height="500" data-width="600"  data-equations='["(1,2)","x=5"]' data-disable-expressions data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-schema-version="1.0">
+<div class="os-raise-ib-desmos-gc" data-wait-for-event="eventnameY"  data-height="500" data-width="600"  data-equations='["(1,2)","x=5"]'  data-disable-expressions data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-schema-version="1.0">
+</div>
+```
+
+The following template is an example with two tables
+
+```html
+<div class="os-raise-ib-desmos-gc" data-wait-for-event="eventnameY"  data-height="500" data-width="600"  data-equations='["(1,2)","x=5"]' data-tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "x_2", "values": [3, 5]}],[{"variable": "x_3", "values": [10, 13]},{"variable": "x_4", "values": [7, -4]}]]'  data-disable-expressions data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-schema-version="1.0">
 </div>
 ```
 

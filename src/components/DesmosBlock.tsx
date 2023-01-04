@@ -41,11 +41,10 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
     })
 
     tablesArray.forEach((table: any) => {
-      console.log(typeof table)
       calculator.setExpression({
         type: 'table',
-        columns: table.map((str: { variable: string, values: string }) => {
-          return { latex: str.variable, values: str.values }
+        columns: table.map((col: { variable: string, values: string }) => {
+          return { latex: col.variable, values: col.values }
         })
       })
     })
