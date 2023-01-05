@@ -11,9 +11,12 @@ interface DesmosBlockProps {
   scaleBottom: string
   scaleLeft: string
   scaleRight: string
+  tables: string
 }
-export function DesmosBlock({ width, height, waitForEvent, equations, disableExpressions, scaleTop, scaleBottom, scaleLeft, scaleRight }: DesmosBlockProps): JSX.Element {
+
+export function DesmosBlock({ width, height, waitForEvent, equations, disableExpressions, scaleTop, scaleBottom, scaleLeft, scaleRight, tables }: DesmosBlockProps): JSX.Element {
   const equationsArray: string[] = JSON.parse(equations)
+  const tablesArray = JSON.parse(tables) as Array<Array<{ variable: string, values: string[] }>>
   const [desmosLoaded, setDesmosLoaded] = useState(false)
 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
@@ -36,6 +39,16 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
     equationsArray.forEach((str: string) => {
       calculator.setExpression({ latex: `${str}` })
     })
+
+    tablesArray.forEach((table) => {
+      calculator.setExpression({
+        type: 'table',
+        columns: table.map((col) => {
+          return { latex: col.variable, values: col.values }
+        })
+      })
+    })
+
     calculator.setMathBounds({
       left: parseFloat(scaleLeft),
       right: parseFloat(scaleRight),

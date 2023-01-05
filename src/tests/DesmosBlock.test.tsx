@@ -21,7 +21,7 @@ test('Desmos block calls script and grahing calcultor functions', async () => {
   } as any
 
   render(
-      <DesmosBlock width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
+      <DesmosBlock width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "y_1", "values": [3, 5]}]]' disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
   expect(loadDesmos).toBeCalled()
@@ -45,7 +45,7 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
   } as any
 
   render(
-      <DesmosBlock waitForEvent='event' width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
+      <DesmosBlock waitForEvent='event' width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "y_1", "values": [3, 5]}]]' disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
   expect(loadDesmos).toBeCalled()
@@ -69,7 +69,8 @@ test('DesmosBlock calculator does render if waitForEvent does fire', async () =>
   } as any
 
   render(
-      <DesmosBlock waitForEvent='event' width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
+      <DesmosBlock waitForEvent='event' width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "y_1", "values": [3, 5]}]]'
+      disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
   expect(loadDesmos).toBeCalled()
