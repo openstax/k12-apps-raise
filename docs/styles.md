@@ -12,7 +12,7 @@ Adds a solid border and padding to a table.
 
 **Example**
 <div style="text-align: center;">
-    <img src="./static/table.png" width="300">
+    <img src="./static/standardtable.png" width="300">
 </div>
 
 
