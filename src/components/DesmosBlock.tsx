@@ -40,10 +40,10 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
       calculator.setExpression({ latex: `${str}` })
     })
 
-    tablesArray.forEach((table: Array<{ variable: string, values: string[] }>) => {
+    tablesArray.forEach((table) => {
       calculator.setExpression({
         type: 'table',
-        columns: table.map((col: { variable: string, values: string[] }) => {
+        columns: table.map((col) => {
           return { latex: col.variable, values: col.values }
         })
       })
