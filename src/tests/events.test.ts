@@ -91,7 +91,7 @@ test('Test queueContentLoadFailedV1Event', async () => {
   expect(jsonData[0].course_id).toBe(1)
 })
 
-test('Test timer', async () => {
+test('Test timer resets itself after flushing', async () => {
   await queueContentLoadFailedV1Event(1, '1234', 'error')
   await waitForRequest('POST', 'http://localhost:8888/v1/events')
   await queueContentLoadFailedV1Event(1, '12345', 'error2')
