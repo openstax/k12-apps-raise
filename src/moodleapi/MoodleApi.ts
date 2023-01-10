@@ -1,4 +1,4 @@
-interface GetUserResponse {
+export interface GetUserResponse {
   uuid: string
   jwt: string
 }
