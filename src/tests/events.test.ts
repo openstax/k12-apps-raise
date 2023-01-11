@@ -67,6 +67,18 @@ beforeAll(() => {
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 
+// NOTE (Hack): Due to the internal implementation of the events module, this test
+// case should run first (it will otherwise pass but not exercise / validate
+// the desired code path)
+test('Simultaneous requests result in a single EventManager instance', async () => {
+  const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
+  void queueContentLoadedV1Event(1, '1234', 'main')
+  void queueContentLoadedV1Event(1, '1235', 'main')
+  const req = await pendingRequest
+  const jsonData = await req.json()
+  expect(jsonData.length).toBe(2)
+})
+
 test('Test queueContentLoadedV1Event', async () => {
   const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
   await queueContentLoadedV1Event(1, '1234', 'main')
@@ -96,13 +108,4 @@ test('Test timer resets itself after flushing', async () => {
   await waitForRequest('POST', 'http://localhost:8888/v1/events')
   await queueContentLoadFailedV1Event(1, '12345', 'error2')
   await waitForRequest('POST', 'http://localhost:8888/v1/events')
-})
-
-test('Simultaneous requests result in a single EventManager instance', async () => {
-  const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
-  void queueContentLoadedV1Event(1, '1234', 'main')
-  void queueContentLoadedV1Event(1, '1235', 'main')
-  const req = await pendingRequest
-  const jsonData = await req.json()
-  expect(jsonData.length).toBe(2)
 })
