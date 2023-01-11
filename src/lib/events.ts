@@ -8,7 +8,7 @@ import {
   CreateEventsV1EventsPostRequest
 } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
-import { MoodleApi } from '../moodleapi'
+import { MoodleApi, GetUserResponse } from '../moodleapi'
 import { getCurrentContext } from './utils'
 import { ENV } from './env'
 
@@ -28,9 +28,11 @@ interface EventManagerConfig {
   impressionId: string
   courseId: number
 }
+
 class EventManager {
   private static instance: EventManager
   private static impressionId: string
+  private static getUserPromise: Promise<GetUserResponse>
   private readonly config: EventManagerConfig | undefined
   private readonly eventQueue: ApiEvent[] = []
   private timer: number | undefined
@@ -60,7 +62,17 @@ class EventManager {
       return this.instance
     }
     const moodleApi = new MoodleApi(window.M.cfg.wwwroot, window.M.cfg.sesskey)
-    const user = await moodleApi.getUser()
+
+    // Wait on a new or existing promise for user data from Moodle
+    this.getUserPromise = this.getUserPromise ?? moodleApi.getUser()
+    const user = await this.getUserPromise
+
+    // Check for an initialized instance again in case there were multiple
+    // waiters on the promise
+    if (this.instance !== undefined) {
+      return this.instance
+    }
+
     const parameters: ConfigurationParameters = {
       accessToken: user.jwt,
       basePath: eventsEndpoint
