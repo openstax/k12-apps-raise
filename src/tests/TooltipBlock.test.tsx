@@ -25,5 +25,5 @@ test('Tooltip Block renders math', async () => {
 
   expect(screen.getByText('my-text'))
   fireEvent.mouseOver(screen.getByText('my-text'))
-  await waitFor(() => expect(mathifyElement).toHaveBeenCalled())
+  await waitFor(() => { expect(mathifyElement).toHaveBeenCalled() })
 })

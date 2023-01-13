@@ -64,8 +64,8 @@ beforeAll(() => {
   server.listen()
 })
 
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+afterEach(() => { server.resetHandlers() })
+afterAll(() => { server.close() })
 
 // NOTE (Hack): Due to the internal implementation of the events module, this test
 // case should run first (it will otherwise pass but not exercise / validate

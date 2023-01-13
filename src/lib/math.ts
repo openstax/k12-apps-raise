@@ -53,7 +53,7 @@ export const mathifyElement = (elem: Element): void => {
       if (loadSuccess) {
         queueMathJax(elem)
       }
-    }).catch(error => console.error(error))
+    }).catch(error => { console.error(error) })
   } else {
     queueMathJax(elem)
   }

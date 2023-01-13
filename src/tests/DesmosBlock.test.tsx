@@ -26,7 +26,7 @@ test('Desmos block calls script and grahing calcultor functions', async () => {
 
   expect(loadDesmos).toBeCalled()
 
-  await waitFor(() => expect(graphingCalculator).toBeCalled())
+  await waitFor(() => { expect(graphingCalculator).toBeCalled() })
   expect(setExpression).toBeCalled()
   expect(setMathBounds).toBeCalled()
 })
@@ -50,7 +50,7 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
 
   expect(loadDesmos).toBeCalled()
 
-  await waitFor(() => expect(graphingCalculator).not.toBeCalled())
+  await waitFor(() => { expect(graphingCalculator).not.toBeCalled() })
   expect(setExpression).not.toBeCalled()
   expect(setMathBounds).not.toBeCalled()
 })
@@ -77,7 +77,7 @@ test('DesmosBlock calculator does render if waitForEvent does fire', async () =>
 
   fireEvent(document, new CustomEvent('event'))
 
-  await waitFor(() => expect(graphingCalculator).toBeCalled())
+  await waitFor(() => { expect(graphingCalculator).toBeCalled() })
   expect(setExpression).toBeCalled()
   expect(setMathBounds).toBeCalled()
 })

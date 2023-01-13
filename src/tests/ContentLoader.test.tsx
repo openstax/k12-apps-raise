@@ -30,9 +30,9 @@ jest.mock('../lib/env.ts', () => ({
   }
 }))
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => { server.listen() })
+afterEach(() => { server.resetHandlers() })
+afterAll(() => { server.close() })
 
 test('content is fetched and rendered on success', async () => {
   render(
@@ -69,8 +69,8 @@ test('OnContentLoad is called', async () => {
     <ContentLoader contentId='test-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
 
-  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(1))
-  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(0))
+  await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(1) })
+  await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(0) })
   expect(mockOnLoad.mock.calls[0][0]).toBe('test-content')
   expect(mockOnLoad.mock.calls[0][1]).toBe('main')
 })
@@ -81,8 +81,8 @@ test('OnContentLadFailed is called when error loading content', async () => {
   render(
     <ContentLoader contentId='test-content-failure' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
-  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(0) })
+  await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(1) })
   expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-failure')
   expect(mockOnLoadFailed.mock.calls[0][1]).toBe('TypeError: Network request failed')
 })
@@ -93,8 +93,8 @@ test('OnContentLadFailed is called when there is a 404 error', async () => {
   render(
     <ContentLoader contentId='test-content-404' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
-  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(0) })
+  await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(1) })
   expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-404')
   expect(mockOnLoadFailed.mock.calls[0][1]).toBe('Error: Request for content returned 404')
 })
@@ -105,8 +105,8 @@ test('OnContentLadFailed is called when variant cannot be found', async () => {
   render(
     <ContentLoader contentId='test-nomain-content' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
-  await waitFor(() => expect(mockOnLoad.mock.calls.length).toBe(0))
-  await waitFor(() => expect(mockOnLoadFailed.mock.calls.length).toBe(1))
+  await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(0) })
+  await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(1) })
   expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-nomain-content')
   expect(mockOnLoadFailed.mock.calls[0][1]).toBe('Error: Could not resolve content variant')
 })
