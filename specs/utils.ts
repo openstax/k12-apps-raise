@@ -16,7 +16,7 @@ const createContentJSON = (htmlContent: string): string => {
 }
 
 export const mockPageContentRequest = async (page: Page, htmlContent: string): Promise<void> => {
-  return await page.route(
+  await page.route(
     `${TEST_CONTENT_URL_PREFIX}/test.json`,
     route => {
       route.fulfill({
@@ -43,7 +43,7 @@ const createVariantContentJSON = (mainContent: string, variantContent: string): 
 }
 
 export const mockVariantContentRequest = async (page: Page, mainContent: string, variantContent: string): Promise<void> => {
-  return await page.route(
+  await page.route(
     `${TEST_CONTENT_URL_PREFIX}/test.json`,
     route => {
       route.fulfill({

@@ -14,9 +14,9 @@ const server = setupServer(
     }]))
   }))
 
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => { server.listen() })
+afterEach(() => { server.resetHandlers() })
+afterAll(() => { server.close() })
 
 test('Test getuser', async () => {
   const moodleApi = new MoodleApi('http://moodle', '12345')
