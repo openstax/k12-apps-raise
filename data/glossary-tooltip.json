@@ -57,7 +57,7 @@
   "difference of squares": "The product of a conjugate pair of binomials. A difference of squares has the form \\( a^2-b^2 \\).",
   "direct variation": "For any two variables \\( x \\) and \\( y \\), \\( y \\) varies directly with \\( x \\) if \\( y = kx \\), where \\( k \\neq 0 \\). The constant \\( k \\) is called the constant of variation.",
   "discrete function": "A discrete function is a function with distinct and separate values that are not connected with each other.",
-  "discriminant": "The discriminant of the quadratic formula, <em>b</em>2 \u2212 4<em>ac</em>, determines if the solution is real or imaginary.",
+  "discriminant": "The discriminant of the quadratic formula, \\( b^2 \u2212 4ac \\), determines if the solution is real or imaginary.",
   "distribution": "Describes how many of each value are in the data set. Its shape is often used to classify data.",
   "distributive property": "If a, b, c are real numbers then, a(b+c)=ab+ac.",
   "divisible by a number": "If a number <em>m</em> is a multiple of <em>n</em>, then <em>m</em> is divisible by <em>n</em>.",
