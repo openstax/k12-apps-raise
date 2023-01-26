@@ -1,12 +1,57 @@
 {
   "raiselearning.org": {
     "courses": {
-      "125": "wsic"
+      "80": "animate",
+      "82": "animate",
+      "83": "animate",
+      "87": "animate",
+      "89": "animate",
+      "92": "animate",
+      "93": "animate",
+      "96": "animate",
+      "98": "animate",
+      "101": "animate",
+      "103": "animate",
+      "106": "animate",
+      "107": "animate",
+      "109": "animate",
+      "110": "animate",
+      "112": "animate",
+      "114": "animate",
+      "118": "animate",
+      "119": "animate",
+      "122": "animate",
+      "123": "animate",
+      "124": "animate",
+      "125": "animate",
+      "128": "animate",
+      "130": "animate",
+      "133": "animate",
+      "136": "animate",
+      "137": "animate",
+      "139": "animate",
+      "169": "animate",
+      "170": "animate",
+      "171": "animate",
+      "172": "animate",
+      "174": "animate",
+      "177": "animate",
+      "182": "animate",
+      "185": "animate",
+      "188": "animate",
+      "189": "animate",
+      "194": "animate",
+      "208": "animate",
+      "210": "animate",
+      "212": "animate",
+      "214": "animate",
+      "230": "animate"
     }
   },
   "staging.raiselearning.org": {
     "courses": {
-      "70": "wsic"
+      "70": "wsic",
+      "136": "animate"
     }
   },
   "localhost:3001": {
