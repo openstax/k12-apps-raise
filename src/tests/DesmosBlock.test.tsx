@@ -7,13 +7,17 @@ jest.mock('../lib/desmos.ts', () => ({
   loadDesmos: jest.fn(async () => {})
 }))
 
-test('Desmos block calls script and grahing calcultor functions', async () => {
+test('Desmos block calls script and graphing calculator functions', async () => {
   const setExpression = jest.fn()
   const setMathBounds = jest.fn()
+  const setDefaultState = jest.fn()
+  const getState = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
       setExpression,
-      setMathBounds
+      setMathBounds,
+      setDefaultState,
+      getState
     }
   })
   window.Desmos = {
@@ -29,15 +33,21 @@ test('Desmos block calls script and grahing calcultor functions', async () => {
   await waitFor(() => { expect(graphingCalculator).toBeCalled() })
   expect(setExpression).toBeCalled()
   expect(setMathBounds).toBeCalled()
+  expect(setDefaultState).toBeCalled()
+  expect(getState).toBeCalled()
 })
 
 test('DesmosBlock does not render if waitForEvent does not fire', async () => {
   const setExpression = jest.fn()
   const setMathBounds = jest.fn()
+  const setDefaultState = jest.fn()
+  const getState = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
       setExpression,
-      setMathBounds
+      setMathBounds,
+      setDefaultState,
+      getState
     }
   })
   window.Desmos = {
@@ -53,15 +63,21 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
   await waitFor(() => { expect(graphingCalculator).not.toBeCalled() })
   expect(setExpression).not.toBeCalled()
   expect(setMathBounds).not.toBeCalled()
+  expect(setDefaultState).not.toBeCalled()
+  expect(getState).not.toBeCalled()
 })
 
 test('DesmosBlock calculator does render if waitForEvent does fire', async () => {
   const setExpression = jest.fn()
   const setMathBounds = jest.fn()
+  const setDefaultState = jest.fn()
+  const getState = jest.fn()
   const graphingCalculator = jest.fn(() => {
     return {
       setExpression,
-      setMathBounds
+      setMathBounds,
+      setDefaultState,
+      getState
     }
   })
   window.Desmos = {
@@ -80,4 +96,6 @@ test('DesmosBlock calculator does render if waitForEvent does fire', async () =>
   await waitFor(() => { expect(graphingCalculator).toBeCalled() })
   expect(setExpression).toBeCalled()
   expect(setMathBounds).toBeCalled()
+  expect(setDefaultState).toBeCalled()
+  expect(getState).toBeCalled()
 })

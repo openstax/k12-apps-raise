@@ -55,6 +55,10 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
       bottom: parseFloat(scaleBottom),
       top: parseFloat(scaleTop)
     })
+
+    // Set the default state explicitly to what was configured so users can
+    // easily reset the graph equations and bounds in the rendered UI
+    calculator.setDefaultState(calculator.getState())
   }
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
