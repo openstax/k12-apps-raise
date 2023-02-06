@@ -15,6 +15,7 @@ test('MultipleChoiceProblem renders', async () => {
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -40,6 +41,7 @@ test('MultipleChoiceProblem shows message if user does not select an option', as
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -68,6 +70,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -102,6 +105,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -130,6 +134,7 @@ test('MultipleChoiceProblem clears encourage response when user changes answer',
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -163,6 +168,7 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     retryLimit={3}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={'No more attempts allowed'}
     answerResponses={[]}
     />
@@ -205,6 +211,7 @@ test('MultipleChoiceProblem renders answer specific responses', async () => {
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
     />
@@ -238,6 +245,7 @@ test('MultipleChoiceProblem renders answer specific responses only on button cli
     retryLimit={0}
     solution={'Option 2'}
     buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
     />

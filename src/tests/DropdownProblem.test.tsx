@@ -2,7 +2,35 @@ import { fireEvent, render, screen, act } from '@testing-library/react'
 import { DropdownProblem } from '../components/DropdownProblem'
 import '@testing-library/jest-dom'
 
-test('DropdownProblem renders', async () => {
+test('DropdownProblem renders with dataContentId', async () => {
+  render(
+    <DropdownProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={''}
+    retryLimit={0}
+    solution={''}
+    buttonText={'Check'}
+    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
+    />
+  )
+
+  screen.getByText('Problem text')
+  screen.getByText('Select an answer')
+  screen.getByText('Option 1')
+  screen.getByText('Option 2')
+  screen.getByText('Option 3')
+  screen.getByRole('combobox')
+  expect(screen.getByRole('button')).toHaveTextContent('Check')
+})
+
+test('DropdownProblem renders without dataContentId', async () => {
   render(
     <DropdownProblem
     solutionOptions={'["Option 1", "Option 2", "Option 3"]'}

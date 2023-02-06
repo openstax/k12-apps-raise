@@ -15,6 +15,31 @@ test('InputProblem renders with content, input and button', async () => {
       solution={' 5 '}
       buttonText={'Submit'}
       comparator={'integer'}
+      dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
+      attemptsExhaustedResponse={''}
+      answerResponses={[]}
+      />
+  )
+
+  screen.getByText('Content')
+  screen.getByRole('textbox')
+  expect(document.querySelector('input')).not.toBeNull()
+  expect(screen.getByRole('button').textContent).toBe('Submit')
+})
+
+test('InputProblem renders without dataContentId', async () => {
+  render(
+        <InputProblem
+      solvedCallback={() => { } }
+      exhaustedCallback={() => { } }
+      allowedRetryCallback={() => { } }
+      content={'Content'}
+      correctResponse={''}
+      encourageResponse={''}
+      retryLimit={0}
+      solution={' 5 '}
+      buttonText={'Submit'}
+      comparator={'integer'}
       attemptsExhaustedResponse={''}
       answerResponses={[]}
       />

@@ -5,6 +5,18 @@ import '@testing-library/jest-dom'
 
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
+    <UserInputBlock dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'} content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="Submit"/>
+  )
+
+  screen.getByText('Content text')
+  screen.getByText('Prompt text')
+  screen.getByRole('textbox')
+  expect(document.querySelector('textarea')).not.toBeNull()
+  expect(screen.getByRole('button').textContent).toBe('Submit')
+})
+
+test('UserInputBlock renders without dataContentId', async () => {
+  render(
     <UserInputBlock content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="Submit"/>
   )
 
