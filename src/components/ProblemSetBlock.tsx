@@ -16,6 +16,7 @@ export interface ProblemData {
   retryLimit: number
   buttonText: string
   attemptsExhaustedResponse: string
+  contentId?: string
   answerResponses: AnswerSpecificResponse[]
 }
 
@@ -28,6 +29,7 @@ export interface BaseProblemProps {
   solvedCallback: () => void
   exhaustedCallback: () => void
   allowedRetryCallback: () => void
+  contentId?: string
   content: string
   correctResponse: string
   encourageResponse: string
@@ -54,10 +56,11 @@ interface ProblemSetBlockProps {
   waitForEvent?: string
   fireSuccessEvent?: string
   fireLearningOpportunityEvent?: string
+  contentId?: string
   problems: ProblemData[]
 }
 
-export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, problems }: ProblemSetBlockProps): JSX.Element => {
+export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems }: ProblemSetBlockProps): JSX.Element => {
   const generateInitialProblemResults = (): Map<number, ProblemResult> => {
     const initProblems = new Map<number, ProblemResult>()
     problems.forEach((_, indx) => {
@@ -115,6 +118,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       solvedCallback: solvedCallbackFactory(indx),
       exhaustedCallback: exhaustedCallbackFactory(indx),
       allowedRetryCallback: allowedRetryCallbackFactory(indx),
+      contentId: prob.contentId,
       solution: prob.solution,
       retryLimit: prob.retryLimit,
       content: prob.content,

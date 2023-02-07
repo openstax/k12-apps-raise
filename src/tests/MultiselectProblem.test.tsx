@@ -15,6 +15,31 @@ test('MultiselectProblem renders', async () => {
     retryLimit={0}
     solution={'[]'}
     buttonText={'Check'}
+    contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[]}
+    />
+  )
+  screen.getByText('Question Content')
+  screen.getByText('Option 1')
+  screen.getByText('Option 2')
+  screen.getByText('Option 3')
+  expect(screen.getByRole('button')).toHaveTextContent('Check')
+})
+
+test('MultiselectProblem renders without contentId', async () => {
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Question Content</p>'}
+    correctResponse={''}
+    encourageResponse={''}
+    retryLimit={0}
+    solution={'[]'}
+    buttonText={'Check'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />

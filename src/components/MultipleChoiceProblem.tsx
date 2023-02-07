@@ -14,7 +14,7 @@ interface MultipleChoiceFormValues {
 }
 
 export const MultipleChoiceProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, buttonText, answerResponses, solutionOptions,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, answerResponses, solutionOptions,
   correctResponse, encourageResponse, solution, retryLimit, attemptsExhaustedResponse
 }: MultipleChoiceProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')

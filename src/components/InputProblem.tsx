@@ -21,7 +21,7 @@ interface InputFormValues {
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
-  solution, retryLimit, content, comparator, encourageResponse, buttonText, correctResponse, answerResponses
+  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)

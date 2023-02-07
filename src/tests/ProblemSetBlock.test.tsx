@@ -83,6 +83,16 @@ const testProblems: ProblemData[] = [
 
 test('ProblemSetBlock renders with questions', async () => {
   render(
+    <ProblemSetBlock problems={testProblems} contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}/>
+  )
+
+  screen.getByText('Mock input problem')
+  screen.getByText('Mock dropdown problem')
+  screen.getByText('Mock multiselect problem')
+})
+
+test('ProblemSetBlock renders without contentId', async () => {
+  render(
     <ProblemSetBlock problems={testProblems}/>
   )
 
