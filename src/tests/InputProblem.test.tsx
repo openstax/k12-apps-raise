@@ -15,7 +15,7 @@ test('InputProblem renders with content, input and button', async () => {
       solution={' 5 '}
       buttonText={'Submit'}
       comparator={'integer'}
-      dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
+      contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
       attemptsExhaustedResponse={''}
       answerResponses={[]}
       />
@@ -27,7 +27,7 @@ test('InputProblem renders with content, input and button', async () => {
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
-test('InputProblem renders without dataContentId', async () => {
+test('InputProblem renders without contentId', async () => {
   render(
         <InputProblem
       solvedCallback={() => { } }

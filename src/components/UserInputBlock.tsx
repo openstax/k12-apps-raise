@@ -15,14 +15,14 @@ interface UserInputBlockProps {
   waitForEvent?: string
   fireEvent?: string
   buttonText: string
-  dataContentId?: string
+  contentId?: string
 }
 
 interface InputFormValues {
   response: string
 }
 
-export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, dataContentId }: UserInputBlockProps): JSX.Element => {
+export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
 
   const schema = Yup.object({

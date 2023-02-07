@@ -15,7 +15,7 @@ test('MultipleChoiceProblem renders', async () => {
     retryLimit={0}
     solution={''}
     buttonText={'Check'}
-    dataContentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
+    contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
@@ -28,7 +28,7 @@ test('MultipleChoiceProblem renders', async () => {
   expect(screen.getByRole('button')).toHaveTextContent('Check')
 })
 
-test('MultipleChoiceProblem renders without dataContentID', async () => {
+test('MultipleChoiceProblem renders without contentId', async () => {
   render(
     <MultipleChoiceProblem
     solutionOptions={'["Option 1", "Option 2", "Option 3"]'}

@@ -14,7 +14,7 @@ interface DropdownFormValues {
 }
 
 export const DropdownProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, dataContentId, buttonText, solutionOptions,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
   encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')

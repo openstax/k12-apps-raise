@@ -14,7 +14,7 @@ interface MultiselectFormValues {
 }
 
 export const MultiselectProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, dataContentId, buttonText, solutionOptions,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
   correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
 }: MultiselectProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')

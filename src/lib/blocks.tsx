@@ -172,7 +172,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
   const maybeButtonText = element.dataset.buttonText
   const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
   const fireEvent = namespaceEvent(element.dataset.fireEvent)
-  const dataContentId = element.dataset.dataContentId
+  const contentId = element.dataset.contentId
   const contentElem = element.querySelector(`.${INPUT_CONTENT_CLASS}`)
   const promptElem = element.querySelector(`.${INPUT_PROMPT_CLASS}`)
   const ackElem = element.querySelector(`.${INPUT_ACK_CLASS}`)
@@ -193,7 +193,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     buttonText={maybeButtonText ?? 'Submit'}
     waitForEvent={waitForEvent}
     fireEvent={fireEvent}
-    dataContentId={dataContentId}
+    contentId={contentId}
   />
 }
 
@@ -205,7 +205,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
   const fireSuccessEvent = namespaceEvent(element.dataset.fireSuccessEvent)
   const fireLearningOpportunityEvent = namespaceEvent(element.dataset.fireLearningOpportunityEvent)
   const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
-  const dataContentId = element.dataset.dataContentId
+  const contentId = element.dataset.contentId
   const maybeRetryLimit = element.dataset.retryLimit
   const maybeButtonText = element.dataset.buttonText
   const psetCorrectResponseElem = element.querySelector(`:scope > .${PSET_CORRECT_RESPONSE_CLASS}`)
@@ -236,7 +236,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
   psetProblemElems.forEach(prob => {
     const htmlElem = prob as HTMLElement
     const problemType = htmlElem.dataset.problemType
-    const dataContentId = htmlElem.dataset.dataContentId
+    const contentId = htmlElem.dataset.contentId
     const solution = htmlElem.dataset.solution
     const problemComparator = htmlElem.dataset.problemComparator
     const solutionOptions = htmlElem.dataset.solutionOptions
@@ -260,7 +260,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     problems.push({
       type: problemType,
       content: maybeProblemContent.innerHTML,
-      dataContentId,
+      contentId,
       solution,
       comparator: htmlElem.dataset.problemComparator,
       solutionOptions,
@@ -278,7 +278,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     fireSuccessEvent={fireSuccessEvent}
     fireLearningOpportunityEvent={fireLearningOpportunityEvent}
     waitForEvent={waitForEvent}
-    dataContentId={dataContentId}
+    contentId={contentId}
   />
 }
 
