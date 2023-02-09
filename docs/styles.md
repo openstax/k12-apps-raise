@@ -169,7 +169,7 @@ the side by side content.
 
 ## Centered text (os-raise-text-center)
 
-This utility class can be applied to any element to center content using the [`text-align` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).
+This utility class can be applied to center content using the [`text-align` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).
 
 **Example**
 <div style="text-align: center;">
@@ -178,7 +178,7 @@ This utility class can be applied to any element to center content using the [`t
 
 **Availability**
 
-Any element
+Any block element or table-cell box (e.g. any element where `text-align` CSS property can apply).
 
 **Usage**
 
