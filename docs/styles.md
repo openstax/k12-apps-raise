@@ -152,17 +152,52 @@ Any element
 
 **Usage**
 
-You can append the additional styles to class attribute to add more styling to 
-the side by side content. 
+You can append the additional styles to class attribute to add more styling to
+the side by side content.
 
- - `os-raise-align-items-center` centers the side by side content vertically. 
- - `os-raise-justify-content-center` centers the grid horizontally. 
- - `os-raise-justify-content-between` adds even spacing between content starting after the first element and ending before the last. 
- - `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element. 
+ - `os-raise-align-items-center` centers the side by side content vertically.
+ - `os-raise-justify-content-center` centers the grid horizontally.
+ - `os-raise-justify-content-between` adds even spacing between content starting after the first element and ending before the last.
+ - `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element.
 ```html
 <div class="os-raise-d-flex os-raise-align-items-center">
     <p>Element 1</p>
     <p>Element 2</p>
     <p>Element 3</p>
 </div>
+```
+
+## Centered text (os-raise-text-center)
+
+This utility class can be applied to center content using the [`text-align` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).
+
+**Example**
+<div style="text-align: center;">
+    <img src="./static/center.png" width="600">
+</div>
+
+**Availability**
+
+Any block element or table-cell box (e.g. any element where `text-align` CSS property can apply).
+
+**Usage**
+
+```html
+<p><img src="https://openstax.org/dist/images/logo.svg"></p>
+<p class="os-raise-text-center"><img src="https://openstax.org/dist/images/logo.svg"></p>
+
+<table class="os-raise-standardtable">
+  <tr>
+    <th class="os-raise-text-center">Centered heading</th>
+    <th>Default heading</th>
+  </tr>
+  <tr>
+    <td>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </td>
+    <td>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    </td>
+  </tr>
+</table>
 ```
