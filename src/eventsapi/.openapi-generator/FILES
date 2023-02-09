@@ -6,7 +6,10 @@ models/ContentLoadedV1.ts
 models/DetailMessage.ts
 models/EventsInner.ts
 models/HTTPValidationError.ts
+models/IbInputSubmittedV1.ts
+models/IbPsetProblemAttemptedV1.ts
 models/LocationInner.ts
+models/Response.ts
 models/ValidationError.ts
 models/index.ts
 runtime.ts

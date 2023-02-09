@@ -26,13 +26,27 @@ import {
     ContentLoadedV1FromJSONTyped,
     ContentLoadedV1ToJSON,
 } from './ContentLoadedV1';
+import {
+    IbInputSubmittedV1,
+    instanceOfIbInputSubmittedV1,
+    IbInputSubmittedV1FromJSON,
+    IbInputSubmittedV1FromJSONTyped,
+    IbInputSubmittedV1ToJSON,
+} from './IbInputSubmittedV1';
+import {
+    IbPsetProblemAttemptedV1,
+    instanceOfIbPsetProblemAttemptedV1,
+    IbPsetProblemAttemptedV1FromJSON,
+    IbPsetProblemAttemptedV1FromJSONTyped,
+    IbPsetProblemAttemptedV1ToJSON,
+} from './IbPsetProblemAttemptedV1';
 
 /**
  * @type EventsInner
  * 
  * @export
  */
-export type EventsInner = { eventname: 'content_load_failed_v1' } & ContentLoadFailedV1 | { eventname: 'content_loaded_v1' } & ContentLoadedV1;
+export type EventsInner = { eventname: 'content_load_failed_v1' } & ContentLoadFailedV1 | { eventname: 'content_loaded_v1' } & ContentLoadedV1 | { eventname: 'ib_input_submitted_v1' } & IbInputSubmittedV1 | { eventname: 'ib_pset_problem_attempted_v1' } & IbPsetProblemAttemptedV1;
 
 export function EventsInnerFromJSON(json: any): EventsInner {
     return EventsInnerFromJSONTyped(json, false);
@@ -47,6 +61,10 @@ export function EventsInnerFromJSONTyped(json: any, ignoreDiscriminator: boolean
             return {...ContentLoadFailedV1FromJSONTyped(json, true), eventname: 'content_load_failed_v1'};
         case 'content_loaded_v1':
             return {...ContentLoadedV1FromJSONTyped(json, true), eventname: 'content_loaded_v1'};
+        case 'ib_input_submitted_v1':
+            return {...IbInputSubmittedV1FromJSONTyped(json, true), eventname: 'ib_input_submitted_v1'};
+        case 'ib_pset_problem_attempted_v1':
+            return {...IbPsetProblemAttemptedV1FromJSONTyped(json, true), eventname: 'ib_pset_problem_attempted_v1'};
         default:
             throw new Error(`No variant of EventsInner exists with 'eventname=${json['eventname']}'`);
     }
@@ -64,6 +82,10 @@ export function EventsInnerToJSON(value?: EventsInner | null): any {
             return ContentLoadFailedV1ToJSON(value);
         case 'content_loaded_v1':
             return ContentLoadedV1ToJSON(value);
+        case 'ib_input_submitted_v1':
+            return IbInputSubmittedV1ToJSON(value);
+        case 'ib_pset_problem_attempted_v1':
+            return IbPsetProblemAttemptedV1ToJSON(value);
         default:
             throw new Error(`No variant of EventsInner exists with 'eventname=${value['eventname']}'`);
     }
