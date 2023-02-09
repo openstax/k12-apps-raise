@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { getVariant } from '../lib/utils'
 import { blockifyHTML } from '../lib/blocks'
 import { ENV } from '../lib/env'
+import { ContentLoadedContext } from '../lib/contexts'
 
 export interface ContentResponse {
   id: string
@@ -27,6 +28,7 @@ interface ContentLoaderProps {
 
 export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
+  const [variant, setVariant] = useState('')
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
 
   const fetchContent = async (): Promise<void> => {
@@ -49,6 +51,7 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
       }
 
       setChildren(blockifyHTML(selectedVariant.html))
+      setVariant(selectedVariant.variant)
       setFetchStatus(FetchStatus.FetchSuccess)
     } catch (error) {
       if (onContentLoadFailure !== undefined) {
@@ -64,9 +67,9 @@ export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }
 
   if (fetchStatus === FetchStatus.FetchSuccess) {
     return (
-      <>
+      <ContentLoadedContext.Provider value={{ variant, contentId }}>
         {children}
-      </>
+      </ContentLoadedContext.Provider>
     )
   }
 

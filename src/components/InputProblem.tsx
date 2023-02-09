@@ -21,7 +21,7 @@ interface InputFormValues {
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
-  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses
+  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
@@ -64,7 +64,12 @@ export const InputProblem = ({
   }
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
+    let correct = false
+    let finalAttempt = false
+    const attempt = retriesAllowed + 1
+
     if (evaluateInput(values.response.trim(), solution.trim())) {
+      correct = true
       setFeedback(correctResponse)
       solvedCallback()
       setInputDisabled(true)
@@ -76,6 +81,18 @@ export const InputProblem = ({
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setInputDisabled(true)
+      finalAttempt = true
+    }
+
+    if (onProblemAttempt !== undefined) {
+      onProblemAttempt(
+        'input', // TODO: Revisit use of constant vs in-line string here
+        values.response,
+        correct,
+        attempt,
+        finalAttempt,
+        contentId
+      )
     }
   }
   const clearFeedback = (): void => {
