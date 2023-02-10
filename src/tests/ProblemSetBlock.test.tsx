@@ -2,6 +2,12 @@ import { render, screen, fireEvent, act } from '@testing-library/react'
 import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
 import '@testing-library/jest-dom'
 import { BaseProblemProps, ProblemData, ProblemSetBlock } from '../components/ProblemSetBlock'
+import { ContentLoadedContext } from '../lib/contexts'
+import { queueIbPsetProblemAttemptedV1Event } from '../lib/events'
+
+jest.mock('../lib/events.ts', () => ({
+  queueIbPsetProblemAttemptedV1Event: jest.fn(async () => {})
+}))
 
 jest.mock('../lib/env.ts', () => {})
 
@@ -33,12 +39,13 @@ jest.mock('../components/MultiselectProblem', () => {
 
 jest.mock('../components/InputProblem', () => {
   return {
-    InputProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
+    InputProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback, onProblemAttempt }: BaseProblemProps) => (
       <>
         <p>Mock input problem</p>
         <button onClick={solvedCallback}>Solve Input</button>
         <button onClick={exhaustedCallback}>Exhaust Input</button>
         <button onClick={allowedRetryCallback}>Retry Input</button>
+        <button onClick={() => { onProblemAttempt?.('Response', false, 1, false, 'psetProblemContentIdValue') }}>Attempt Input</button>
       </>
     )
   }
@@ -388,4 +395,57 @@ test('parseProblemSetBlock applies attempts exhausted response overrides', async
   expect(generatedProblemSetBlock?.props.problems[0].buttonText).toBe('Check')
   expect(generatedProblemSetBlock?.props.problems[1].correctResponse).toMatch('Generic correct response')
   expect(generatedProblemSetBlock?.props.problems[1].encourageResponse).toMatch('Generic encouragement response')
+})
+
+test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-content-id="pset-content-1" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+      <div class="os-raise-ib-pset-correct-response">
+        <p>Input problem correct response</p>
+      </div>
+      <div class="os-raise-ib-pset-encourage-response">
+        <p>Input problem encourage response</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  Date.now = jest.fn(() => 12345)
+
+  render(
+    <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
+      {generatedProblemSetBlock as JSX.Element}
+    </ContentLoadedContext.Provider>
+  )
+
+  await act(async () => {
+    screen.getByText('Attempt Input').click()
+  })
+
+  expect(queueIbPsetProblemAttemptedV1Event).toBeCalled()
+  expect(queueIbPsetProblemAttemptedV1Event).toHaveBeenCalledWith(
+    12345,
+    'contentLoadedId',
+    'testvariant',
+    'input',
+    'Response',
+    false,
+    1,
+    false,
+    'pset-content-1',
+    'psetProblemContentIdValue'
+  )
 })
