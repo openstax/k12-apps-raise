@@ -2,8 +2,14 @@ import { render, screen, fireEvent, act } from '@testing-library/react'
 import { UserInputBlock, MAX_CHARACTER_INPUT_BLOCK_LENGTH } from '../components/UserInputBlock'
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import '@testing-library/jest-dom'
+import { ContentLoadedContext } from '../lib/contexts'
+import { queueIbInputSubmittedV1Event } from '../lib/events'
 
 jest.mock('../lib/env.ts', () => {})
+
+jest.mock('../lib/events.ts', () => ({
+  queueIbInputSubmittedV1Event: jest.fn(async () => {})
+}))
 
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
@@ -181,4 +187,41 @@ test('UserInputBlock from parseUserInputBlock fires namespaced event on valid su
   })
 
   expect(eventHandler).toHaveBeenCalled()
+})
+
+test('UserInputBlock calls onInputSumbitted callback', async () => {
+  const htmlContent = `
+  <div class="os-raise-ib-input" data-content-id="1234" data-schema-version="1.0">
+    <div class="os-raise-ib-input-content"></div>
+    <div class="os-raise-ib-input-prompt"></div>
+    <div class="os-raise-ib-input-ack"></div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = htmlContent
+  const generatedContentBlock = parseUserInputBlock(divElem.children[0] as HTMLElement)
+
+  Date.now = jest.fn(() => 12345)
+
+  expect(generatedContentBlock).not.toBeNull()
+
+  render(
+    <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
+      {generatedContentBlock as JSX.Element}
+    </ContentLoadedContext.Provider>
+  )
+
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
+  await act(async () => {
+    screen.getByRole('button').click()
+  })
+
+  expect(queueIbInputSubmittedV1Event).toHaveBeenCalled()
+  expect(queueIbInputSubmittedV1Event).toHaveBeenCalledWith(
+    12345,
+    'contentLoadedId',
+    'testvariant',
+    'Input text',
+    '1234'
+  )
 })

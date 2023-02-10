@@ -6,7 +6,8 @@ import {
   DefaultApi as EventsApi,
   Configuration,
   ConfigurationParameters,
-  CreateEventsV1EventsPostRequest
+  CreateEventsV1EventsPostRequest,
+  IbInputSubmittedV1
 } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
 import { MoodleApi, GetUserResponse } from '../moodleapi'
@@ -38,6 +39,19 @@ export const queueIbPsetProblemAttemptedV1Event = async (
   const eventManager = await EventManager.getInstance()
   eventManager.queueIbPsetProblemAttemptedV1Event(
     timestamp, contentId, variant, problemType, response, correct, attempt, finalAttempt, psetContentId, psetProblemContentId
+  )
+}
+
+export const queueIbInputSubmittedV1Event = async (
+  timestamp: number,
+  contentId: string,
+  variant: string,
+  response: string,
+  inputContentId: string
+): Promise<void> => {
+  const eventManager = await EventManager.getInstance()
+  eventManager.queueIbInputSumbittedV1Event(
+    timestamp, contentId, variant, response, inputContentId
   )
 }
 
@@ -201,6 +215,30 @@ class EventManager {
       finalAttempt,
       psetContentId,
       psetProblemContentId
+    }
+    this.queueEvent(event)
+  }
+
+  queueIbInputSumbittedV1Event(
+    timestamp: number,
+    contentId: string,
+    variant: string,
+    response: string,
+    inputContentId: string
+  ): void {
+    if (this.config === undefined) {
+      return
+    }
+    const event: IbInputSubmittedV1 = {
+      courseId: this.config.courseId,
+      impressionId: this.config.impressionId,
+      sourceUri: window.location.toString(),
+      timestamp,
+      eventname: 'ib_input_submitted_v1',
+      contentId,
+      variant,
+      response,
+      inputContentId
     }
     this.queueEvent(event)
   }
