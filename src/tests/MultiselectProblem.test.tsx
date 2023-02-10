@@ -347,3 +347,51 @@ test('MultiselectProblem renders answer specific responses only on submit', asyn
   expect(screen.queryByText('Almost There')).toBeNull()
   expect(screen.queryByText('Even Closer')).toBeNull()
 })
+
+test('multiselect calls the onProblemAttempt handler', async () => {
+  const problemAttemptedHandler = jest.fn()
+
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={() => {}}
+    exhaustedCallback={() => {}}
+    allowedRetryCallback={() => {}}
+    content={'<p>Problem text</p>'}
+    correctResponse={'<p>Correct</p>'}
+    encourageResponse={'<p>Try again!</p>'}
+    retryLimit={1}
+    solution={'["Option 2"]'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={''}
+    answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
+    contentId={'dataContentId'}
+    onProblemAttempt={problemAttemptedHandler}
+          />
+  )
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(1)
+  expect(problemAttemptedHandler).toHaveBeenCalledWith(
+    ['Option 1'],
+    false,
+    1,
+    false,
+    'dataContentId'
+  )
+
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 2'))
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(2)
+  expect(problemAttemptedHandler).toHaveBeenLastCalledWith(
+    ['Option 1', 'Option 2'],
+    false,
+    2,
+    true,
+    'dataContentId'
+  )
+})

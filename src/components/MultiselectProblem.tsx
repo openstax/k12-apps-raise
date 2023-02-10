@@ -15,7 +15,8 @@ interface MultiselectFormValues {
 
 export const MultiselectProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
+  correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
+  onProblemAttempt
 }: MultiselectProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -86,7 +87,12 @@ export const MultiselectProblem = ({
   }
 
   const handleSubmit = async (values: MultiselectFormValues): Promise<void> => {
+    let correct = false
+    let finalAttempt = false
+    const attempt = retriesAllowed + 1
+
     if (compareForm(values.response, solutionArray)) {
+      correct = true
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
@@ -98,6 +104,17 @@ export const MultiselectProblem = ({
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
+      finalAttempt = true
+    }
+
+    if (onProblemAttempt !== undefined) {
+      onProblemAttempt(
+        values.response,
+        correct,
+        attempt,
+        finalAttempt,
+        contentId
+      )
     }
   }
 

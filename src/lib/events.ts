@@ -23,7 +23,7 @@ export const queueContentLoadFailedV1Event = async (timestamp: number, contentId
   eventManager.queueContentLoadFailedV1Event(timestamp, contentId, error)
 }
 
-export const queueIbPsetPoblemAttemptedV1Event = async (
+export const queueIbPsetProblemAttemptedV1Event = async (
   timestamp: number,
   contentId: string,
   variant: string,

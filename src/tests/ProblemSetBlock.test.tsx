@@ -3,6 +3,8 @@ import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
 import '@testing-library/jest-dom'
 import { BaseProblemProps, ProblemData, ProblemSetBlock } from '../components/ProblemSetBlock'
 
+jest.mock('../lib/env.ts', () => {})
+
 jest.mock('../components/DropdownProblem', () => {
   return {
     DropdownProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (

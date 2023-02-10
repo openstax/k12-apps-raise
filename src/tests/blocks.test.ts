@@ -12,6 +12,8 @@ import {
 import { UserInputBlock } from '../components/UserInputBlock'
 import { ProblemSetBlock } from '../components/ProblemSetBlock'
 
+jest.mock('../lib/env.ts', () => {})
+
 test('isInteractiveBlock returns false on non-interactive block', async () => {
   const tmpDiv = document.createElement('div')
 

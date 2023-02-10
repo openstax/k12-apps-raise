@@ -331,3 +331,51 @@ test('InputProblem renders answer specific content only on button click', async 
   })
   await screen.findByText('Even Closer')
 })
+
+test('InputProblem calls the onProblemAttempt handler', async () => {
+  const problemAttemptedHandler = jest.fn()
+
+  render(
+          <InputProblem
+          solvedCallback={() => {}}
+          exhaustedCallback={() => {}}
+          allowedRetryCallback={() => {}}
+          content={'Content'}
+          correctResponse={'Correct!'}
+          encourageResponse={'Try again!'}
+          retryLimit={1}
+          solution={' 5 '}
+          buttonText={'Submit'}
+          comparator={'integer'}
+          attemptsExhaustedResponse={''}
+          contentId={'dataContentId'}
+          answerResponses={[{ answer: '3', response: 'Almost There' }, { answer: '4', response: 'Even Closer' }]}
+          onProblemAttempt={problemAttemptedHandler}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(1)
+  expect(problemAttemptedHandler).toHaveBeenCalledWith(
+    '3',
+    false,
+    1,
+    false,
+    'dataContentId'
+  )
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(2)
+  expect(problemAttemptedHandler).toHaveBeenLastCalledWith(
+    '4',
+    false,
+    2,
+    true,
+    'dataContentId'
+  )
+})

@@ -8,6 +8,8 @@ jest.mock('../lib/math.ts', () => ({
   mathifyElement: jest.fn()
 }))
 
+jest.mock('../lib/env.ts', () => {})
+
 test('ContentBlock renders', async () => {
   render(
     <ContentBlock content={'<p>String</p>'} />

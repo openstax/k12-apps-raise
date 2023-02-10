@@ -4,7 +4,6 @@ import { EventControlledContent } from './EventControlledContent'
 import { InputProblem } from './InputProblem'
 import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
-import { queueIbPsetPoblemAttemptedV1Event } from '../lib/events'
 import { ContentLoadedContext } from '../lib/contexts'
 
 export interface ProblemData {
@@ -41,7 +40,6 @@ export interface BaseProblemProps {
   attemptsExhaustedResponse: string
   answerResponses: AnswerSpecificResponse[]
   onProblemAttempt?: (
-    problemType: string,
     response: string | string[],
     correct: boolean,
     attempt: number,
@@ -68,9 +66,20 @@ interface ProblemSetBlockProps {
   fireLearningOpportunityEvent?: string
   contentId?: string
   problems: ProblemData[]
+  onProblemAttempt?: (
+    contentId: string,
+    variant: string,
+    problemType: string,
+    response: string | string[],
+    correct: boolean,
+    attempt: number,
+    finalAttempt: boolean,
+    psetContentId: string | undefined,
+    psetProblemContentId: string | undefined
+  ) => void
 }
 
-export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems }: ProblemSetBlockProps): JSX.Element => {
+export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems, onProblemAttempt }: ProblemSetBlockProps): JSX.Element => {
   const generateInitialProblemResults = (): Map<number, ProblemResult> => {
     const initProblems = new Map<number, ProblemResult>()
     problems.forEach((_, indx) => {
@@ -123,31 +132,34 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1 } }))
   }
 
-  const problemAttemptedCallback = (
-    problemType: string,
-    response: string | string[],
-    correct: boolean,
-    attempt: number,
-    finalAttempt: boolean,
-    psetProblemContentId: string | undefined
-  ): void => {
-    if ((contentId === undefined) || (psetProblemContentId === undefined)) {
-      return
+  const problemAttemptedCallbackFactory = (problemType: string): (
+  response: string | string[],
+  correct: boolean,
+  attempt: number,
+  finalAttempt: boolean,
+  psetProblemContentId: string | undefined
+  ) => void => {
+    return (
+      response: string | string[],
+      correct: boolean,
+      attempt: number,
+      finalAttempt: boolean,
+      psetProblemContentId: string | undefined
+    ): void => {
+      if (onProblemAttempt !== undefined) {
+        onProblemAttempt(
+          contentLoadedContext.contentId,
+          contentLoadedContext.variant,
+          problemType,
+          response,
+          correct,
+          attempt,
+          finalAttempt,
+          contentId,
+          psetProblemContentId
+        )
+      }
     }
-    queueIbPsetPoblemAttemptedV1Event(
-      Date.now(),
-      contentLoadedContext.contentId,
-      contentLoadedContext.variant,
-      problemType,
-      response,
-      correct,
-      attempt,
-      finalAttempt,
-      contentId, // This is the current pset's ID
-      psetProblemContentId
-    ).catch((err) => {
-      console.error(err)
-    })
   }
 
   problems.forEach((prob, indx) => {
@@ -165,7 +177,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       buttonText: prob.buttonText,
       attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
       answerResponses: prob.answerResponses,
-      onProblemAttempt: problemAttemptedCallback
+      onProblemAttempt: problemAttemptedCallbackFactory(prob.type)
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem

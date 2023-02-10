@@ -15,7 +15,8 @@ interface DropdownFormValues {
 
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
-  encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse
+  encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
+  onProblemAttempt
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -50,7 +51,12 @@ export const DropdownProblem = ({
   }
 
   const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
+    let correct = false
+    let finalAttempt = false
+    const attempt = retriesAllowed + 1
+
     if (evaluateInput(values.response, solution)) {
+      correct = true
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
@@ -62,6 +68,17 @@ export const DropdownProblem = ({
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
+      finalAttempt = true
+    }
+
+    if (onProblemAttempt !== undefined) {
+      onProblemAttempt(
+        values.response,
+        correct,
+        attempt,
+        finalAttempt,
+        contentId
+      )
     }
   }
 

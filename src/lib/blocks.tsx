@@ -6,6 +6,7 @@ import {
   PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT
 } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
+import { queueIbPsetProblemAttemptedV1Event } from './events'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
@@ -273,12 +274,43 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     })
   })
 
+  const problemAttemptedCallback = (
+    contentId: string,
+    variant: string,
+    problemType: string,
+    response: string | string[],
+    correct: boolean,
+    attempt: number,
+    finalAttempt: boolean,
+    psetContentId: string | undefined,
+    psetProblemContentId: string | undefined
+  ): void => {
+    if ((psetContentId === undefined) || (psetProblemContentId === undefined)) {
+      return
+    }
+    queueIbPsetProblemAttemptedV1Event(
+      Date.now(),
+      contentId,
+      variant,
+      problemType,
+      response,
+      correct,
+      attempt,
+      finalAttempt,
+      psetContentId,
+      psetProblemContentId
+    ).catch((err) => {
+      console.error(err)
+    })
+  }
+
   return <ProblemSetBlock
     problems={problems}
     fireSuccessEvent={fireSuccessEvent}
     fireLearningOpportunityEvent={fireLearningOpportunityEvent}
     waitForEvent={waitForEvent}
     contentId={contentId}
+    onProblemAttempt={problemAttemptedCallback}
   />
 }
 

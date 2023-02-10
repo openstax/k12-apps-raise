@@ -86,7 +86,6 @@ export const InputProblem = ({
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
-        'input', // TODO: Revisit use of constant vs in-line string here
         values.response,
         correct,
         attempt,
