@@ -282,3 +282,51 @@ test('DropdownProblem renders answer specific content only on button click', asy
   })
   expect(screen.queryByText('Even Closer')).toBeNull()
 })
+
+test('DropdownProblem calls the onProblemAttempt handler', async () => {
+  const problemAttemptedHandler = jest.fn()
+
+  render(
+          <DropdownProblem
+          solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+          solvedCallback={() => {}}
+          exhaustedCallback={() => {}}
+          allowedRetryCallback={() => {}}
+          content={'<p>Problem text</p>'}
+          correctResponse={''}
+          encourageResponse={'<p>Try again!</p>'}
+          retryLimit={1}
+          solution={'Option 2'}
+          buttonText={'Check'}
+          attemptsExhaustedResponse={''}
+          answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
+          contentId={'dataContentId'}
+          onProblemAttempt={problemAttemptedHandler}
+          />
+  )
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(1)
+  expect(problemAttemptedHandler).toHaveBeenCalledWith(
+    'Option 1',
+    false,
+    1,
+    false,
+    'dataContentId'
+  )
+
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 2' } })
+    screen.getByRole('button').click()
+  })
+  expect(problemAttemptedHandler).toBeCalledTimes(2)
+  expect(problemAttemptedHandler).toHaveBeenLastCalledWith(
+    'Option 2',
+    true,
+    2,
+    false,
+    'dataContentId'
+  )
+})

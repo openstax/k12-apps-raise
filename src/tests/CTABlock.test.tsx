@@ -8,6 +8,8 @@ jest.mock('../lib/math.ts', () => ({
   mathifyElement: jest.fn()
 }))
 
+jest.mock('../lib/env.ts', () => {})
+
 test('CTABlock renders', async () => {
   render(
     <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'}/>

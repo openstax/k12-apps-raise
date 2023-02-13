@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { DropdownProblem } from './DropdownProblem'
 import { EventControlledContent } from './EventControlledContent'
 import { InputProblem } from './InputProblem'
 import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
+import { ContentLoadedContext } from '../lib/contexts'
 
 export interface ProblemData {
   type: string
@@ -38,6 +39,13 @@ export interface BaseProblemProps {
   buttonText: string
   attemptsExhaustedResponse: string
   answerResponses: AnswerSpecificResponse[]
+  onProblemAttempt?: (
+    response: string | string[],
+    correct: boolean,
+    attempt: number,
+    finalAttempt: boolean,
+    psetProblemContentId: string | undefined
+  ) => void
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
@@ -58,9 +66,20 @@ interface ProblemSetBlockProps {
   fireLearningOpportunityEvent?: string
   contentId?: string
   problems: ProblemData[]
+  onProblemAttempt?: (
+    contentId: string,
+    variant: string,
+    problemType: string,
+    response: string | string[],
+    correct: boolean,
+    attempt: number,
+    finalAttempt: boolean,
+    psetContentId: string | undefined,
+    psetProblemContentId: string | undefined
+  ) => void
 }
 
-export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems }: ProblemSetBlockProps): JSX.Element => {
+export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems, onProblemAttempt }: ProblemSetBlockProps): JSX.Element => {
   const generateInitialProblemResults = (): Map<number, ProblemResult> => {
     const initProblems = new Map<number, ProblemResult>()
     problems.forEach((_, indx) => {
@@ -70,6 +89,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
   }
   const [problemResults, setProblemResults] = useState<Map<number, ProblemResult>>(generateInitialProblemResults())
   const children: JSX.Element[] = []
+  const contentLoadedContext = useContext(ContentLoadedContext)
 
   useEffect(() => {
     // As a placeholder: We'll fire successEvent if all problems are solved or learningOpportunityEvent if all problems
@@ -112,6 +132,36 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1 } }))
   }
 
+  const problemAttemptedCallbackFactory = (problemType: string): (
+  response: string | string[],
+  correct: boolean,
+  attempt: number,
+  finalAttempt: boolean,
+  psetProblemContentId: string | undefined
+  ) => void => {
+    return (
+      response: string | string[],
+      correct: boolean,
+      attempt: number,
+      finalAttempt: boolean,
+      psetProblemContentId: string | undefined
+    ): void => {
+      if (onProblemAttempt !== undefined) {
+        onProblemAttempt(
+          contentLoadedContext.contentId,
+          contentLoadedContext.variant,
+          problemType,
+          response,
+          correct,
+          attempt,
+          finalAttempt,
+          contentId,
+          psetProblemContentId
+        )
+      }
+    }
+  }
+
   problems.forEach((prob, indx) => {
     const sharedProps = {
       key: indx,
@@ -126,7 +176,8 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       encourageResponse: prob.encourageResponse,
       buttonText: prob.buttonText,
       attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
-      answerResponses: prob.answerResponses
+      answerResponses: prob.answerResponses,
+      onProblemAttempt: problemAttemptedCallbackFactory(prob.type)
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem

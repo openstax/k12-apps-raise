@@ -3,6 +3,8 @@ import { UserInputBlock, MAX_CHARACTER_INPUT_BLOCK_LENGTH } from '../components/
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import '@testing-library/jest-dom'
 
+jest.mock('../lib/env.ts', () => {})
+
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
     <UserInputBlock contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'} content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="Submit"/>

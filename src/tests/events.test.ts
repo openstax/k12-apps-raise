@@ -1,7 +1,7 @@
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
 import { rest, MockedRequest, matchRequestUrl } from 'msw'
-import { queueContentLoadFailedV1Event, queueContentLoadedV1Event } from '../lib/events'
+import { queueContentLoadFailedV1Event, queueContentLoadedV1Event, queueIbPsetProblemAttemptedV1Event } from '../lib/events'
 import { validate } from 'uuid'
 
 const server = setupServer(
@@ -99,6 +99,37 @@ test('Test queueContentLoadFailedV1Event', async () => {
   expect(jsonData[0].content_id).toBe('1234')
   expect(jsonData[0].eventname).toBe('content_load_failed_v1')
   expect(jsonData[0].error).toBe('error')
+  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(jsonData[0].course_id).toBe(1)
+})
+
+test('Test queueIbPsetProblemAttemptedV1Event', async () => {
+  const pendingRequest = waitForRequest('POST', 'http://localhost:8888/v1/events')
+  await queueIbPsetProblemAttemptedV1Event(
+    1,
+    '1234',
+    'variant',
+    'input',
+    'this is the response',
+    true,
+    1,
+    false,
+    'abcd1',
+    'efgh2'
+  )
+  const req = await pendingRequest
+  const jsonData = await req.json()
+  expect(jsonData[0].timestamp).toBe(1)
+  expect(jsonData[0].content_id).toBe('1234')
+  expect(jsonData[0].variant).toBe('variant')
+  expect(jsonData[0].problem_type).toBe('input')
+  expect(jsonData[0].response).toBe('this is the response')
+  expect(jsonData[0].correct).toBe(true)
+  expect(jsonData[0].attempt).toBe(1)
+  expect(jsonData[0].final_attempt).toBe(false)
+  expect(jsonData[0].pset_content_id).toBe('abcd1')
+  expect(jsonData[0].pset_problem_content_id).toBe('efgh2')
+  expect(jsonData[0].eventname).toBe('ib_pset_problem_attempted_v1')
   expect(validate(jsonData[0].impression_id)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })

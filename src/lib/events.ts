@@ -2,6 +2,7 @@ import {
   EventsInner as ApiEvent,
   ContentLoadedV1,
   ContentLoadFailedV1,
+  IbPsetProblemAttemptedV1,
   DefaultApi as EventsApi,
   Configuration,
   ConfigurationParameters,
@@ -20,6 +21,24 @@ export const queueContentLoadedV1Event = async (timestamp: number, contentId: st
 export const queueContentLoadFailedV1Event = async (timestamp: number, contentId: string, error?: string): Promise<void> => {
   const eventManager = await EventManager.getInstance()
   eventManager.queueContentLoadFailedV1Event(timestamp, contentId, error)
+}
+
+export const queueIbPsetProblemAttemptedV1Event = async (
+  timestamp: number,
+  contentId: string,
+  variant: string,
+  problemType: string,
+  response: string | string[],
+  correct: boolean,
+  attempt: number,
+  finalAttempt: boolean,
+  psetContentId: string,
+  psetProblemContentId: string
+): Promise<void> => {
+  const eventManager = await EventManager.getInstance()
+  eventManager.queueIbPsetProblemAttemptedV1Event(
+    timestamp, contentId, variant, problemType, response, correct, attempt, finalAttempt, psetContentId, psetProblemContentId
+  )
 }
 
 interface EventManagerConfig {
@@ -148,6 +167,40 @@ class EventManager {
       eventname: 'content_load_failed_v1',
       contentId,
       error
+    }
+    this.queueEvent(event)
+  }
+
+  queueIbPsetProblemAttemptedV1Event(
+    timestamp: number,
+    contentId: string,
+    variant: string,
+    problemType: string,
+    response: string | string[],
+    correct: boolean,
+    attempt: number,
+    finalAttempt: boolean,
+    psetContentId: string,
+    psetProblemContentId: string
+  ): void {
+    if (this.config === undefined) {
+      return
+    }
+    const event: IbPsetProblemAttemptedV1 = {
+      courseId: this.config.courseId,
+      impressionId: this.config.impressionId,
+      sourceUri: window.location.toString(),
+      timestamp,
+      eventname: 'ib_pset_problem_attempted_v1',
+      contentId,
+      variant,
+      problemType,
+      response,
+      correct,
+      attempt,
+      finalAttempt,
+      psetContentId,
+      psetProblemContentId
     }
     this.queueEvent(event)
   }

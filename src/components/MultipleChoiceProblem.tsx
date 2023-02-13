@@ -15,7 +15,7 @@ interface MultipleChoiceFormValues {
 
 export const MultipleChoiceProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, answerResponses, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit, attemptsExhaustedResponse
+  correctResponse, encourageResponse, solution, retryLimit, attemptsExhaustedResponse, onProblemAttempt
 }: MultipleChoiceProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
@@ -63,7 +63,12 @@ export const MultipleChoiceProblem = ({
   }
 
   const handleSubmit = async (values: MultipleChoiceFormValues): Promise<void> => {
+    let correct = false
+    let finalAttempt = false
+    const attempt = retriesAllowed + 1
+
     if (evaluateInput(values.response, solution)) {
+      correct = true
       setFeedback(correctResponse)
       solvedCallback()
       setFormDisabled(true)
@@ -75,6 +80,17 @@ export const MultipleChoiceProblem = ({
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
+      finalAttempt = true
+    }
+
+    if (onProblemAttempt !== undefined) {
+      onProblemAttempt(
+        values.response,
+        correct,
+        attempt,
+        finalAttempt,
+        contentId
+      )
     }
   }
 

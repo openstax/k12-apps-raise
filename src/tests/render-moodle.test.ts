@@ -17,6 +17,8 @@ import {
 
 const mockRender = jest.fn()
 
+jest.mock('../lib/env.ts', () => {})
+
 jest.mock('react-dom/client', () => ({
   createRoot: jest.fn(() => ({ render: mockRender }))
 }))
