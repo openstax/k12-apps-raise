@@ -1,9 +1,10 @@
 import { EventControlledContent } from './EventControlledContent'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useContext } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { tooltipify } from '../lib/tooltip'
+import { ContentLoadedContext } from '../lib/contexts'
 
 const DEFAULT_TEXTAREA_ROWS = 2
 export const MAX_CHARACTER_INPUT_BLOCK_LENGTH = 5000
@@ -16,14 +17,21 @@ interface UserInputBlockProps {
   fireEvent?: string
   buttonText: string
   contentId?: string
+  onInputSubmitted?: (
+    contentId: string,
+    variant: string,
+    response: string,
+    inputContentId: string | undefined
+  ) => void
 }
 
 interface InputFormValues {
   response: string
 }
 
-export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId }: UserInputBlockProps): JSX.Element => {
+export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
+  const contentLoadedContext = useContext(ContentLoadedContext)
 
   const schema = Yup.object({
     response: Yup.string()
@@ -37,6 +45,14 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     if (fireEvent !== undefined) {
       const submitEvent = new CustomEvent(fireEvent)
       document.dispatchEvent(submitEvent)
+    }
+    if (onInputSubmitted !== undefined) {
+      onInputSubmitted(
+        contentLoadedContext.contentId,
+        contentLoadedContext.variant,
+        values.response,
+        contentId
+      )
     }
   }
 
