@@ -61,7 +61,7 @@
   "distribution": "Describes how many of each value are in the data set. Its shape is often used to classify data.",
   "distributive property": "If a, b, c are real numbers then, a(b+c)=ab+ac.",
   "divisible by a number": "If a number <em>m</em> is a multiple of <em>n</em>, then <em>m</em> is divisible by <em>n</em>.",
-  "domain": "The set of all of possible input values. for a function.",
+  "domain": "The set of all of possible input values for a function.",
   "domain of a relation": "All the <em>x</em>-values in the ordered pairs of the relation.",
   "double root": "A double root is a root that appears twice in the solution of an algebraic equation.",
   "elimination": "A method of solving a system of equations where you add or subtract a multiple of one equation to another in order to get an equation with only one of the variables (eliminating the other\n variable).",
