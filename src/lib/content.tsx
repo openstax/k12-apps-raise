@@ -2,8 +2,23 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { ContentLoader } from '../components/ContentLoader'
 import { queueContentLoadedV1Event, queueContentLoadFailedV1Event } from './events'
+import { getCurrentContext } from './utils'
+import * as contentVersions from '../../data/content-versions.json'
 
 const OS_RAISE_CONTENT_CLASS = 'os-raise-content'
+
+export const getVersionId = (): string => {
+  const { courseId, host } = getCurrentContext()
+  const defaultVersionId = contentVersions.defaultVersion
+
+  if (courseId === undefined || host === undefined) {
+    return defaultVersionId
+  }
+
+  const maybeOverride = (contentVersions as any).overrides[host]?.[courseId]
+
+  return maybeOverride ?? defaultVersionId
+}
 
 export const renderContentElements = (): number => {
   const osContentItems = document.querySelectorAll(`.${OS_RAISE_CONTENT_CLASS}`)
@@ -37,6 +52,7 @@ export const renderContentElements = (): number => {
       <React.StrictMode>
         <ContentLoader
           contentId={contentId}
+          versionId={getVersionId()}
           onContentLoad={contentLoadedCallback}
           onContentLoadFailure={contentLoadFailedCallback} />
       </React.StrictMode>

@@ -22,17 +22,18 @@ enum FetchStatus {
 
 interface ContentLoaderProps {
   contentId: string
+  versionId: string
   onContentLoad?: (contentId: string, variant: string) => void
   onContentLoadFailure?: (contentId: string, error?: string) => void
 }
 
-export const ContentLoader = ({ contentId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
+export const ContentLoader = ({ contentId, versionId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [variant, setVariant] = useState('')
   const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
 
   const fetchContent = async (): Promise<void> => {
-    const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${contentId}.json`)
+    const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${versionId}/${contentId}.json`)
 
     try {
       const response = await fetch(request)
