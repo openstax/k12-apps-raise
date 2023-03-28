@@ -67,8 +67,8 @@ interface ProblemSetBlockProps {
   contentId?: string
   problems: ProblemData[]
   onProblemAttempt?: (
-    contentId: string,
-    variant: string,
+    contentId: string | undefined,
+    variant: string | undefined,
     problemType: string,
     response: string | string[],
     correct: boolean,

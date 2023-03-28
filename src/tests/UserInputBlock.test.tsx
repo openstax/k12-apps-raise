@@ -11,6 +11,10 @@ jest.mock('../lib/events.ts', () => ({
   queueIbInputSubmittedV1Event: jest.fn(async () => {})
 }))
 
+afterEach(() => {
+  jest.clearAllMocks()
+})
+
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
   render(
     <UserInputBlock contentId={'c2c322d9-9297-4928-b763-ae581ce6bb47'} content="<p>Content text</p>" prompt="<p>Prompt text</p>" ack="<p>Ack text</p>" buttonText="Submit"/>
@@ -224,4 +228,32 @@ test('UserInputBlock calls onInputSumbitted callback', async () => {
     'Input text',
     '1234'
   )
+})
+
+test('UserInputBlock does not call onInputSumbitted on default context', async () => {
+  const htmlContent = `
+  <div class="os-raise-ib-input" data-content-id="1234" data-schema-version="1.0">
+    <div class="os-raise-ib-input-content"></div>
+    <div class="os-raise-ib-input-prompt"></div>
+    <div class="os-raise-ib-input-ack"></div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = htmlContent
+  const generatedContentBlock = parseUserInputBlock(divElem.children[0] as HTMLElement)
+
+  Date.now = jest.fn(() => 12345)
+
+  expect(generatedContentBlock).not.toBeNull()
+
+  render(
+    generatedContentBlock as JSX.Element
+  )
+
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
+  await act(async () => {
+    screen.getByRole('button').click()
+  })
+
+  expect(queueIbInputSubmittedV1Event).not.toHaveBeenCalled()
 })

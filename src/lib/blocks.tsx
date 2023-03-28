@@ -188,12 +188,12 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
   const ackInnerHTML = ackElem.innerHTML
 
   const onInputSubmitted = (
-    contentId: string,
-    variant: string,
+    contentId: string | undefined,
+    variant: string | undefined,
     response: string,
     inputContentId: string | undefined
   ): void => {
-    if (inputContentId === undefined) {
+    if ((inputContentId === undefined) || (contentId === undefined) || (variant === undefined)) {
       return
     }
     queueIbInputSubmittedV1Event(
@@ -296,8 +296,8 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
   })
 
   const problemAttemptedCallback = (
-    contentId: string,
-    variant: string,
+    contentId: string | undefined,
+    variant: string | undefined,
     problemType: string,
     response: string | string[],
     correct: boolean,
@@ -306,7 +306,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     psetContentId: string | undefined,
     psetProblemContentId: string | undefined
   ): void => {
-    if ((psetContentId === undefined) || (psetProblemContentId === undefined)) {
+    if ((psetContentId === undefined) || (psetProblemContentId === undefined) || (contentId === undefined) || (variant === undefined)) {
       return
     }
     queueIbPsetProblemAttemptedV1Event(
