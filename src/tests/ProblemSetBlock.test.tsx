@@ -51,6 +51,10 @@ jest.mock('../components/InputProblem', () => {
   }
 })
 
+afterEach(() => {
+  jest.clearAllMocks()
+})
+
 const testProblems: ProblemData[] = [
   {
     type: 'input',
@@ -448,4 +452,43 @@ test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
     'pset-content-1',
     'psetProblemContentIdValue'
   )
+})
+
+test('ProblemSetBlock does not call the onProblemAttempt handler on default context', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-content-id="pset-content-1" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+      <div class="os-raise-ib-pset-correct-response">
+        <p>Input problem correct response</p>
+      </div>
+      <div class="os-raise-ib-pset-encourage-response">
+        <p>Input problem encourage response</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  Date.now = jest.fn(() => 12345)
+
+  render(
+    generatedProblemSetBlock as JSX.Element
+  )
+
+  await act(async () => {
+    screen.getByText('Attempt Input').click()
+  })
+
+  expect(queueIbPsetProblemAttemptedV1Event).not.toBeCalled()
 })

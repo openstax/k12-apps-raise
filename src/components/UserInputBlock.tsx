@@ -18,8 +18,8 @@ interface UserInputBlockProps {
   buttonText: string
   contentId?: string
   onInputSubmitted?: (
-    contentId: string,
-    variant: string,
+    contentId: string | undefined,
+    variant: string | undefined,
     response: string,
     inputContentId: string | undefined
   ) => void
