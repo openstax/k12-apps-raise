@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 import type { ContentResponse } from '../src/components/ContentLoader'
 
 const TEST_CONTENT_URL_PREFIX = 'http://localhost:8800/contents'

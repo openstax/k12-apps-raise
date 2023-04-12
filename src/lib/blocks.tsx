@@ -2,8 +2,14 @@ import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import { DesmosBlock } from '../components/DesmosBlock'
 import {
-  AnswerSpecificResponse, NO_MORE_ATTEMPTS_MESSAGE, ProblemData, ProblemSetBlock, PROBLEM_TYPE_DROPDOWN,
-  PROBLEM_TYPE_INPUT, PROBLEM_TYPE_MULTIPLECHOICE, PROBLEM_TYPE_MULTISELECT
+  type AnswerSpecificResponse,
+  NO_MORE_ATTEMPTS_MESSAGE,
+  type ProblemData,
+  ProblemSetBlock,
+  PROBLEM_TYPE_DROPDOWN,
+  PROBLEM_TYPE_INPUT,
+  PROBLEM_TYPE_MULTIPLECHOICE,
+  PROBLEM_TYPE_MULTISELECT
 } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 import { queueIbPsetProblemAttemptedV1Event, queueIbInputSubmittedV1Event } from './events'

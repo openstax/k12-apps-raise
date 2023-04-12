@@ -1,4 +1,4 @@
-import { AnswerSpecificResponse } from '../components/ProblemSetBlock'
+import type { AnswerSpecificResponse } from '../components/ProblemSetBlock'
 
 export const determineFeedback = (userResponse: string | string[], encourageResponse: string, answerResponses: AnswerSpecificResponse[], comparator: ((input: string, answer: string) => boolean) | ((input: string[], answer: string) => boolean)): string => {
   let response

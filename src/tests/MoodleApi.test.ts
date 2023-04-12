@@ -4,8 +4,8 @@ import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
 const server = setupServer(
-  rest.post('http://moodle/lib/ajax/service.php', (req, res, ctx) => {
-    return res(ctx.json([{
+  rest.post('http://moodle/lib/ajax/service.php', async (req, res, ctx) => {
+    return await res(ctx.json([{
       data: {
         uuid: 'uuid',
         jwt: 'jwt'

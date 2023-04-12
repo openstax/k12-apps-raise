@@ -1,16 +1,19 @@
 import {
-  EventsInner as ApiEvent,
-  ContentLoadedV1,
-  ContentLoadFailedV1,
-  IbPsetProblemAttemptedV1,
+  type EventsInner as ApiEvent,
+  type ContentLoadedV1,
+  type ContentLoadFailedV1,
+  type IbPsetProblemAttemptedV1,
   DefaultApi as EventsApi,
   Configuration,
-  ConfigurationParameters,
-  CreateEventsV1EventsPostRequest,
-  IbInputSubmittedV1
+  type ConfigurationParameters,
+  type CreateEventsV1EventsPostRequest,
+  type IbInputSubmittedV1
 } from '../eventsapi'
 import { v4 as uuidv4 } from 'uuid'
-import { MoodleApi, GetUserResponse } from '../moodleapi'
+import {
+  MoodleApi,
+  type GetUserResponse
+} from '../moodleapi'
 import { getCurrentContext } from './utils'
 import { ENV } from './env'
 

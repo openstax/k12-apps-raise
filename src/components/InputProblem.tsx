@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { BaseProblemProps } from './ProblemSetBlock'
+import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
@@ -30,7 +30,7 @@ export const InputProblem = ({
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
 
-  const schema = (): Yup.SchemaOf<InputSchema> => {
+  const schema = (): Yup.Schema<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
         response: Yup.number().integer(NUMERIC_INPUT_ERROR).typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
