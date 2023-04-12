@@ -6,19 +6,19 @@ import '@testing-library/jest-dom'
 import { ContentLoader } from '../components/ContentLoader'
 
 const server = setupServer(
-  rest.get('http://contentapi/contents/version/test-content.json', (req, res, ctx) => {
-    return res(ctx.json({
+  rest.get('http://contentapi/contents/version/test-content.json', async (req, res, ctx) => {
+    return await res(ctx.json({
       content: [{ variant: 'main', html: '<p>Test content</p>' }]
     }))
   }),
-  rest.get('http://contentapi/contents/version/test-content-404.json', (req, res, ctx) => {
-    return res(ctx.status(404))
+  rest.get('http://contentapi/contents/version/test-content-404.json', async (req, res, ctx) => {
+    return await res(ctx.status(404))
   }),
   rest.get('http://contentapi/contents/version/test-content-failure.json', (req, res, ctx) => {
     throw new Error('This is a fake network error')
   }),
-  rest.get('http://contentapi/contents/version/test-nomain-content.json', (req, res, ctx) => {
-    return res(ctx.json({
+  rest.get('http://contentapi/contents/version/test-nomain-content.json', async (req, res, ctx) => {
+    return await res(ctx.json({
       content: [{ variant: 'nomain', html: '<p>Test content</p>' }]
     }))
   })
@@ -84,7 +84,7 @@ test('OnContentLadFailed is called when error loading content', async () => {
   await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(0) })
   await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(1) })
   expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-failure')
-  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('TypeError: Network request failed')
+  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('TypeError: Failed to fetch')
 })
 
 test('OnContentLadFailed is called when there is a 404 error', async () => {

@@ -1,7 +1,11 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
 import '@testing-library/jest-dom'
-import { BaseProblemProps, ProblemData, ProblemSetBlock } from '../components/ProblemSetBlock'
+import {
+  type BaseProblemProps,
+  type ProblemData,
+  ProblemSetBlock
+} from '../components/ProblemSetBlock'
 import { ContentLoadedContext } from '../lib/contexts'
 import { queueIbPsetProblemAttemptedV1Event } from '../lib/events'
 

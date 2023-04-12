@@ -30,7 +30,7 @@ interface ContentLoaderProps {
 export const ContentLoader = ({ contentId, versionId, onContentLoad, onContentLoadFailure }: ContentLoaderProps): JSX.Element => {
   const [children, setChildren] = useState<JSX.Element[]>([])
   const [variant, setVariant] = useState('')
-  const [fetchStatus, setFetchStatus] = useState<Number>(FetchStatus.Unfetched)
+  const [fetchStatus, setFetchStatus] = useState<number>(FetchStatus.Unfetched)
 
   const fetchContent = async (): Promise<void> => {
     const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${versionId}/${contentId}.json`)

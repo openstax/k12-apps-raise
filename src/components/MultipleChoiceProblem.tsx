@@ -1,4 +1,4 @@
-import { BaseProblemProps } from './ProblemSetBlock'
+import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Field, Form, ErrorMessage } from 'formik'

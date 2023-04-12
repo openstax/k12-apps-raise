@@ -1,6 +1,6 @@
 import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest, MockedRequest, matchRequestUrl } from 'msw'
+import { rest, type MockedRequest, matchRequestUrl } from 'msw'
 import {
   queueContentLoadFailedV1Event,
   queueContentLoadedV1Event,
@@ -10,13 +10,13 @@ import {
 import { validate } from 'uuid'
 
 const server = setupServer(
-  rest.post('http://localhost:8888/v1/events', (req, res, ctx) => {
-    return res(ctx.json({
+  rest.post('http://localhost:8888/v1/events', async (req, res, ctx) => {
+    return await res(ctx.json({
       detail: 'Success!'
     }))
   }),
-  rest.post('http://moodle/lib/ajax/service.php', (req, res, ctx) => {
-    return res(ctx.json([{
+  rest.post('http://moodle/lib/ajax/service.php', async (req, res, ctx) => {
+    return await res(ctx.json([{
       data: {
         uuid: 'uuid',
         jwt: 'jwt'
