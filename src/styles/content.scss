@@ -70,23 +70,34 @@ table.os-raise-basictable {
   border-spacing: 0;
   border-radius: 5px;
 
+  caption {
+    color: $raise-light-black;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: left;
+  }
+
   thead {
     background-color: $raise-table-color;
   }
 
-  th {
+  th,
+  td {
     text-align: center;
     padding: 16px;
+  }
+
+  th {
     font-size: 18px;
     font-weight: 700;
     color: #ffffff;
   }
 
   td {
-    padding: 16px;
     font-size: 16px;
-    text-align: center;
+
     color: $raise-light-black;
+    background-color: #ffffff;
     border-left: 1px solid $raise-table-color;
     border-top: 1px solid $raise-table-color;
   }
@@ -98,15 +109,7 @@ table.os-raise-textheavytable {
   table-layout: fixed;
   width: 100%;
 
-  caption {
-    color: $raise-light-black;
-    font-weight: 600;
-  }
-
-  th {
-    text-align: left;
-  }
-
+  th,
   td {
     text-align: left;
   }
@@ -123,8 +126,11 @@ table.os-raise-textheavytable {
 table.os-raise-horizontaltable {
   @extend table, .os-raise-basictable;
 
+  width: 100%;
+
   th {
     background-color: $raise-table-color;
+    text-align: left;
   }
 
   tr:first-child td {
@@ -134,6 +140,10 @@ table.os-raise-horizontaltable {
 
 table.os-raise-midsizetable {
   @extend table, .os-raise-basictable;
+
+  table-layout: fixed;
+  width: 66%;
+  margin: auto;
 
   td:first-child {
     border-left: none;
@@ -161,36 +171,22 @@ table.os-raise-wideadjustedtable {
   }
 }
 
-table.os-raise-doubleheadertable {
-  @extend table, .os-raise-basictable;
+table.os-raise-wideequaltable {
+  @extend table, .os-raise-wideadjustedtable;
 
-  border-color: $raise-light-gray;
-
-  width: 100%;
-
-  th {
-    color: $raise-light-black;
-    background-color: #84ada8;
-    border: 1px solid $raise-light-gray;
-  }
-
-  th:first-child {
-    border-left: none;
-  }
-
-  thead tr th:first-child {
-    background-color: #ffffff;
-    border: none;
-  }
-
-  td {
-    border-color: $raise-light-gray;
-  }
+  table-layout: fixed;
 }
 
-table.temp {
+table.os-raise-doubleheadertable {
   table-layout: fixed;
   width: 100%;
+
+  caption {
+    color: $raise-light-black;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: left;
+  }
 
   th,
   td {
