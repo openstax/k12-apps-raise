@@ -142,12 +142,12 @@ Add as a class attribute to a table html tag.
 
 ## Skinny Table
 
-Adds a solid border, styled table header, and padding to a centered, fixed-width, mid-size table.
+Adds a solid border, styled table header, and padding to a fixed-width skinny table.
 
 **Example**
 
 <div style="text-align: center;">
-    <img src="./static/midsizetable.png" width="400">
+    <img src="./static/skinnytable.png" width="600">
 </div>
 
 **Availability**
@@ -193,6 +193,162 @@ Add as a class attribute to a table html tag.
     </tbody>
   </table>
 </div>
+```
+
+---
+
+## Wide Equal Column Table
+
+Adds a solid border, styled table header, and padding to a fixed-width table with equal column width.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/wideequaltable.png" width="600">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<table class="os-raise-wideequaltable">
+  <thead>
+    <tr>
+      <th scope="col">Expression</th>
+      <th scope="col">To multiple like bases, add the exponents.</th>
+      <th scope="col">Simplified Result - Simplified Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(n\)</td>
+      <td>\((2)^2\) = \((-2)\)\((-2)\)</td>
+      <td>\(2\)</td>
+    </tr>
+    <tr>
+      <td>\(n^2\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^3\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^4\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^5\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+```
+
+---
+
+## Wide Adjusted Table
+
+Adds a solid border, styled table header, and padding to a table with column widths determined by the widest content in a column.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/wideadjustedtable.png" width="600">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<table class="os-raise-wideadjustedtable">
+  <thead>
+    <tr>
+      <th scope="col">Expression</th>
+      <th scope="col">To multiple like bases, add the exponents.</th>
+      <th scope="col">Simplified Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\(n\)</td>
+      <td>\((2)^2\) = \((-2)\)\((-2)\)</td>
+      <td>\(2\)</td>
+    </tr>
+    <tr>
+      <td>\(n^2\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^3\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^4\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>\(n^5\)</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+```
+
+---
+
+## Double Header Table
+
+Adds a solid border, styled table/cell headers, and padding to a fixed-width table with an empty first column cell.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/doubleheadertable.png" width="600">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<table class="os-raise-doubleheadertable">
+  <thead>
+    <tr>
+      <th></th>
+      <th scope="col">\(x\)</th>
+      <th scope="col">\(+7\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="rowl">\(x\)</th>
+      <td>\(x^2\)</td>
+      <td>\(7x\)</td>
+    </tr>
+    <tr>
+      <th scope="row">\(+9\)</th>
+      <td>\(9x\)</td>
+      <td>\(63\)</td>
+    </tr>
+  </tbody>
+</table>
 ```
 
 ---
