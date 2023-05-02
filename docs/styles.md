@@ -140,6 +140,63 @@ Add as a class attribute to a table html tag.
 
 ---
 
+## Skinny Table
+
+Adds a solid border, styled table header, and padding to a centered, fixed-width, mid-size table.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/midsizetable.png" width="400">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<div class="os-raise-d-flex os-raise-justify-content-between">
+  <img
+    src="https://k12.openstax.org/contents/raise/resources/e58d77d5467431d611f6c3b66b4ae002583c7eab"
+    width="450px"
+  />
+  <table class="os-raise-skinnytable">
+    <thead>
+      <tr>
+        <th scope="col">x</th>
+        <th scope="col">y</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>20</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+---
+
 ## Gray Box (os-raise-graybox)
 
 Add a Gray box around your element

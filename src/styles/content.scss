@@ -154,7 +154,8 @@ table.os-raise-skinnytable {
   @extend table, .os-raise-basictable;
 
   table-layout: fixed;
-  width: 30%;
+  width: 100%;
+  max-width: 280px;
 
   td:first-child {
     border-left: none;
