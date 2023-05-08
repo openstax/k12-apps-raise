@@ -72,7 +72,7 @@ table.os-raise-standardtable {
 
   caption {
     color: $raise-light-black;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: left;
   }
@@ -88,13 +88,13 @@ table.os-raise-standardtable {
   }
 
   th {
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 700;
     color: #fff;
   }
 
   td {
-    font-size: 16px;
+    font-size: 1rem;
     color: $raise-light-black;
     background-color: #fff;
     border-left: 1px solid $raise-table-color;
@@ -108,7 +108,7 @@ table.os-raise-doubleheadertable {
 
   caption {
     color: $raise-light-black;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 600;
     text-align: left;
   }
@@ -122,7 +122,7 @@ table.os-raise-doubleheadertable {
 
   th {
     color: #000;
-    font-size: 18px;
+    font-size: 1.125rem;
     background-color: #84ada8;
     font-weight: 700;
   }
@@ -134,7 +134,7 @@ table.os-raise-doubleheadertable {
 
   td {
     color: $raise-light-black;
-    font-size: 16px;
+    font-size: 1rem;
     background-color: #fff;
   }
 }
@@ -153,10 +153,6 @@ table.os-raise-textheavytable {
 
   td:first-child {
     border-left: none;
-  }
-
-  p {
-    margin-bottom: 0;
   }
 }
 
@@ -177,7 +173,9 @@ table.os-raise-skinnytable {
 
   table-layout: fixed;
   width: 100%;
-  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 240px;
 
   td:first-child {
     border-left: none;
@@ -221,9 +219,18 @@ table.os-raise-horizontaltable {
   }
 }
 
+.os-raise-mb-0 {
+  margin-bottom: 0;
+}
+
+.os-raise-mx-auto {
+  margin: auto;
+}
+
 .os-raise-d-flex {
   display: flex;
   flex-wrap: wrap;
+  row-gap: 5rem;
 }
 
 .os-raise-align-items-center {

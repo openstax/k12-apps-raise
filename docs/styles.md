@@ -26,7 +26,7 @@ Add as a class attribute to a table html tag.
   <thead>
     <tr>
       <th scope="col">TEKS</th>
-      <th scope="col">Explination of Coverage</th>
+      <th scope="col">Explanation of Coverage</th>
     </tr>
   </thead>
   <tbody>
@@ -62,6 +62,7 @@ Add as a class attribute to a table html tag.
 
 ```html
 <table class="os-raise-horizontaltable">
+  <thead></thead>
   <tbody>
     <tr>
       <th scope="row">Time (years)</th>
@@ -140,14 +141,14 @@ Add as a class attribute to a table html tag.
 
 ---
 
-## Skinny Table
+## Skinny Table (Table + Media)
 
-Adds a solid border, styled table header, and padding to a fixed-width skinny table.
+Adds a solid border, styled table header, and padding to a fixed-width skinny table paired with a image.
 
 **Example**
 
 <div style="text-align: center;">
-    <img src="./static/skinnytable.png" width="600">
+    <img src="./static/skinnytablewithmedia.png" width="600">
 </div>
 
 **Availability**
@@ -158,10 +159,125 @@ Add as a class attribute to a table html tag.
 
 ```html
 <div class="os-raise-d-flex os-raise-justify-content-between">
-  <img
-    src="https://k12.openstax.org/contents/raise/resources/e58d77d5467431d611f6c3b66b4ae002583c7eab"
-    width="450px"
-  />
+  <div class="os-raise-mx-auto">
+    <img
+      src="https://k12.openstax.org/contents/raise/resources/e58d77d5467431d611f6c3b66b4ae002583c7eab"
+      width="450px"
+    />
+  </div>
+  <table class="os-raise-skinnytable">
+    <thead>
+      <tr>
+        <th scope="col">x</th>
+        <th scope="col">y</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>20</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
+---
+
+## Skinny Table (Three Tables)
+
+Adds a solid border, styled table header, and padding to three fixed-width skinny tables.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/threeskinnytables.png" width="600">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<div class="os-raise-d-flex os-raise-justify-content-between">
+  <table class="os-raise-skinnytable">
+    <thead>
+      <tr>
+        <th scope="col">x</th>
+        <th scope="col">y</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>20</td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="os-raise-skinnytable">
+    <thead>
+      <tr>
+        <th scope="col">x</th>
+        <th scope="col">y</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>5</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>10</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>20</td>
+      </tr>
+    </tbody>
+  </table>
   <table class="os-raise-skinnytable">
     <thead>
       <tr>
