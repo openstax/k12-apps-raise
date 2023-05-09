@@ -1,4 +1,42 @@
-# Styling content for RAISE
+# Table of Contents
+
+- Purpose behind this markdown
+  - [Styling Content for RAISE](#styling-content-for-raise)
+- Tables
+  - [Text Heavy Tables](#text-heavy-table)
+  - [Horizontal Tables](#horizontal-table)
+  - [Mid-Sized Tables](#mid-size-table)
+  - Skinny Tables
+    - [Skinny Table w/Media](#skinny-table-table--media)
+    - [Three Skinny Tables](#skinny-table-three-tables)
+  - Wide Tables
+    - [Equal Column Wide Tables](#wide-equal-column-table)
+    - [Adjustable Column Wide Tables](#wide-adjusted-table)
+  * [Double Header Tables](#double-header-table)
+
+* Spacing
+  - Margin
+    - [No Bottom Margin](#no-margin-bottom-os-raise-mb-0)
+    - [Center w/Auto Margin](#margin-auto-os-raise-mx-auto)
+  - Indentation
+    - [Indent](#indent-os-raise-indent)
+    - [No Indent](#no-indent-os-raise-noindent)
+  - Text Centering
+    - [Center Text Horizontally](#centered-text-os-raise-text-center)
+* Layout
+  - Flex
+    - Initialization of Flex Box
+      - [Required Flex Class](#side-by-side-os-raise-d-flex)
+    - Content Positioning
+      - [Center Side-by-Side Content Vertically](#side-by-side-os-raise-d-flex)
+      - [Center Side-by-Side Content Horizontally](#side-by-side-os-raise-d-flex)
+      - [Add Space Between Side-by-Side Content](#side-by-side-os-raise-d-flex)
+      - [Add Space Equally Around Side-by-Side Content](#side-by-side-os-raise-d-flex)
+* Components
+  - [Gray Box](#gray-box-os-raise-graybox)
+  - [Motivational Message](#motivational-content-os-raise-motivation)
+
+# Styling Content for RAISE
 
 In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below.
 
@@ -447,14 +485,14 @@ Add as a class attribute to a table html tag.
 <table class="os-raise-doubleheadertable">
   <thead>
     <tr>
-      <th></th>
+      <th scope="col"></th>
       <th scope="col">\(x\)</th>
       <th scope="col">\(+7\)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="rowl">\(x\)</th>
+      <th scope="row">\(x\)</th>
       <td>\(x^2\)</td>
       <td>\(7x\)</td>
     </tr>
@@ -488,6 +526,54 @@ Grayboxes should be used in div elements only
 <div class="os-raise-graybox">
     <p> Image Title</p>
     <img src="www.link.com"></img>
+</div>
+```
+
+---
+
+## No margin-bottom (os-raise-mb-0)
+
+Remove bottom margin from your element
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/nomarginbottom.png" width="300">
+</div>
+
+**Availability**
+
+Any element with a default bottom margin
+
+**Usage**
+
+```html
+<p>Text with bottom margin</p>
+<p class="os-raise-mb-0">Text without bottom margin</p>
+<p>Text with bottom margin</p>
+```
+
+---
+
+## Margin auto (os-raise-mx-auto)
+
+Horizontally center a block element within its container. The block element will take up the specified width and the remaining space is split equally between the left and right margin.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/marginauto.png" width="300">
+</div>
+
+**Availability**
+
+Any child block element with a width smaller than its parent element.
+
+**Usage**
+
+```html
+<div>
+  <div class="os-raise-mx-auto"></div>
 </div>
 ```
 
