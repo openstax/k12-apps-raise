@@ -1,7 +1,5 @@
-/* eslint-disable import/no-duplicates */
 import { type FormEvent, useEffect, useRef } from 'react'
 import { MathfieldElement } from 'mathlive'
-import 'mathlive'
 
 // TODO: All of this setup should probably be organized differently / elsewhere. Just
 // hacking around for now
