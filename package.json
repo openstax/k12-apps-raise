@@ -17,8 +17,10 @@
     "build:authoring": "tsc && vite build -m authoring"
   },
   "dependencies": {
+    "@khanacademy/kas": "^0.3.1",
     "bootstrap": "^5.2.3",
     "formik": "^2.2.9",
+    "mathlive": "^0.93.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^9.0.0",
