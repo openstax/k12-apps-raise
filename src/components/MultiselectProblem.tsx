@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
 import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
+import Checkbox from './Checkbox'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
@@ -23,6 +24,7 @@ export const MultiselectProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const solutionArray: string[] = JSON.parse(solution)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
+  const [showAnswers, setShowAnswers] = useState(false)
 
   const schema = Yup.object({
     response: Yup.array().min(1, 'Please select an answer')
@@ -52,8 +54,9 @@ export const MultiselectProblem = ({
     const options: JSX.Element[] = []
 
     parsedOptionValues.forEach(val => options.push(
-    <div key={val} className="form-check">
-      <label className="form-check-label">
+    // check if option is a correct answer -> option component.
+    <div key={val} className="form-check problem-choice">
+      <label className="form-check-label" style={{height: '100%', width: '100%'}}>
         <Field
         className="form-check-input"
         type="checkbox"
@@ -63,6 +66,9 @@ export const MultiselectProblem = ({
         value={val}>
         </Field>
         {val}
+        {solution.includes(val) && showAnswers ? <span> ✅ </span> : <></>}
+        {!solution.includes(val) && showAnswers ? <span> ❌ </span> : <></>}
+
       </label>
     </div>
     ))
@@ -90,10 +96,10 @@ export const MultiselectProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-
     if (compareForm(values.response, solutionArray)) {
       correct = true
       setFeedback(correctResponse)
+      setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
@@ -101,6 +107,9 @@ export const MultiselectProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+    // only show answers if attempts run out
+      setShowAnswers(true)
+      setRetriesAllowed(currRetries => currRetries + 1) // implications of changing retries allowed in final attempt.
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
@@ -128,10 +137,11 @@ export const MultiselectProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            {generateOptions(values, isSubmitting, setFieldValue)}
+            <div className='problem-options'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
             <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary mt-3">{buttonText}</button>
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <div>{retryLimit === 0 ? <p>Attempts left: Unlimited</p> : <p> Attempts left: {retryLimit - retriesAllowed + 1}/{retryLimit + 1} </p>}</div>
           </Form>
         )}
       </Formik>
