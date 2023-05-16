@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
 import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
-import Checkbox from './Checkbox'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 
