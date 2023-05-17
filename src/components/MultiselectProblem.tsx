@@ -1,110 +1,144 @@
-import { useCallback, useState } from 'react'
-import { mathifyElement } from '../lib/math'
-import { determineFeedback } from '../lib/problems'
-import type { BaseProblemProps } from './ProblemSetBlock'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
+import { useCallback, useState } from "react";
+import { mathifyElement } from "../lib/math";
+import { determineFeedback } from "../lib/problems";
+import type { BaseProblemProps } from "./ProblemSetBlock";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 interface MultiselectProps extends BaseProblemProps {
-  solutionOptions: string
+  solutionOptions: string;
 }
 
 interface MultiselectFormValues {
-  response: string[]
+  response: string[];
 }
 
 export const MultiselectProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
-  onProblemAttempt
+  solvedCallback,
+  exhaustedCallback,
+  allowedRetryCallback,
+  content,
+  contentId,
+  buttonText,
+  solutionOptions,
+  correctResponse,
+  encourageResponse,
+  solution,
+  retryLimit,
+  answerResponses,
+  attemptsExhaustedResponse,
+  onProblemAttempt,
 }: MultiselectProps): JSX.Element => {
-  const [feedback, setFeedback] = useState('')
-  const [formDisabled, setFormDisabled] = useState(false)
-  const [retriesAllowed, setRetriesAllowed] = useState(0)
-  const solutionArray: string[] = JSON.parse(solution)
-  const parsedOptionValues: string[] = JSON.parse(solutionOptions)
+  const [feedback, setFeedback] = useState("");
+  const [formDisabled, setFormDisabled] = useState(false);
+  const [retriesAllowed, setRetriesAllowed] = useState(0);
+  const solutionArray: string[] = JSON.parse(solution);
+  const parsedOptionValues: string[] = JSON.parse(solutionOptions);
 
   const schema = Yup.object({
-    response: Yup.array().min(1, 'Please select an answer')
-  })
+    response: Yup.array().min(1, "Please select an answer"),
+  });
 
-  const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
-    if (node != null) {
-      mathifyElement(node)
-    }
-  }, [feedback])
+  const contentRefCallback = useCallback(
+    (node: HTMLDivElement | null): void => {
+      if (node != null) {
+        mathifyElement(node);
+      }
+    },
+    [feedback]
+  );
 
   const clearFeedback = (): void => {
-    setFeedback('')
-  }
+    setFeedback("");
+  };
 
-  const modifyModel = (values: MultiselectFormValues, e: React.ChangeEvent<HTMLInputElement>): string[] => {
-    const newSet = new Set(values.response)
+  const modifyModel = (
+    values: MultiselectFormValues,
+    e: React.ChangeEvent<HTMLInputElement>
+  ): string[] => {
+    const newSet = new Set(values.response);
     if (e.target.checked) {
-      newSet.add(e.target.value)
+      newSet.add(e.target.value);
     } else {
-      newSet.delete(e.target.value)
+      newSet.delete(e.target.value);
     }
-    return Array.from(newSet)
-  }
+    return Array.from(newSet);
+  };
 
-  const generateOptions = (values: MultiselectFormValues, isSubmitting: boolean, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): JSX.Element[] => {
-    const options: JSX.Element[] = []
+  const generateOptions = (
+    values: MultiselectFormValues,
+    isSubmitting: boolean,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  ): JSX.Element[] => {
+    const options: JSX.Element[] = [];
 
-    parsedOptionValues.forEach(val => options.push(
-    <div key={val} className="form-check">
-      <label className="form-check-label">
-        <Field
-        className="form-check-input"
-        type="checkbox"
-        name="response"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
-        disabled={isSubmitting || formDisabled}
-        value={val}>
-        </Field>
-        {val}
-      </label>
-    </div>
-    ))
+    parsedOptionValues.forEach((val) =>
+      options.push(
+        <div key={val} className="form-check">
+          <label className="form-check-label">
+            <Field
+              className="form-check-input"
+              type="checkbox"
+              name="response"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                clearFeedback();
+                setFieldValue("response", modifyModel(values, e));
+              }}
+              disabled={isSubmitting || formDisabled}
+              value={val}
+            ></Field>
+            {val}
+          </label>
+        </div>
+      )
+    );
 
-    return options
-  }
+    return options;
+  };
 
   const evaluateInput = (input: string[], answer: string): boolean => {
-    return compareForm(input, JSON.parse(answer))
-  }
+    return compareForm(input, JSON.parse(answer));
+  };
 
   const compareForm = (form: string[], solution: string[]): boolean => {
     if (form.length !== solution.length) {
-      return false
+      return false;
     }
     for (let i = 0; i < solution.length; i++) {
       if (!solution.includes(form[i])) {
-        return false
+        return false;
       }
     }
-    return true
-  }
+    return true;
+  };
 
   const handleSubmit = async (values: MultiselectFormValues): Promise<void> => {
-    let correct = false
-    let finalAttempt = false
-    const attempt = retriesAllowed + 1
+    let correct = false;
+    let finalAttempt = false;
+    const attempt = retriesAllowed + 1;
 
     if (compareForm(values.response, solutionArray)) {
-      correct = true
-      setFeedback(correctResponse)
-      solvedCallback()
-      setFormDisabled(true)
+      correct = true;
+      setFeedback(correctResponse);
+      console.log(correctResponse);
+      solvedCallback();
+      setFormDisabled(true);
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
-      setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
-      allowedRetryCallback()
+      setRetriesAllowed((currRetries) => currRetries + 1);
+      setFeedback(
+        determineFeedback(
+          values.response,
+          encourageResponse,
+          answerResponses,
+          evaluateInput
+        )
+      );
+      allowedRetryCallback();
     } else {
-      setFeedback(attemptsExhaustedResponse)
-      exhaustedCallback()
-      setFormDisabled(true)
-      finalAttempt = true
+      setFeedback(attemptsExhaustedResponse);
+      exhaustedCallback();
+      setFormDisabled(true);
+      finalAttempt = true;
     }
 
     if (onProblemAttempt !== undefined) {
@@ -114,9 +148,9 @@ export const MultiselectProblem = ({
         attempt,
         finalAttempt,
         contentId
-      )
+      );
     }
-  }
+  };
 
   return (
     <div className="os-raise-bootstrap" ref={contentRefCallback}>
@@ -129,12 +163,28 @@ export const MultiselectProblem = ({
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
             {generateOptions(values, isSubmitting, setFieldValue)}
-            <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary mt-3">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <ErrorMessage
+              className="text-danger my-3"
+              component="div"
+              name="response"
+            />
+            <button
+              type="submit"
+              disabled={isSubmitting || formDisabled}
+              className="btn btn-outline-primary mt-3"
+            >
+              {buttonText}
+            </button>
+            {feedback !== "" ? (
+              <div
+                ref={contentRefCallback}
+                dangerouslySetInnerHTML={{ __html: feedback }}
+                className="my-3"
+              />
+            ) : null}
           </Form>
         )}
       </Formik>
     </div>
-  )
-}
+  );
+};
