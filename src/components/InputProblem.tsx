@@ -4,6 +4,7 @@ import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
+import { Mathfield } from './Mathfield'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -110,9 +111,10 @@ export const InputProblem = ({
             <Form >
               <Field
               name="response"
+              as={comparator.toLowerCase() === 'math' ? Mathfield : 'input'}
               disabled={inputDisabled || isSubmitting}
               autoComplete={'off'}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+              onChange={comparator.toLowerCase() === 'math' ? (newValue: string) => { clearFeedback(); setFieldValue('response', newValue) } : (e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className="os-form-control mb-3" />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
               <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary">{buttonText}</button>

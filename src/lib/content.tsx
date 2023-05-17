@@ -49,13 +49,13 @@ export const renderContentElements = (): number => {
     }
 
     createRoot(htmlElem).render(
-      <React.StrictMode>
+      // <React.StrictMode>
         <ContentLoader
           contentId={contentId}
           versionId={getVersionId()}
           onContentLoad={contentLoadedCallback}
           onContentLoadFailure={contentLoadFailedCallback} />
-      </React.StrictMode>
+      // </React.StrictMode>
     )
   })
 
