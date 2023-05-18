@@ -8,6 +8,7 @@ module.exports = {
     'dist',
     'vite.config.ts',
     'jest.config.ts',
+    'jest.setup.ts',
     'playwright.config.ts'
   ],
   rules: {

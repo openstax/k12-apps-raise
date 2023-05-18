@@ -8,5 +8,9 @@ export default {
     '!src/*.d.ts',
     '!src/lib/env.ts'
   ],
+  moduleNameMapper: {
+    '^mathlive$': '<rootDir>/node_modules/mathlive'
+  },
+  setupFiles: ['<rootDir>/jest.setup.ts'],
   verbose: true
 }
