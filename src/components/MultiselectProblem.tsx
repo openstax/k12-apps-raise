@@ -4,6 +4,7 @@ import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { Formik, Field, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import Checkbox from './CustomCheckbox'
 
 interface MultiselectProps extends BaseProblemProps {
   solutionOptions: string
@@ -52,23 +53,11 @@ export const MultiselectProblem = ({
   const generateOptions = (values: MultiselectFormValues, isSubmitting: boolean, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): JSX.Element[] => {
     const options: JSX.Element[] = []
 
-    parsedOptionValues.forEach(val => options.push(
-    // check if option is a correct answer -> option component.
-    <div key={val} className="form-check problem-choice">
-      <label className="form-check-label" style={{height: '100%', width: '100%'}}>
-        <Field
-        className="form-check-input"
-        type="checkbox"
-        name="response"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
-        disabled={isSubmitting || formDisabled}
-        value={val}>
-        </Field>
-        {val}
-        {solution.includes(val) && showAnswers ? <span> ✅ </span> : <></>}
-        {!solution.includes(val) && showAnswers ? <span> ❌ </span> : <></>}
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }
 
-      </label>
+    parsedOptionValues.forEach(val => options.push(
+    <div key={val} className="form-check os-raise-default-answer-choice ">
+      <Checkbox label={val} type='multichoice' clearFeedback={() => { clearFeedback() }} correct={solutionArray.includes(val)} disabled={isSubmitting || formDisabled} onChange={onChange} showAnswer={showAnswers} isSubmitting={isSubmitting}/>
     </div>
     ))
 
@@ -106,9 +95,8 @@ export const MultiselectProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
-    // only show answers if attempts run out
       setShowAnswers(true)
-      setRetriesAllowed(currRetries => currRetries + 1) // implications of changing retries allowed in final attempt.
+      setRetriesAllowed(currRetries => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
@@ -136,10 +124,10 @@ export const MultiselectProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            <div className='problem-options'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
+            <div className='os-raise-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary mt-3">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <div className='os-raise-text-center mt-4'><button className="os-raise-button" type="submit" disabled={isSubmitting || formDisabled}>{buttonText}</button></div>
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null }
             <div>{retryLimit === 0 ? <p>Attempts left: Unlimited</p> : <p> Attempts left: {retryLimit - retriesAllowed + 1}/{retryLimit + 1} </p>}</div>
           </Form>
         )}
@@ -147,3 +135,17 @@ export const MultiselectProblem = ({
     </div>
   )
 }
+/* <label className="form-check-label" style={{height: '100%', width: '100%'}}>
+        <Field
+        className="form-check-input"
+        type="checkbox"
+        name="response"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
+        disabled={isSubmitting || formDisabled}
+        value={val}>
+        </Field>
+        {val}
+        {solution.includes(val) && showAnswers ? <span> ✅ </span> : <></>}
+        {!solution.includes(val) && showAnswers ? <span> ❌ </span> : <></>}
+
+</label> */
