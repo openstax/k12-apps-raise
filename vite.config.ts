@@ -6,7 +6,8 @@ export default defineConfig(({ mode }) => {
   const config = {
     plugins: [react()],
     build: {
-      sourcemap: true
+      sourcemap: true,
+      chunkSizeWarningLimit: 700
     },
     server: {
       port: 3000
@@ -18,6 +19,7 @@ export default defineConfig(({ mode }) => {
     config.build['rollupOptions'] = {
       output: {
         assetFileNames: 'assets/[name][extname]',
+        chunkFileNames: "assets/[name].js",
         entryFileNames: 'assets/[name].js'
       }
     }
@@ -25,6 +27,7 @@ export default defineConfig(({ mode }) => {
     config.build['rollupOptions'] = {
       output: {
         assetFileNames: 'assets/[name].authoring.[hash][extname]',
+        chunkFileNames: "assets/[name].authoring.[hash].js",
         entryFileNames: 'assets/[name].authoring.[hash].js'
       }
     }
@@ -32,9 +35,14 @@ export default defineConfig(({ mode }) => {
     config.build['rollupOptions'] = {
       output: {
         assetFileNames: 'assets/[name].[hash][extname]',
+        chunkFileNames: "assets/[name].[hash].js",
         entryFileNames: 'assets/[name].[hash].js'
       }
     }
+  }
+
+  config.build['rollupOptions'].output.manualChunks = {
+    mathlive: ['mathlive']
   }
 
   return config
