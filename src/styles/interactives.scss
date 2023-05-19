@@ -10,13 +10,16 @@ div.os-raise-grid {
 }
 
 div.os-raise-default-answer-choice {
-  border: 2px solid #000;
+  border: 2px solid #424242;
   border-radius: 5px;
-  box-shadow: 0px 2px 2px #07070742;
+  box-shadow: 0px 2px 2px #808080;
 }
 
-div.os-raise-default-answer-choice:focus-within {
-  //Need logic to apply this border-color after an answer is selected; likely to change from pseudoclass to a connection of state logic
+div.os-raise-no-box-shadow {
+  box-shadow: none;
+}
+
+div.os-raise-selected-answer-choice {
   border-color: #159eb2;
 }
 
@@ -28,30 +31,7 @@ div.os-raise-wrong-answer-choice {
   border-color: red;
 }
 
-button.os-raise-button {
-  cursor: pointer;
-  border-radius: 5px;
-  padding: 0.4rem 2rem;
-  background-color: #0b5b51;
-  border: none;
-  box-shadow: 0px 2px 2px #07070742;
-  color: #fff;
-  font-weight: 700;
-}
-
-button.os-raise-button:hover {
-  background-color: #13a895;
-  transition: 0.7s;
-}
-
-button.os-raise-button:active {
-  transform: scale(0.98);
-  box-shadow: 0px 2px 2px #07070742;
-}
-
-label.os-raise-100-height-width {
-  // Revise name of class
-  font-size: 1rem;
+label.os-raise-fill-label-container {
   width: 100%;
   height: 100%;
   padding: 1rem;
@@ -67,7 +47,7 @@ div.os-raise-feedback-message p {
   color: $raise-medium-gray;
 }
 
-span.os-raise-attempts-text {
+p.os-raise-attempts-text {
   color: $raise-medium-gray;
 }
 

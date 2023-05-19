@@ -1,9 +1,10 @@
 import type { BaseProblemProps } from "./ProblemSetBlock";
 import { determineFeedback } from "../lib/problems";
 import { useCallback, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import { mathifyElement } from "../lib/math";
 import * as Yup from "yup";
+import Checkbox from "./CustomCheckbox";
 
 interface MultipleChoiceProps extends BaseProblemProps {
   solutionOptions: string;
@@ -32,6 +33,8 @@ export const MultipleChoiceProblem = ({
   const [feedback, setFeedback] = useState("");
   const [formDisabled, setFormDisabled] = useState(false);
   const [retriesAllowed, setRetriesAllowed] = useState(0);
+  const [showAnswers, setShowAnswers] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
   const parsedOptionValues: string[] = JSON.parse(solutionOptions);
 
   const schema = Yup.object({
@@ -51,6 +54,8 @@ export const MultipleChoiceProblem = ({
     setFeedback("");
   };
 
+  const questionBoxShadow = `${formDisabled ? "os-raise-no-box-shadow " : ""}`;
+
   const generateOptions = (
     values: MultipleChoiceFormValues,
     isSubmitting: boolean,
@@ -58,23 +63,31 @@ export const MultipleChoiceProblem = ({
   ): JSX.Element[] => {
     const options: JSX.Element[] = [];
 
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+      clearFeedback();
+      setFieldValue("response", e.target.value);
+      //setSelectedAnswer(e.target.value);
+    };
+
     parsedOptionValues.forEach((val) =>
       options.push(
-        <div key={val} className="form-check os-raise-default-answer-choice">
-          <label className="form-check-label os-raise-100-height-width">
-            <Field
-              className="form-check-input"
-              type="radio"
-              name="response"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                clearFeedback();
-                setFieldValue("response", e.target.value);
-              }}
-              disabled={isSubmitting || formDisabled}
-              value={val}
-            ></Field>
-            {val}
-          </label>
+        <div
+          key={val}
+          className={`${questionBoxShadow} ${
+            selectedAnswer === val ? "os-raise-selected-answer-choice" : ""
+          } form-check os-raise-default-answer-choice`}
+        >
+          <Checkbox
+            label={val}
+            type="radio"
+            clearFeedback={() => {
+              clearFeedback();
+            }}
+            correct={solution === val}
+            disabled={isSubmitting || formDisabled}
+            onChange={onChange}
+            showAnswer={showAnswers}
+          />
         </div>
       )
     );
@@ -96,6 +109,7 @@ export const MultipleChoiceProblem = ({
     if (evaluateInput(values.response, solution)) {
       correct = true;
       setFeedback(correctResponse);
+      setShowAnswers(true);
       solvedCallback();
       setFormDisabled(true);
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
@@ -110,6 +124,8 @@ export const MultipleChoiceProblem = ({
       );
       allowedRetryCallback();
     } else {
+      setShowAnswers(true);
+      setRetriesAllowed((currRetries) => currRetries + 1);
       setFeedback(attemptsExhaustedResponse);
       exhaustedCallback();
       setFormDisabled(true);
@@ -147,9 +163,9 @@ export const MultipleChoiceProblem = ({
             />
             <div className="os-raise-text-center mt-4">
               <button
+                className="btn btn-outline-primary"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
-                className="os-raise-button"
               >
                 {buttonText}
               </button>
@@ -162,7 +178,17 @@ export const MultipleChoiceProblem = ({
               />
             ) : null}
             <div className="os-raise-d-flex os-raise-justify-content-end">
-              <span className="os-raise-attempts-text">attempts: 1/3</span>
+              {retryLimit === 0 ? (
+                <p className="os-raise-attempts-text">
+                  Attempts left: Unlimited
+                </p>
+              ) : (
+                <p className="os-raise-attempts-text">
+                  {" "}
+                  Attempts left: {retryLimit - retriesAllowed + 1}/
+                  {retryLimit + 1}{" "}
+                </p>
+              )}
             </div>
           </Form>
         )}

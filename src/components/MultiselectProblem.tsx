@@ -2,8 +2,9 @@ import { useCallback, useState } from "react";
 import { mathifyElement } from "../lib/math";
 import { determineFeedback } from "../lib/problems";
 import type { BaseProblemProps } from "./ProblemSetBlock";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import Checkbox from "./CustomCheckbox";
 
 interface MultiselectProps extends BaseProblemProps {
   solutionOptions: string;
@@ -34,6 +35,7 @@ export const MultiselectProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0);
   const solutionArray: string[] = JSON.parse(solution);
   const parsedOptionValues: string[] = JSON.parse(solutionOptions);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   const schema = Yup.object({
     response: Yup.array().min(1, "Please select an answer"),
@@ -72,23 +74,25 @@ export const MultiselectProblem = ({
   ): JSX.Element[] => {
     const options: JSX.Element[] = [];
 
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+      clearFeedback();
+      setFieldValue("response", modifyModel(values, e));
+    };
+
     parsedOptionValues.forEach((val) =>
       options.push(
-        <div key={val} className="form-check os-raise-default-answer-choice">
-          <label className="form-check-label os-raise-100-height-width os-test">
-            <Field
-              className="form-check-input os-form-check-input"
-              type="checkbox"
-              name="response"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                clearFeedback();
-                setFieldValue("response", modifyModel(values, e));
-              }}
-              disabled={isSubmitting || formDisabled}
-              value={val}
-            ></Field>
-            <span className="os-raise-ml">{val}</span>
-          </label>
+        <div key={val} className="form-check os-raise-default-answer-choice ">
+          <Checkbox
+            label={val}
+            type="multichoice"
+            clearFeedback={() => {
+              clearFeedback();
+            }}
+            correct={solutionArray.includes(val)}
+            disabled={isSubmitting || formDisabled}
+            onChange={onChange}
+            showAnswer={showAnswers}
+          />
         </div>
       )
     );
@@ -116,11 +120,10 @@ export const MultiselectProblem = ({
     let correct = false;
     let finalAttempt = false;
     const attempt = retriesAllowed + 1;
-
     if (compareForm(values.response, solutionArray)) {
       correct = true;
       setFeedback(correctResponse);
-      console.log(correctResponse);
+      setShowAnswers(true);
       solvedCallback();
       setFormDisabled(true);
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
@@ -135,6 +138,8 @@ export const MultiselectProblem = ({
       );
       allowedRetryCallback();
     } else {
+      setShowAnswers(true);
+      setRetriesAllowed((currRetries) => currRetries + 1);
       setFeedback(attemptsExhaustedResponse);
       exhaustedCallback();
       setFormDisabled(true);
@@ -172,9 +177,9 @@ export const MultiselectProblem = ({
             />
             <div className="os-raise-text-center mt-4">
               <button
+                className="btn btn-outline-primary"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
-                className="os-raise-button"
               >
                 {buttonText}
               </button>
@@ -186,8 +191,18 @@ export const MultiselectProblem = ({
                 className="my-3 os-raise-feedback-message"
               />
             ) : null}
-            <div className="os-raise-d-flex os-raise-justify-content-end">
-              <span className="os-raise-attempts-text">attempts: 1/3</span>
+            <div>
+              {retryLimit === 0 ? (
+                <p className="os-raise-attempts-text">
+                  Attempts left: Unlimited
+                </p>
+              ) : (
+                <p className="os-raise-attempts-text">
+                  {" "}
+                  Attempts left: {retryLimit - retriesAllowed + 1}/
+                  {retryLimit + 1}{" "}
+                </p>
+              )}
             </div>
           </Form>
         )}
