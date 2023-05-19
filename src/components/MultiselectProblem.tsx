@@ -74,10 +74,10 @@ export const MultiselectProblem = ({
 
     parsedOptionValues.forEach((val) =>
       options.push(
-        <div key={val} className="form-check">
-          <label className="form-check-label">
+        <div key={val} className="form-check os-raise-default-answer-choice">
+          <label className="form-check-label os-raise-100-height-width os-test">
             <Field
-              className="form-check-input"
+              className="form-check-input os-form-check-input"
               type="checkbox"
               name="response"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +87,7 @@ export const MultiselectProblem = ({
               disabled={isSubmitting || formDisabled}
               value={val}
             ></Field>
-            {val}
+            <span className="os-raise-ml">{val}</span>
           </label>
         </div>
       )
@@ -162,26 +162,33 @@ export const MultiselectProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            {generateOptions(values, isSubmitting, setFieldValue)}
+            <div className="os-raise-grid">
+              {generateOptions(values, isSubmitting, setFieldValue)}
+            </div>
             <ErrorMessage
               className="text-danger my-3"
               component="div"
               name="response"
             />
-            <button
-              type="submit"
-              disabled={isSubmitting || formDisabled}
-              className="btn btn-outline-primary mt-3"
-            >
-              {buttonText}
-            </button>
+            <div className="os-raise-text-center mt-4">
+              <button
+                type="submit"
+                disabled={isSubmitting || formDisabled}
+                className="os-raise-button"
+              >
+                {buttonText}
+              </button>
+            </div>
             {feedback !== "" ? (
               <div
                 ref={contentRefCallback}
                 dangerouslySetInnerHTML={{ __html: feedback }}
-                className="my-3"
+                className="my-3 os-raise-feedback-message"
               />
             ) : null}
+            <div className="os-raise-d-flex os-raise-justify-content-end">
+              <span className="os-raise-attempts-text">attempts: 1/3</span>
+            </div>
           </Form>
         )}
       </Formik>
