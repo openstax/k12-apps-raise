@@ -81,7 +81,23 @@ export const MultiselectProblem = ({
 
     parsedOptionValues.forEach((val) =>
       options.push(
-        <div key={val} className="form-check os-raise-default-answer-choice ">
+        <div
+          key={val}
+          className={`${
+            solutionArray.includes(val) && formDisabled
+              ? "os-raise-correct-answer-choice os-raise-no-box-shadow"
+              : ""
+          } ${
+            !solutionArray.includes(val) && formDisabled
+              ? "os-raise-wrong-answer-choice os-raise-no-box-shadow"
+              : ""
+          } ${
+            values.response.includes(val)
+              ? "os-raise-selected-answer-choice"
+              : ""
+          }
+          form-check os-raise-default-answer-choice`}
+        >
           <Checkbox
             label={val}
             type="multichoice"

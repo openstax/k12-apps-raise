@@ -1,7 +1,5 @@
-import { useCallback, useState } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import correctAnswerImg from "../static/correctanswer.svg";
-import incorrectAnswerImg from "../static/incorrectanswer.svg";
+import { useState } from "react";
+import { Field } from "formik";
 
 interface CheckboxProps {
   label: string;
@@ -22,20 +20,12 @@ export const Checkbox = ({
   showAnswer,
 }: CheckboxProps): JSX.Element => {
   const [selected, setSelected] = useState(false);
-  // ANSWER: selected/setSelected only works for MS. removing setSelected() from onChange and checked={selected} allows correct
-  // MC functionality
-  // Selected works for MS choices because modifyModel deletes a value from newSet if it already exists.
-  // Selected is not working for MC choices because selected is set to true for each new option clicked.
-  // selected is never reset to false once a new MC option is selected.
-  // Clone the k12-apps-raise repo with original code and see how values.response is getting updated there and make similar changes to this component.
-  // Make sure the type for clearFeedback is right.
-  // See if I need to move setFieldValue into this component.
 
   return (
     <div className="checkbox" onClick={() => {}}>
       <label className="form-check-label os-raise-fill-label-container">
         <Field
-          className="form-check-input"
+          className="os-form-check-input os-raise-hide-radio-button"
           type={type === "multichoice" ? "checkbox" : "radio"}
           name="response"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {

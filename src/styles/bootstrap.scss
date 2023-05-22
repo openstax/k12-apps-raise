@@ -113,10 +113,16 @@
     width: unset;
   }
 
+  .os-form-check[type="radio"] {
+    @extend .form-check;
+
+    padding-left: 0;
+  }
+
   .os-form-check-input {
     @extend .form-check-input;
 
-    width: 1.2em; // See if there is one class that controls the width/height of checkboxes in default and focus/checked states
+    width: 1.2em;
     height: 1.2em;
     border: 2px solid #000;
   }
@@ -128,7 +134,6 @@
     width: 1.2em;
     height: 1.2em;
     box-shadow: 0 0 0 0.25rem #159db271;
-    border: 2px solid #000;
   }
 
   .os-form-check-input:checked {

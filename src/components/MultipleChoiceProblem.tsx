@@ -66,16 +66,26 @@ export const MultipleChoiceProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
       clearFeedback();
       setFieldValue("response", e.target.value);
-      //setSelectedAnswer(e.target.value);
+      setSelectedAnswer(e.target.value);
     };
+
+    console.log(`this is solution: ${solution}`);
+    parsedOptionValues.forEach((val) => console.log(val));
 
     parsedOptionValues.forEach((val) =>
       options.push(
         <div
           key={val}
           className={`${questionBoxShadow} ${
-            selectedAnswer === val ? "os-raise-selected-answer-choice" : ""
-          } form-check os-raise-default-answer-choice`}
+            solution === val && formDisabled
+              ? "os-raise-correct-answer-choice"
+              : ""
+          } ${
+            solution !== val && formDisabled
+              ? "os-raise-wrong-answer-choice"
+              : ""
+          } ${selectedAnswer === val ? "os-raise-selected-answer-choice" : ""}
+           os-form-check os-raise-default-answer-choice`}
         >
           <Checkbox
             label={val}
