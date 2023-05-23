@@ -145,4 +145,10 @@
     background-color: #159eb2;
     border-color: #159eb2;
   }
+
+  .os-btn {
+    @extend .btn;
+
+    padding: 8px 32px;
+  }
 }

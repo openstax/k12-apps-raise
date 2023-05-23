@@ -84,11 +84,13 @@ export const MultiselectProblem = ({
         <div
           key={val}
           className={`${
-            solutionArray.includes(val) && formDisabled
+            solutionArray.includes(val) && showAnswers
               ? "os-raise-correct-answer-choice os-raise-no-box-shadow"
               : ""
           } ${
-            !solutionArray.includes(val) && formDisabled
+            !solutionArray.includes(val) &&
+            values.response.includes(val) &&
+            showAnswers
               ? "os-raise-wrong-answer-choice os-raise-no-box-shadow"
               : ""
           } ${
@@ -96,7 +98,7 @@ export const MultiselectProblem = ({
               ? "os-raise-selected-answer-choice"
               : ""
           } ${
-            values.response.includes(val) && formDisabled
+            values.response.includes(val) && showAnswers
               ? "os-form-check"
               : "form-check"
           }
@@ -198,7 +200,7 @@ export const MultiselectProblem = ({
             />
             <div className="os-raise-text-center mt-4">
               <button
-                className="btn btn-outline-primary"
+                className="os-btn btn-outline-primary"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
               >
@@ -219,9 +221,8 @@ export const MultiselectProblem = ({
                 </p>
               ) : (
                 <p className="os-raise-attempts-text">
-                  {" "}
                   Attempts left: {retryLimit - retriesAllowed + 1}/
-                  {retryLimit + 1}{" "}
+                  {retryLimit + 1}
                 </p>
               )}
             </div>

@@ -34,7 +34,6 @@ export const MultipleChoiceProblem = ({
   const [formDisabled, setFormDisabled] = useState(false);
   const [retriesAllowed, setRetriesAllowed] = useState(0);
   const [showAnswers, setShowAnswers] = useState(false);
-  const [selectedAnswer, setSelectedAnswer] = useState("");
   const parsedOptionValues: string[] = JSON.parse(solutionOptions);
 
   const schema = Yup.object({
@@ -66,23 +65,23 @@ export const MultipleChoiceProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
       clearFeedback();
       setFieldValue("response", e.target.value);
-      setSelectedAnswer(e.target.value);
     };
 
     parsedOptionValues.forEach((val) =>
       options.push(
         <div
           key={val}
-          className={`${questionBoxShadow} ${
-            solution === val && formDisabled
-              ? "os-raise-correct-answer-choice"
+          className={`os-form-check os-raise-default-answer-choice 
+          ${
+            solution === val && values.response === val && showAnswers
+              ? `os-raise-correct-answer-choice ${questionBoxShadow}`
               : ""
           } ${
-            solution !== val && formDisabled
-              ? "os-raise-wrong-answer-choice"
+            solution !== val && values.response === val && showAnswers
+              ? `os-raise-wrong-answer-choice ${questionBoxShadow}`
               : ""
-          } ${selectedAnswer === val ? "os-raise-selected-answer-choice" : ""}
-           os-form-check os-raise-default-answer-choice`}
+          } ${values.response === val ? "os-raise-selected-answer-choice" : ""}
+           `}
         >
           <Checkbox
             label={val}
@@ -171,7 +170,7 @@ export const MultipleChoiceProblem = ({
             />
             <div className="os-raise-text-center mt-4">
               <button
-                className="btn btn-outline-primary"
+                className="os-btn btn-outline-primary"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
               >
@@ -192,9 +191,8 @@ export const MultipleChoiceProblem = ({
                 </p>
               ) : (
                 <p className="os-raise-attempts-text">
-                  {" "}
                   Attempts left: {retryLimit - retriesAllowed + 1}/
-                  {retryLimit + 1}{" "}
+                  {retryLimit + 1}
                 </p>
               )}
             </div>
