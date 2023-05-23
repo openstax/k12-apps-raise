@@ -95,12 +95,16 @@ export const MultiselectProblem = ({
             values.response.includes(val)
               ? "os-raise-selected-answer-choice"
               : ""
+          } ${
+            values.response.includes(val) && formDisabled
+              ? "os-form-check"
+              : "form-check"
           }
-          form-check os-raise-default-answer-choice`}
+           os-raise-default-answer-choice`}
         >
           <Checkbox
             label={val}
-            type="multichoice"
+            type="checkbox"
             clearFeedback={() => {
               clearFeedback();
             }}
@@ -108,6 +112,7 @@ export const MultiselectProblem = ({
             disabled={isSubmitting || formDisabled}
             onChange={onChange}
             showAnswer={showAnswers}
+            selectedMultiSelect={values.response.includes(val)}
           />
         </div>
       )
@@ -207,7 +212,7 @@ export const MultiselectProblem = ({
                 className="my-3 os-raise-feedback-message"
               />
             ) : null}
-            <div>
+            <div className="os-raise-d-flex os-raise-justify-content-end">
               {retryLimit === 0 ? (
                 <p className="os-raise-attempts-text">
                   Attempts left: Unlimited

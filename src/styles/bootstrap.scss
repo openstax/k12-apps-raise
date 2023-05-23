@@ -113,7 +113,7 @@
     width: unset;
   }
 
-  .os-form-check[type="radio"] {
+  .os-form-check {
     @extend .form-check;
 
     padding-left: 0;

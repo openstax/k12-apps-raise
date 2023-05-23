@@ -40,10 +40,10 @@ div.os-raise-wrong-answer-choice {
 label.os-raise-fill-label-container {
   width: 100%;
   height: 100%;
-  padding: 1rem;
+  padding: 1rem 0.5rem 1rem 0.8rem;
 }
 
-input.os-raise-hide-radio-button[type="radio"] {
+input.os-raise-hide-input-button {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
   height: 1px;
@@ -71,6 +71,10 @@ div.os-raise-justify-content-end {
   justify-content: end;
 }
 
-.os-raise-ml {
-  margin-left: 0.5rem;
+.os-raise-ml-1 {
+  margin-left: 0.7rem;
+}
+
+.os-raise-flex {
+  display: flex;
 }

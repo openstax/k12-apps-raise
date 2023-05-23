@@ -69,9 +69,6 @@ export const MultipleChoiceProblem = ({
       setSelectedAnswer(e.target.value);
     };
 
-    console.log(`this is solution: ${solution}`);
-    parsedOptionValues.forEach((val) => console.log(val));
-
     parsedOptionValues.forEach((val) =>
       options.push(
         <div
@@ -97,6 +94,7 @@ export const MultipleChoiceProblem = ({
             disabled={isSubmitting || formDisabled}
             onChange={onChange}
             showAnswer={showAnswers}
+            selectedMultiChoice={values.response === val}
           />
         </div>
       )
