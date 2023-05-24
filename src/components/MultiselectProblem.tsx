@@ -56,9 +56,33 @@ export const MultiselectProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-    <div key={val} className="form-check os-raise-default-answer-choice ">
-      <Checkbox label={val} type='multichoice' clearFeedback={() => { clearFeedback() }} correct={solutionArray.includes(val)} disabled={isSubmitting || formDisabled} onChange={onChange} showAnswer={showAnswers} isSubmitting={isSubmitting}/>
-    </div>
+      <div key={val} className={`${solutionArray.includes(val) && showAnswers
+          ? 'os-raise-correct-answer-choice os-raise-no-box-shadow'
+          : ''
+        } ${!solutionArray.includes(val) &&
+          values.response.includes(val) &&
+          showAnswers
+          ? 'os-raise-wrong-answer-choice os-raise-no-box-shadow'
+          : ''
+        } ${values.response.includes(val)
+          ? 'os-raise-selected-answer-choice'
+          : ''
+        } ${values.response.includes(val) && showAnswers
+          ? 'os-form-check'
+          : 'form-check'
+        }
+           os-raise-default-answer-choice`}
+      >
+
+        <Checkbox label={val}
+          type='checkbox' clearFeedback={() => { clearFeedback() }}
+          correct={solutionArray.includes(val)}
+          disabled={isSubmitting || formDisabled}
+          onChange={onChange}
+          showAnswer={showAnswers}
+          selected={values.response.includes(val)}
+        />
+      </div>
     ))
 
     return options
@@ -126,26 +150,31 @@ export const MultiselectProblem = ({
           <Form>
             <div className='os-raise-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <div className='os-raise-text-center mt-4'><button className="os-raise-button" type="submit" disabled={isSubmitting || formDisabled}>{buttonText}</button></div>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null }
-            <div>{retryLimit === 0 ? <p>Attempts left: Unlimited</p> : <p> Attempts left: {retryLimit - retriesAllowed + 1}/{retryLimit + 1} </p>}</div>
+            <div className='os-raise-text-center mt-4'>
+              <button
+                className="btn btn-outline-primary"
+                type="submit"
+                disabled={isSubmitting || formDisabled}
+              >
+                {buttonText}
+              </button>
+            </div>
+
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+            <div className="os-raise-d-flex os-raise-justify-content-end">
+              {retryLimit === 0
+                ? <p className="os-raise-attempts-text">
+                  Attempts left: Unlimited
+                </p>
+                : <p className="os-raise-attempts-text">
+                  Attempts left: {retryLimit - retriesAllowed + 1}/
+                  {retryLimit + 1}
+                </p>
+              }
+            </div>
           </Form>
         )}
       </Formik>
     </div>
   )
 }
-/* <label className="form-check-label" style={{height: '100%', width: '100%'}}>
-        <Field
-        className="form-check-input"
-        type="checkbox"
-        name="response"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
-        disabled={isSubmitting || formDisabled}
-        value={val}>
-        </Field>
-        {val}
-        {solution.includes(val) && showAnswers ? <span> ✅ </span> : <></>}
-        {!solution.includes(val) && showAnswers ? <span> ❌ </span> : <></>}
-
-</label> */

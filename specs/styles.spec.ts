@@ -149,3 +149,29 @@ test('justify content evenly', async ({ page }) => {
     return window.getComputedStyle(el).getPropertyValue('justify-content')
   })).toBe('space-evenly')
 })
+
+test('Multiselect styles test', async ({ page }) => {
+  const htmlContent = `
+  <div class="os-raise-ib-pset" data-retry-limit="3" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p id="problem">Multiselect problem content: \\( x^2 \\)</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p id="correct">Correct response with math: \\( x=2 \\)</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
+    </div>
+  </div>
+  `
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  const elem = await page.waitForSelector('.os-raise-fill-label-container')
+  await page.waitForSelector('text=Attempts left: 4/4')
+
+  expect(await elem.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('cursor')
+  })).toBe('pointer')
+})
