@@ -50,6 +50,10 @@ label.os-raise-fill-label-container {
   cursor: pointer;
 }
 
+label.os-raise-no-cursor-pointer {
+  cursor: default;
+}
+
 input.os-raise-hide-input-button {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
