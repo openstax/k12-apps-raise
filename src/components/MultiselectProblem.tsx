@@ -38,8 +38,19 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
 }
 
 export const MultiselectProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
-  correctResponse, encourageResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
+  solvedCallback,
+  exhaustedCallback,
+  allowedRetryCallback,
+  content,
+  contentId,
+  buttonText,
+  solutionOptions,
+  correctResponse,
+  encourageResponse,
+  solution,
+  retryLimit,
+  answerResponses,
+  attemptsExhaustedResponse,
   onProblemAttempt
 }: MultiselectProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
@@ -53,17 +64,23 @@ export const MultiselectProblem = ({
     response: Yup.array().min(1, 'Please select an answer')
   })
 
-  const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
-    if (node != null) {
-      mathifyElement(node)
-    }
-  }, [feedback])
+  const contentRefCallback = useCallback(
+    (node: HTMLDivElement | null): void => {
+      if (node != null) {
+        mathifyElement(node)
+      }
+    },
+    [feedback]
+  )
 
   const clearFeedback = (): void => {
     setFeedback('')
   }
 
-  const modifyModel = (values: MultiselectFormValues, e: React.ChangeEvent<HTMLInputElement>): string[] => {
+  const modifyModel = (
+    values: MultiselectFormValues,
+    e: React.ChangeEvent<HTMLInputElement>
+  ): string[] => {
     const newSet = new Set(values.response)
     if (e.target.checked) {
       newSet.add(e.target.value)
@@ -73,7 +90,11 @@ export const MultiselectProblem = ({
     return Array.from(newSet)
   }
 
-  const generateOptions = (values: MultiselectFormValues, isSubmitting: boolean, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): JSX.Element[] => {
+  const generateOptions = (
+    values: MultiselectFormValues,
+    isSubmitting: boolean,
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+  ): JSX.Element[] => {
     const options: JSX.Element[] = []
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }
 
@@ -120,8 +141,15 @@ export const MultiselectProblem = ({
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
-      setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
+      setRetriesAllowed((currRetries) => currRetries + 1)
+      setFeedback(
+        determineFeedback(
+          values.response,
+          encourageResponse,
+          answerResponses,
+          evaluateInput
+        )
+      )
       allowedRetryCallback()
     } else {
       setShowAnswers(true)

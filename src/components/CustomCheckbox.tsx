@@ -1,6 +1,5 @@
 import { Field } from 'formik'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
-// select box
 interface CheckboxProps {
   label: string
   type: string
@@ -27,7 +26,7 @@ export const Checkbox = ({
     selected && !correct && showAnswer
 
   return (
-    <div className="os-raise-flex os-raise-align-items-center">
+    <div className={`os-raise-flex os-raise-align-items-center ${showAnswer ? 'disabled' : ''}`}>
         {selectedCorrectAnswer
           ? <CorrectAnswerIcon />
           : <></>
@@ -50,7 +49,6 @@ export const Checkbox = ({
           value={label}
         ></Field>
         {label}
-
       </label>
     </div>
   )
