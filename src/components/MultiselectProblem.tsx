@@ -2,9 +2,10 @@ import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
 import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Formik, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import Checkbox from './CustomCheckbox'
+import { Checkbox } from './CustomCheckbox'
+import { AttemptsCounter } from './AttemptsCounter'
 
 interface MultiselectProps extends BaseProblemProps {
   solutionOptions: string
@@ -12,6 +13,28 @@ interface MultiselectProps extends BaseProblemProps {
 
 interface MultiselectFormValues {
   response: string[]
+}
+
+export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
+  let className = 'os-raise-default-answer-choice'
+
+  if (solutionArray.includes(val) && showAnswers) {
+    className += ' os-raise-correct-answer-choice os-raise-no-box-shadow'
+  } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
+    className += ' os-raise-wrong-answer-choice os-raise-no-box-shadow'
+  }
+
+  if (values.response.includes(val)) {
+    className += ' os-raise-selected-answer-choice'
+  }
+
+  if (values.response.includes(val) && showAnswers) {
+    className += ' os-form-check'
+  } else {
+    className += ' form-check'
+  }
+
+  return className
 }
 
 export const MultiselectProblem = ({
@@ -52,28 +75,10 @@ export const MultiselectProblem = ({
 
   const generateOptions = (values: MultiselectFormValues, isSubmitting: boolean, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): JSX.Element[] => {
     const options: JSX.Element[] = []
-
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-      <div key={val} className={`${solutionArray.includes(val) && showAnswers
-          ? 'os-raise-correct-answer-choice os-raise-no-box-shadow'
-          : ''
-        } ${!solutionArray.includes(val) &&
-          values.response.includes(val) &&
-          showAnswers
-          ? 'os-raise-wrong-answer-choice os-raise-no-box-shadow'
-          : ''
-        } ${values.response.includes(val)
-          ? 'os-raise-selected-answer-choice'
-          : ''
-        } ${values.response.includes(val) && showAnswers
-          ? 'os-form-check'
-          : 'form-check'
-        }
-           os-raise-default-answer-choice`}
-      >
-
+      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
         <Checkbox label={val}
           type='checkbox' clearFeedback={() => { clearFeedback() }}
           correct={solutionArray.includes(val)}
@@ -161,17 +166,7 @@ export const MultiselectProblem = ({
             </div>
 
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
-            <div className="os-raise-d-flex os-raise-justify-content-end">
-              {retryLimit === 0
-                ? <p className="os-raise-attempts-text">
-                  Attempts left: Unlimited
-                </p>
-                : <p className="os-raise-attempts-text">
-                  Attempts left: {retryLimit - retriesAllowed + 1}/
-                  {retryLimit + 1}
-                </p>
-              }
-            </div>
+            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>

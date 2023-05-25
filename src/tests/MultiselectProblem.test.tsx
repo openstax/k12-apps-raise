@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
-import { MultiselectProblem } from '../components/MultiselectProblem'
+import { MultiselectProblem, buildClassName} from '../components/MultiselectProblem'
 import '@testing-library/jest-dom'
 
 test('MultiselectProblem renders', async () => {
@@ -404,4 +404,17 @@ test('multiselect calls the onProblemAttempt handler', async () => {
     true,
     'dataContentId'
   )
+})
+
+test('returns the correct className string', () => {
+  const solutionArray = ['A', 'B', 'C']
+  const showAnswers = true
+  const val = 'B'
+  const values = { response: ['A', 'B'] }
+  const expectedClassName =
+    'os-raise-default-answer-choice os-raise-correct-answer-choice os-raise-no-box-shadow os-raise-selected-answer-choice os-form-check'
+
+  const className = buildClassName(solutionArray, showAnswers, val, values)
+
+  expect(className).toBe(expectedClassName)
 })

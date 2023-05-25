@@ -4,7 +4,8 @@ import { useCallback, useState } from 'react'
 import { Formik, Form, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
-import Checkbox from './CustomCheckbox'
+import { Checkbox } from './CustomCheckbox'
+import { AttemptsCounter } from './AttemptsCounter'
 
 interface MultipleChoiceProps extends BaseProblemProps {
   solutionOptions: string
@@ -12,6 +13,20 @@ interface MultipleChoiceProps extends BaseProblemProps {
 
 interface MultipleChoiceFormValues {
   response: string
+}
+
+export function buildClassName(val: string, solution: string, response: string, showAnswers: boolean, questionBoxShadow: string): string {
+  let className = 'os-form-check os-raise-default-answer-choice'
+  if (solution === val && response === val && showAnswers) {
+    className += ' os-raise-correct-answer-choice ' + questionBoxShadow
+  }
+  if (solution !== val && response === val && showAnswers) {
+    className += ' os-raise-wrong-answer-choice ' + questionBoxShadow
+  }
+  if (response === val) {
+    className += ' os-raise-selected-answer-choice'
+  }
+  return className
 }
 
 export const MultipleChoiceProblem = ({
@@ -71,17 +86,7 @@ export const MultipleChoiceProblem = ({
       options.push(
         <div
           key={val}
-          className={`os-form-check os-raise-default-answer-choice 
-          ${
-            solution === val && values.response === val && showAnswers
-              ? `os-raise-correct-answer-choice ${questionBoxShadow}`
-              : ''
-          } ${
-            solution !== val && values.response === val && showAnswers
-              ? `os-raise-wrong-answer-choice ${questionBoxShadow}`
-              : ''
-          } ${values.response === val ? 'os-raise-selected-answer-choice' : ''}
-           `}
+          className={buildClassName(val, solution, values.response, showAnswers, questionBoxShadow)}
         >
           <Checkbox
             label={val}
@@ -186,20 +191,7 @@ export const MultipleChoiceProblem = ({
               />
                 )
               : null}
-            <div className="os-raise-d-flex os-raise-justify-content-end">
-              {retryLimit === 0
-                ? (
-                <p className="os-raise-attempts-text">
-                  Attempts left: Unlimited
-                </p>
-                  )
-                : (
-                <p className="os-raise-attempts-text">
-                  Attempts left: {retryLimit - retriesAllowed + 1}/
-                  {retryLimit + 1}
-                </p>
-                  )}
-            </div>
+              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
           </Form>
         )}
       </Formik>

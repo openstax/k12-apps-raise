@@ -1,7 +1,6 @@
-import { useCallback, useState } from 'react'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Field } from 'formik'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
-
+// select box
 interface CheckboxProps {
   label: string
   type: string
@@ -28,7 +27,7 @@ export const Checkbox = ({
     selected && !correct && showAnswer
 
   return (
-    <div className="os-raise-flex os-raise-align-items-center" onClick={() => { }}>
+    <div className="os-raise-flex os-raise-align-items-center">
         {selectedCorrectAnswer
           ? <CorrectAnswerIcon />
           : <></>
@@ -56,5 +55,3 @@ export const Checkbox = ({
     </div>
   )
 }
-
-export default Checkbox

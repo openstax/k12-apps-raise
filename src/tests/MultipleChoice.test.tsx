@@ -1,6 +1,7 @@
 import { render, screen, act } from '@testing-library/react'
-import { MultipleChoiceProblem } from '../components/MultipleChoiceProblem'
+import { MultipleChoiceProblem, buildClassName } from '../components/MultipleChoiceProblem'
 import '@testing-library/jest-dom'
+
 test('MultipleChoiceProblem renders', async () => {
   render(
     <MultipleChoiceProblem
@@ -333,4 +334,22 @@ test('MultipleChoiceProblem calls the onProblemAttempt handler', async () => {
     true,
     'dataContentId'
   )
+})
+
+test('returns the correct className string', () => {
+  const val = 'A'
+  let solution = 'A'
+  const response = 'A'
+  const showAnswers = true
+  const questionBoxShadow = 'box-shadow'
+
+  let className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
+
+  expect(className).toEqual('os-form-check os-raise-default-answer-choice os-raise-correct-answer-choice box-shadow os-raise-selected-answer-choice')
+
+  solution = 'B'
+
+  className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
+
+  expect(className).toEqual('os-form-check os-raise-default-answer-choice os-raise-wrong-answer-choice box-shadow os-raise-selected-answer-choice')
 })
