@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
-import { MultiselectProblem, buildClassName} from '../components/MultiselectProblem'
+import { MultiselectProblem, buildClassName } from '../components/MultiselectProblem'
 import '@testing-library/jest-dom'
 
 test('MultiselectProblem renders', async () => {
