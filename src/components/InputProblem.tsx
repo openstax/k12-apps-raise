@@ -73,7 +73,7 @@ export const InputProblem = ({
         console.error(parsedAnswer)
         return false
       }
-      return KAS.compare(parsedInput.expr, parsedAnswer.expr).equal
+      return KAS.compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
 
     return input.toLowerCase() === answer.toLowerCase()
