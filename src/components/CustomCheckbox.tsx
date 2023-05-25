@@ -1,6 +1,5 @@
 import { Field } from 'formik'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
-
 interface CheckboxProps {
   label: string
   type: string
@@ -21,34 +20,31 @@ export const Checkbox = ({
   showAnswer,
   selected
 }: CheckboxProps): JSX.Element => {
-  const selectedCorrectAnswer = selected && correct && showAnswer
-
-  const selectedWrongAnswer = selected && !correct && showAnswer
+  const selectedCorrectAnswer =
+    selected && correct && showAnswer
+  const selectedWrongAnswer =
+    selected && !correct && showAnswer
 
   return (
     <div className={`os-raise-flex os-raise-align-items-center ${showAnswer ? 'disabled' : ''}`}>
-      {selectedCorrectAnswer
-        ? <CorrectAnswerIcon />
-        : <></>}
-      {selectedWrongAnswer
-        ? <WrongAnswerIcon />
-        : <></>}
-      <label
-        className="form-check-label os-raise-fill-label-container"
-      >
+        {selectedCorrectAnswer
+          ? <CorrectAnswerIcon />
+          : <></>
+        }
+        {selectedWrongAnswer
+          ? <WrongAnswerIcon />
+          : <></>
+        }
+      <label className={`form-check-label os-raise-fill-label-container ${showAnswer ? 'os-raise-no-cursor-pointer' : ''}`}>
         <Field
-          className={`os-form-check-input ${
-            type === 'radio' ? 'os-raise-hide-input-button' : ''
-          } ${
-            type === 'checkbox' && selected && showAnswer
+          className={`os-form-check-input ${type === 'radio' ? 'os-raise-hide-input-button' : ''
+            } ${type === 'checkbox' && selected && showAnswer
               ? 'os-raise-hide-input-button'
               : ''
-          }`}
+            }`}
           type={type}
           name="response"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            onChange(e)
-          }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => { onChange(e) }}
           disabled={disabled}
           value={label}
         ></Field>
