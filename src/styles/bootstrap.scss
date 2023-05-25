@@ -114,12 +114,14 @@
   }
 
   .os-form-check {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-check;
 
     padding-left: 0;
   }
 
   .os-form-check-input {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-check-input;
 
     width: 1.2em;
@@ -147,6 +149,7 @@
   }
 
   .os-btn {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .btn;
 
     padding: 8px 32px;
