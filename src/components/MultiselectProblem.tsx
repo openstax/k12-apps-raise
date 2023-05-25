@@ -157,7 +157,7 @@ export const MultiselectProblem = ({
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
             <div className='os-raise-text-center mt-4'>
               <button
-                className="btn btn-outline-primary"
+                className="os-btn btn-outline-primary"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
               >
