@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { MathfieldElement } from 'mathlive'
 
 // TODO: All of this setup should probably be organized differently / elsewhere. Just
@@ -24,12 +24,12 @@ window.mathVirtualKeyboard.addEventListener('geometrychange', (ev) => {
 })
 
 interface MathfieldProps {
-  onInput?: (event: FormEvent<MathfieldElement>) => void
+  onChange?: (event: React.ChangeEvent<MathfieldElement>) => void
   className?: string
   disabled?: boolean
 }
 
-export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX.Element => {
+export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
   const mathKeyboardRef = useRef<HTMLDivElement>(null)
 
@@ -58,6 +58,13 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
       maybeMathKeyboard.style.minWidth = '320px'
       window.mathVirtualKeyboard.show()
     })
+
+    // Using an onChange in the element below did not work, so resorted to this for now
+    maybeMathfield.addEventListener('change', (ev) => {
+      if (onChange !== undefined) {
+        onChange(ev as unknown as React.ChangeEvent<MathfieldElement>) // RN: Yeah, this is a total hack but I didn't want to deal with it during the spike :joy:
+      }
+    })
   }, [mathfieldRef, mathKeyboardRef])
 
   return (
@@ -66,7 +73,6 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
         class={className}
         ref={mathfieldRef}
         {...((disabled === true) ? { disabled: true } : {})}
-        onInput={onInput} // TODO: Using onInput as for some reason onChange was not firing
       />
       <div ref={mathKeyboardRef} className='my-3'></div>
     </div>

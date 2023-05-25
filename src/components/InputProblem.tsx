@@ -132,7 +132,7 @@ export const InputProblem = ({
                     name="response"
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
-                    onInput={(e: React.ChangeEvent<MathfieldElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+                    onChange={(e: React.ChangeEvent<MathfieldElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
                     className="os-form-control mb-3 w-50" />
                     )
                   : (
