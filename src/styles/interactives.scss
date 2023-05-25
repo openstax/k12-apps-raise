@@ -22,7 +22,7 @@ div.os-raise-default-answer-choice:focus-within {
   border-color: $raise-selected-focus-border-color;
 }
 
-div.os-raise-default-answer-choice:hover {
+div.os-raise-default-answer-choice > div:hover {
   background-color: $raise-answer-background;
 }
 
@@ -48,10 +48,6 @@ label.os-raise-fill-label-container {
   height: 100%;
   padding: 1rem 0.5rem 1rem 0.8rem;
   cursor: pointer;
-}
-
-label.os-raise-no-cursor-pointer {
-  cursor: default;
 }
 
 input.os-raise-hide-input-button {
@@ -82,7 +78,12 @@ div.os-raise-justify-content-end {
   justify-content: end;
 }
 
-.os-raise-ml-1 {
+.disabled {
+  pointer-events: none;
+
+}
+
+.os-raise-ml {
   margin-left: 0.7rem;
 }
 

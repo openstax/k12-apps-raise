@@ -6,7 +6,7 @@ export const CorrectAnswerIcon: React.FC = () => (
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    className="os-raise-ml-1"
+    className="os-raise-ml"
   >
     <path
       fill="#019920"
@@ -21,7 +21,7 @@ export const WrongAnswerIcon: React.FC = () => (
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    className="os-raise-ml-1"
+    className="os-raise-ml"
   >
     <path
       fill="#fc0516"
