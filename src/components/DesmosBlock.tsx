@@ -36,10 +36,6 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
 
     const calculator = Desmos.GraphingCalculator(calculatorWrapper, options)
 
-    equationsArray.forEach((str: string) => {
-      calculator.setExpression({ latex: `${str}` })
-    })
-
     tablesArray.forEach((table) => {
       calculator.setExpression({
         type: 'table',
@@ -47,6 +43,10 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
           return { latex: col.variable, values: col.values }
         })
       })
+    })
+
+    equationsArray.forEach((str: string) => {
+      calculator.setExpression({ latex: `${str}` })
     })
 
     calculator.setMathBounds({
