@@ -2,8 +2,10 @@ import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
 import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { Formik, Field, Form, ErrorMessage } from 'formik'
+import { Formik, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import { Checkbox } from './CustomCheckbox'
+import { AttemptsCounter } from './AttemptsCounter'
 
 interface MultiselectProps extends BaseProblemProps {
   solutionOptions: string
@@ -11,6 +13,28 @@ interface MultiselectProps extends BaseProblemProps {
 
 interface MultiselectFormValues {
   response: string[]
+}
+
+export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
+  let className = 'os-raise-default-answer-choice'
+
+  if (solutionArray.includes(val) && showAnswers) {
+    className += ' os-raise-correct-answer-choice os-raise-no-box-shadow'
+  } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
+    className += ' os-raise-wrong-answer-choice os-raise-no-box-shadow'
+  }
+
+  if (values.response.includes(val)) {
+    className += ' os-raise-selected-answer-choice'
+  }
+
+  if (values.response.includes(val) && showAnswers) {
+    className += ' os-form-check'
+  } else {
+    className += ' form-check'
+  }
+
+  return className
 }
 
 export const MultiselectProblem = ({
@@ -23,6 +47,7 @@ export const MultiselectProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const solutionArray: string[] = JSON.parse(solution)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
+  const [showAnswers, setShowAnswers] = useState(false)
 
   const schema = Yup.object({
     response: Yup.array().min(1, 'Please select an answer')
@@ -50,21 +75,19 @@ export const MultiselectProblem = ({
 
   const generateOptions = (values: MultiselectFormValues, isSubmitting: boolean, setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void): JSX.Element[] => {
     const options: JSX.Element[] = []
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-    <div key={val} className="form-check">
-      <label className="form-check-label">
-        <Field
-        className="form-check-input"
-        type="checkbox"
-        name="response"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { clearFeedback(); setFieldValue('response', modifyModel(values, e)) }}
-        disabled={isSubmitting || formDisabled}
-        value={val}>
-        </Field>
-        {val}
-      </label>
-    </div>
+      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
+        <Checkbox label={val}
+          type='checkbox' clearFeedback={() => { clearFeedback() }}
+          correct={solutionArray.includes(val)}
+          disabled={isSubmitting || formDisabled}
+          onChange={onChange}
+          showAnswer={showAnswers}
+          selected={values.response.includes(val)}
+        />
+      </div>
     ))
 
     return options
@@ -90,10 +113,10 @@ export const MultiselectProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-
     if (compareForm(values.response, solutionArray)) {
       correct = true
       setFeedback(correctResponse)
+      setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
@@ -101,6 +124,8 @@ export const MultiselectProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setShowAnswers(true)
+      setRetriesAllowed(currRetries => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
@@ -128,10 +153,20 @@ export const MultiselectProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            {generateOptions(values, isSubmitting, setFieldValue)}
+            <div className='os-raise-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary mt-3">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <div className='os-raise-text-center mt-4'>
+              <button
+                className="btn btn-outline-primary"
+                type="submit"
+                disabled={isSubmitting || formDisabled}
+              >
+                {buttonText}
+              </button>
+            </div>
+
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>
