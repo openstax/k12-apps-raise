@@ -30,8 +30,6 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
 
   if (values.response.includes(val) && showAnswers) {
     className += ' os-form-check'
-  } else {
-    className += ' form-check'
   }
 
   return className
@@ -101,7 +99,7 @@ export const MultiselectProblem = ({
     parsedOptionValues.forEach(val => options.push(
       <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
         <Checkbox label={val}
-          type='checkbox' clearFeedback={() => { clearFeedback() }}
+          type='checkbox'
           correct={solutionArray.includes(val)}
           disabled={isSubmitting || formDisabled}
           onChange={onChange}

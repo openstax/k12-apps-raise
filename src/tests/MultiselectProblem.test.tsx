@@ -407,14 +407,20 @@ test('multiselect calls the onProblemAttempt handler', async () => {
 })
 
 test('returns the correct className string', () => {
-  const solutionArray = ['A', 'B', 'C']
+  const solutionArray = ['A', 'B']
   const showAnswers = true
-  const val = 'B'
-  const values = { response: ['A', 'B'] }
-  const expectedClassName =
+  let val = 'B'
+  let values = { response: ['A', 'B'] }
+  const expectedCorrectClassName =
     'os-raise-default-answer-choice os-raise-correct-answer-choice os-raise-no-box-shadow os-raise-selected-answer-choice os-form-check'
+  const expectedIncorrectClassName =
+    'os-raise-default-answer-choice os-raise-wrong-answer-choice os-raise-no-box-shadow os-raise-selected-answer-choice os-form-check'
 
-  const className = buildClassName(solutionArray, showAnswers, val, values)
+  const correctAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
 
-  expect(className).toBe(expectedClassName)
+  expect(correctAnswerClassName).toBe(expectedCorrectClassName)
+  val = 'C'
+  values = { response: ['A', 'B', 'C'] }
+  const incorrectAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
+  expect(incorrectAnswerClassName).toBe(expectedIncorrectClassName)
 })

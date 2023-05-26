@@ -91,9 +91,6 @@ export const MultipleChoiceProblem = ({
           <Checkbox
             label={val}
             type="radio"
-            clearFeedback={() => {
-              clearFeedback()
-            }}
             correct={solution === val}
             disabled={isSubmitting || formDisabled}
             onChange={onChange}

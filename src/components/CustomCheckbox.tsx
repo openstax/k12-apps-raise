@@ -5,7 +5,6 @@ interface CheckboxProps {
   type: string
   correct: boolean
   disabled: boolean
-  clearFeedback: () => void
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   showAnswer: boolean
   selected: boolean
@@ -20,18 +19,18 @@ export const Checkbox = ({
   showAnswer,
   selected
 }: CheckboxProps): JSX.Element => {
-  const selectedCorrectAnswer =
+  const showCorrectAnswer =
     selected && correct && showAnswer
-  const selectedWrongAnswer =
+  const showWrongAnswer =
     selected && !correct && showAnswer
 
   return (
     <div className={`os-raise-flex os-raise-align-items-center ${showAnswer ? 'disabled' : ''}`}>
-        {selectedCorrectAnswer
+        {showCorrectAnswer
           ? <CorrectAnswerIcon />
           : <></>
         }
-        {selectedWrongAnswer
+        {showWrongAnswer
           ? <WrongAnswerIcon />
           : <></>
         }
