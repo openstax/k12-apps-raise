@@ -26,7 +26,7 @@ export const Checkbox = ({
     selected && !correct && showAnswer
 
   return (
-    <div className={`os-raise-flex os-raise-align-items-center ${showAnswer ? 'disabled' : ''}`}>
+    <div className={`os-raise-flex os-raise-align-items-center os-raise-height-100 ${showAnswer ? 'disabled' : ''}`}>
         {selectedCorrectAnswer
           ? <CorrectAnswerIcon />
           : <></>
@@ -35,8 +35,8 @@ export const Checkbox = ({
           ? <WrongAnswerIcon />
           : <></>
         }
-      <label className={`form-check-label os-raise-fill-label-container ${showAnswer ? 'os-raise-no-cursor-pointer' : ''}`}>
-        <Field
+      <label className={`form-check-label os-raise-fill-label-container ${showAnswer ? 'os-raise-no-cursor-pointer' : ''} ${type === 'checkbox' ? 'os-raise-flex' : ''}`}>
+      <Field
           className={`os-form-check-input ${type === 'radio' ? 'os-raise-hide-input-button' : ''
             } ${type === 'checkbox' && selected && showAnswer
               ? 'os-raise-hide-input-button'
@@ -47,7 +47,8 @@ export const Checkbox = ({
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => { onChange(e) }}
           disabled={disabled}
           value={label}
-        ></Field>
+      >
+      </Field>
         {label}
       </label>
     </div>

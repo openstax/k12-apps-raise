@@ -30,8 +30,6 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
 
   if (values.response.includes(val) && showAnswers) {
     className += ' os-form-check'
-  } else {
-    className += ' form-check'
   }
 
   return className
