@@ -103,8 +103,8 @@ export const DropdownProblem = ({
               {generateOptions()}
             </Field>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <button type="submit" disabled={isSubmitting || formDisabled} className="os-btn btn-outline-primary">{buttonText}</button>
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null }
           </Form>
         )}
       </Formik>
