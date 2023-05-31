@@ -12,6 +12,7 @@
   @import "bootstrap/scss/maps";
   @import "bootstrap/scss/root";
   @import "bootstrap/scss/reboot";
+  @import "./interactives.scss";
 
   // Additional styles
   @import "bootstrap/scss/helpers";
@@ -98,13 +99,6 @@
   --bs-link-hover-color: #0a58ca;
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
-
-  .os-form-select {
-    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-    @extend .form-select;
-
-    width: unset;
-  }
 
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
