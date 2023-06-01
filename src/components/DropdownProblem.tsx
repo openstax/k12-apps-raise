@@ -4,6 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
 import * as Yup from 'yup'
+import { AttemptsCounter } from './AttemptsCounter'
 
 interface DropdownProblemProps extends BaseProblemProps {
   solutionOptions: string
@@ -65,6 +66,7 @@ export const DropdownProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setRetriesAllowed((currRetries) => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
@@ -97,14 +99,23 @@ export const DropdownProblem = ({
               as="select"
               value={values.response}
               disabled={isSubmitting || formDisabled}
-              className="os-form-select mb-3"
+              className={`form-select mb-3 os-raise-default-answer-choice ${values.response !== '' ? 'os-raise-selected-answer-choice' : ''} ${solution === values.response && formDisabled ? 'os-raise-correct-answer-choice disabled' : ''} ${solution !== values.response && formDisabled ? 'os-raise-wrong-answer-choice disabled' : ''}`}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
             >
               {generateOptions()}
             </Field>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <div className="os-raise-text-center mt-4">
+              <button
+                className="os-btn btn-outline-primary"
+                type="submit"
+                disabled={isSubmitting || formDisabled}
+              >
+                {buttonText}
+              </button>
+            </div>
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null }
+            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>
