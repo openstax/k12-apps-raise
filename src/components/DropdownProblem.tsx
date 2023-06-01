@@ -14,6 +14,20 @@ interface DropdownFormValues {
   response: string
 }
 
+export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+  let className = 'form-select mb-3 os-raise-default-answer-choice'
+  if (response !== '') {
+    className += ' os-raise-selected-answer-choice'
+  }
+  if (solution === response && formDisabled) {
+    className += ' os-raise-correct-answer-choice disabled'
+  }
+  if (solution !== response && formDisabled) {
+    className += ' os-raise-wrong-answer-choice disabled'
+  }
+  return className
+}
+
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
   encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
@@ -99,7 +113,7 @@ export const DropdownProblem = ({
               as="select"
               value={values.response}
               disabled={isSubmitting || formDisabled}
-              className={`form-select mb-3 os-raise-default-answer-choice ${values.response !== '' ? 'os-raise-selected-answer-choice' : ''} ${solution === values.response && formDisabled ? 'os-raise-correct-answer-choice disabled' : ''} ${solution !== values.response && formDisabled ? 'os-raise-wrong-answer-choice disabled' : ''}`}
+              className={buildClassName(values.response, solution, formDisabled)}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
             >
               {generateOptions()}
