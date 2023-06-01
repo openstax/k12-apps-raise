@@ -104,10 +104,11 @@ export const MultipleChoiceProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            {generateOptions(values, isSubmitting, setFieldValue)}
+            <div className='os-raise-input'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
             <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary mt-3">{buttonText}</button>
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+
           </Form>
         )}
       </Formik>

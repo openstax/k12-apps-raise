@@ -68,9 +68,16 @@
   --bs-body-color-rgb: 33, 37, 41;
   --bs-body-bg-rgb: 255, 255, 255;
   /* stylelint-disable-next-line max-line-length */
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgb(255 255 255 / 15%), rgb(255 255 255 / 0%));
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto,
+    "Helvetica Neue", "Noto Sans", "Liberation Sans", arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 15%),
+    rgb(255 255 255 / 0%)
+  );
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
@@ -102,7 +109,59 @@
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
+    width: 98%;
+  }
 
-    width: unset;
+  .os-form-check {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check;
+
+    padding-left: 0;
+  }
+
+  .os-form-check-input {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check-input;
+
+    min-width: 1.2em;
+    min-height: 1.2em;
+    border: 2px solid #000;
+  }
+
+  .os-form-check-input[type="checkbox"] {
+    margin-right: .5rem;
+    margin-top: 0;
+  }
+
+  .os-form-check-input:focus {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check-input;
+
+    min-width: 1.2em;
+    min-height: 1.2em;
+    box-shadow: 0 0 0 0.25rem #159db271;
+  }
+
+  .os-form-check-input:checked {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check-input;
+
+    min-width: 1.2em;
+    min-height: 1.2em;
+    background-color: #159eb2;
+    border-color: #159eb2;
+  }
+
+  .os-btn {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .btn;
+
+    padding: 8px 32px;
+  }
+
+  .os-raise-bootstrap label {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    display: flex;
+    align-items: center;
   }
 }

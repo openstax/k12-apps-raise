@@ -4,6 +4,7 @@ import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
+import { AttemptsCounter } from './AttemptsCounter'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -78,6 +79,7 @@ export const InputProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setRetriesAllowed(currRetries => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setInputDisabled(true)
@@ -110,14 +112,16 @@ export const InputProblem = ({
             <Form >
               <Field
               name="response"
+              placeholder="Enter the value."
               disabled={inputDisabled || isSubmitting}
               autoComplete={'off'}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-              className="os-form-control mb-3" />
+              className={`os-form-control mb-3 ${inputDisabled ? '' : 'os-raise-input'}`} />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
-              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
-
+              <div className="text-center">
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary mt-3">{buttonText}</button></div>
+              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
           )}
         </Formik>
