@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
-import { DropdownProblem } from '../components/DropdownProblem'
+import { DropdownProblem, buildClassName } from '../components/DropdownProblem'
 import '@testing-library/jest-dom'
 
 test('DropdownProblem renders with contentId', async () => {
@@ -136,7 +136,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
     answerResponses={[]}
     />
   )
-
+  await screen.findByText('Attempts left: Unlimited')
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
     screen.getByRole('button').click()
@@ -197,6 +197,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     answerResponses={[]}
     />
   )
+  await screen.findByText('Attempts left: 4/4')
 
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
@@ -204,6 +205,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     screen.getByRole('button').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/4')
   await screen.findByText('Try again!')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
@@ -213,6 +215,8 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 0/4')
+
   expect(screen.queryByText('Try again!')).toBeNull()
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
@@ -232,24 +236,30 @@ test('DropdownProblem renders answer specific content', async () => {
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={3}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
     answerResponses={[{ answer: 'Option 1', response: 'Almost There' }, { answer: 'Option 3', response: 'Even Closer' }]}
     />
   )
+  await screen.findByText('Attempts left: 4/4')
 
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 3/4')
+
   await screen.findByText('Almost There')
   expect(screen.queryByText('Try again!')).toBeNull()
+
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 3' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 2/4')
+
   await screen.findByText('Even Closer')
   expect(screen.queryByText('Try again!')).toBeNull()
 })
@@ -329,4 +339,20 @@ test('DropdownProblem calls the onProblemAttempt handler', async () => {
     false,
     'dataContentId'
   )
+})
+
+test('returns the correct className string', () => {
+  const response = 'A'
+  let solution = 'A'
+  const formDisabled = true
+
+  let className = buildClassName(response, solution, formDisabled)
+
+  expect(className).toEqual('form-select mb-3 os-raise-default-answer-choice os-raise-selected-answer-choice os-raise-correct-answer-choice disabled')
+
+  solution = 'B'
+
+  className = buildClassName(response, solution, formDisabled)
+
+  expect(className).toEqual('form-select mb-3 os-raise-default-answer-choice os-raise-selected-answer-choice os-raise-wrong-answer-choice disabled')
 })
