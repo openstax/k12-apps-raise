@@ -79,44 +79,8 @@ div.os-raise-justify-content-end {
   justify-content: end;
 }
 
-select.form-select {
-  border: 2px solid $raise-default-answer-border-color;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px $raise-default-box-shadow;
-  padding: .75rem 2.25rem .75rem .75rem;
-  cursor: pointer;
-  background-image: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" viewBox="0 0 22 22"%3E%3Cpath fill="currentColor" d="m7 10l5 5l5-5z"%2F%3E%3C%2Fsvg%3E'), linear-gradient($raise-answer-background, $raise-answer-background),;
-  background-size: 40px 50px;
-  background-position: right 0 center;
-  color: $raise-medium-gray;
-}
-
-select.form-select:hover {
+select.os-form-select:hover {
   background-color: $raise-answer-background;
-}
-
-select.form-select:focus {
-  background-color: #fff;
-  border-color: $raise-selected-focus-border-color;
-  box-shadow: 0 2px 2px $raise-default-box-shadow;
-}
-
-select.form-select:disabled {
-  background-color: $raise-answer-background;
-  box-shadow: none;
-}
-
-select.os-raise-selected-answer-choice {
-  border-color: $raise-selected-focus-border-color;
-  background-color: $raise-answer-background;
-}
-
-select.os-raise-correct-answer-choice {
-   border-color: $raise-correct-answer-border-color;
-}
-
-select.os-raise-wrong-answer-choice {
-  border-color: $raise-wrong-answer-border-color;
 }
 
 .disabled {

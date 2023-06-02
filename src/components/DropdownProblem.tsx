@@ -15,15 +15,15 @@ interface DropdownFormValues {
 }
 
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
-  let className = 'form-select mb-3 os-raise-default-answer-choice'
+  let className = 'os-form-select mb-3'
   if (response !== '') {
-    className += ' os-raise-selected-answer-choice'
+    className += ' os-form-select-selected-answer-choice'
   }
   if (solution === response && formDisabled) {
-    className += ' os-raise-correct-answer-choice disabled'
+    className += ' os-form-select-correct-answer-choice disabled'
   }
   if (solution !== response && formDisabled) {
-    className += ' os-raise-wrong-answer-choice disabled'
+    className += ' os-form-select-wrong-answer-choice disabled'
   }
   return className
 }
