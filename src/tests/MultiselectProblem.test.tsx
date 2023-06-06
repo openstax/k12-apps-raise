@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
-import { MultiselectProblem } from '../components/MultiselectProblem'
+import { MultiselectProblem, buildClassName } from '../components/MultiselectProblem'
 import '@testing-library/jest-dom'
 
 test('MultiselectProblem renders', async () => {
@@ -179,7 +179,7 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     answerResponses={[]}
     />
   )
-
+  await screen.findByText('Attempts left: Unlimited')
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 2'))
     screen.getByRole('button').click()
@@ -240,6 +240,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     answerResponses={[]}
     />
   )
+  await screen.findByText('Attempts left: 4/4')
 
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 1'))
@@ -247,6 +248,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     screen.getByRole('button').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/4')
   await screen.findByText('Try again!')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
@@ -256,6 +258,8 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     fireEvent.click(screen.getByLabelText('Option 2'))
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 0/4')
+
   expect(screen.queryByText('Try again!')).toBeNull()
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
@@ -288,11 +292,14 @@ test('MultiselectProblem renders answer specific responses', async () => {
     answerResponses={[{ answer: '["Option 1"]', response: 'Almost There' }, { answer: '["Option 3", "Option 1"]', response: 'Even Closer' }]}
     />
   )
+  await screen.findByText('Attempts left: 4/4')
 
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 1'))
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 3/4')
+
   await screen.findByText('Almost There')
   expect(screen.queryByText('Try again!')).toBeNull()
 
@@ -300,6 +307,8 @@ test('MultiselectProblem renders answer specific responses', async () => {
     fireEvent.click(screen.getByLabelText('Option 3'))
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 2/4')
+
   await screen.findByText('Even Closer')
   expect(screen.queryByText('Almost')).toBeNull()
   await act(async () => {
@@ -309,6 +318,7 @@ test('MultiselectProblem renders answer specific responses', async () => {
     screen.getByRole('button').click()
   })
   await screen.findByText('Correct')
+  await screen.findByText('Attempts left: 2/4')
 })
 
 test('MultiselectProblem renders answer specific responses only on submit', async () => {
@@ -394,4 +404,23 @@ test('multiselect calls the onProblemAttempt handler', async () => {
     true,
     'dataContentId'
   )
+})
+
+test('returns the correct className string', () => {
+  const solutionArray = ['A', 'B']
+  const showAnswers = true
+  let val = 'B'
+  let values = { response: ['A', 'B'] }
+  const expectedCorrectClassName =
+    'os-raise-default-answer-choice os-raise-correct-answer-choice os-raise-no-box-shadow os-raise-selected-answer-choice os-form-check'
+  const expectedIncorrectClassName =
+    'os-raise-default-answer-choice os-raise-wrong-answer-choice os-raise-no-box-shadow os-raise-selected-answer-choice os-form-check'
+
+  const correctAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
+
+  expect(correctAnswerClassName).toBe(expectedCorrectClassName)
+  val = 'C'
+  values = { response: ['A', 'B', 'C'] }
+  const incorrectAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
+  expect(incorrectAnswerClassName).toBe(expectedIncorrectClassName)
 })
