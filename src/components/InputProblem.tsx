@@ -20,6 +20,17 @@ interface InputFormValues {
   response: string
 }
 
+export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+  let className = 'os-form-control mb-3'
+  if (solution === response && formDisabled) {
+    className += ' os-form-control-correct-answer-choice disabled'
+  }
+  if (solution !== response && formDisabled) {
+    className += ' os-form-control-wrong-answer-choice disabled'
+  }
+  return className
+}
+
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
   solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt
@@ -68,7 +79,6 @@ export const InputProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-
     if (evaluateInput(values.response.trim(), solution.trim())) {
       correct = true
       setFeedback(correctResponse)
@@ -108,7 +118,7 @@ export const InputProblem = ({
           onSubmit={handleSubmit}
           validationSchema={schema}
         >
-          {({ isSubmitting, setFieldValue }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form >
               <Field
               name="response"
@@ -116,10 +126,10 @@ export const InputProblem = ({
               disabled={inputDisabled || isSubmitting}
               autoComplete={'off'}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-              className={`os-form-control mb-3 ${inputDisabled ? '' : 'os-raise-input'}`} />
+              className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
               <div className="text-center">
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary mt-3">{buttonText}</button></div>
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary mt-3">{buttonText}</button></div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
               <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>

@@ -109,8 +109,33 @@
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
+
     width: 98%;
+    border: 1px solid #424242;
+    border-radius: 5px;
+    box-shadow: 1px 5px 5px -3px #808080;
   }
+
+  .os-form-control:focus {
+    border-color: #159eb2;
+    box-shadow: 1px 5px 5px -3px #808080;
+
+  }
+
+  .os-form-control-wrong-answer-choice {
+    border-color: #fc0516;
+  }
+
+
+
+  .os-form-control-correct-answer-choice {
+    border-color: #019920;
+  }
+
+  .os-form-control:disabled {
+    box-shadow: none;
+  }
+
 
   .os-form-check {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
