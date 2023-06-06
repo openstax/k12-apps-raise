@@ -16,15 +16,15 @@ interface MultipleChoiceFormValues {
 }
 
 export function buildClassName(val: string, solution: string, response: string, showAnswers: boolean, questionBoxShadow: string): string {
-  let className = 'os-form-check os-raise-default-answer-choice'
+  let className = 'os-form-check os-default-answer-choice'
   if (solution === val && response === val && showAnswers) {
-    className += ' os-raise-correct-answer-choice ' + questionBoxShadow
+    className += ' os-correct-answer-choice ' + questionBoxShadow
   }
   if (solution !== val && response === val && showAnswers) {
-    className += ' os-raise-wrong-answer-choice ' + questionBoxShadow
+    className += ' os-wrong-answer-choice ' + questionBoxShadow
   }
   if (response === val) {
-    className += ' os-raise-selected-answer-choice'
+    className += ' os-selected-answer-choice'
   }
   return className
 }
@@ -68,7 +68,7 @@ export const MultipleChoiceProblem = ({
     setFeedback('')
   }
 
-  const questionBoxShadow = `${formDisabled ? 'os-raise-no-box-shadow ' : ''}`
+  const questionBoxShadow = `${formDisabled ? 'os-no-box-shadow ' : ''}`
 
   const generateOptions = (
     values: MultipleChoiceFormValues,
@@ -162,7 +162,7 @@ export const MultipleChoiceProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            <div className="os-raise-grid">
+            <div className="os-grid">
               {generateOptions(values, isSubmitting, setFieldValue)}
             </div>
             <ErrorMessage
@@ -170,7 +170,7 @@ export const MultipleChoiceProblem = ({
               component="div"
               name="response"
             />
-            <div className="os-raise-text-center mt-4">
+            <div className="os-text-center mt-4">
               <button
                 className="os-btn btn-outline-primary"
                 type="submit"
@@ -184,7 +184,7 @@ export const MultipleChoiceProblem = ({
               <div
                 ref={contentRefCallback}
                 dangerouslySetInnerHTML={{ __html: feedback }}
-                className="my-3 os-raise-feedback-message"
+                className="my-3 os-feedback-message"
               />
                 )
               : null}

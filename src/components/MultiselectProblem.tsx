@@ -16,16 +16,16 @@ interface MultiselectFormValues {
 }
 
 export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
-  let className = 'os-raise-default-answer-choice'
+  let className = 'os-default-answer-choice'
 
   if (solutionArray.includes(val) && showAnswers) {
-    className += ' os-raise-correct-answer-choice os-raise-no-box-shadow'
+    className += ' os-correct-answer-choice os-no-box-shadow'
   } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
-    className += ' os-raise-wrong-answer-choice os-raise-no-box-shadow'
+    className += ' os-wrong-answer-choice os-no-box-shadow'
   }
 
   if (values.response.includes(val)) {
-    className += ' os-raise-selected-answer-choice'
+    className += ' os-selected-answer-choice'
   }
 
   if (values.response.includes(val) && showAnswers) {
@@ -179,9 +179,9 @@ export const MultiselectProblem = ({
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
-            <div className='os-raise-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
+            <div className='os-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <div className='os-raise-text-center mt-4'>
+            <div className='os-text-center mt-4'>
               <button
                 className="os-btn btn-outline-primary"
                 type="submit"
@@ -191,7 +191,7 @@ export const MultiselectProblem = ({
               </button>
             </div>
 
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
             <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}

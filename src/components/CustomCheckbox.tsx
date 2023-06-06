@@ -25,7 +25,7 @@ export const Checkbox = ({
     selected && !correct && showAnswer
 
   return (
-    <div className={`os-raise-flex os-raise-align-items-center os-raise-height-100 ${showAnswer ? 'disabled' : ''}`}>
+    <div className={`os-flex os-align-items-center os-height-100 ${showAnswer ? 'os-disabled' : ''}`}>
         {showCorrectAnswer
           ? <CorrectAnswerIcon />
           : <></>
@@ -34,11 +34,11 @@ export const Checkbox = ({
           ? <WrongAnswerIcon />
           : <></>
         }
-      <label className={`form-check-label os-raise-fill-label-container ${showAnswer ? 'os-raise-no-cursor-pointer' : ''} ${type === 'checkbox' ? 'os-raise-flex' : ''}`}>
+      <label className={`form-check-label os-fill-label-container ${showAnswer ? 'os-no-cursor-pointer' : ''} ${type === 'checkbox' ? 'os-flex' : ''}`}>
       <Field
-          className={`os-form-check-input ${type === 'radio' ? 'os-raise-hide-input-button' : ''
+          className={`os-form-check-input ${type === 'radio' ? 'os-hide-input-button' : ''
             } ${type === 'checkbox' && selected && showAnswer
-              ? 'os-raise-hide-input-button'
+              ? 'os-hide-input-button'
               : ''
             }`}
           type={type}

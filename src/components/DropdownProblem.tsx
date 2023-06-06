@@ -20,10 +20,10 @@ export function buildClassName(response: string, solution: string, formDisabled:
     className += ' os-form-select-selected-answer-choice'
   }
   if (solution === response && formDisabled) {
-    className += ' os-form-select-correct-answer-choice disabled'
+    className += ' os-form-select-correct-answer-choice os-disabled'
   }
   if (solution !== response && formDisabled) {
-    className += ' os-form-select-wrong-answer-choice disabled'
+    className += ' os-form-select-wrong-answer-choice os-disabled'
   }
   return className
 }
@@ -119,7 +119,7 @@ export const DropdownProblem = ({
               {generateOptions()}
             </Field>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <div className="os-raise-text-center mt-4">
+            <div className="os-text-center mt-4">
               <button
                 className="os-btn btn-outline-primary"
                 type="submit"
@@ -128,7 +128,7 @@ export const DropdownProblem = ({
                 {buttonText}
               </button>
             </div>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null }
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null }
             <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}

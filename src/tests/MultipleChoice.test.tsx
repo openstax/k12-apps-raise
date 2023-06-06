@@ -345,11 +345,11 @@ test('returns the correct className string', () => {
 
   let className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
 
-  expect(className).toEqual('os-form-check os-raise-default-answer-choice os-raise-correct-answer-choice box-shadow os-raise-selected-answer-choice')
+  expect(className).toEqual('os-form-check os-default-answer-choice os-correct-answer-choice box-shadow os-selected-answer-choice')
 
   solution = 'B'
 
   className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
 
-  expect(className).toEqual('os-form-check os-raise-default-answer-choice os-raise-wrong-answer-choice box-shadow os-raise-selected-answer-choice')
+  expect(className).toEqual('os-form-check os-default-answer-choice os-wrong-answer-choice box-shadow os-selected-answer-choice')
 })

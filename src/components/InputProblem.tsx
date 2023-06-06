@@ -23,10 +23,10 @@ interface InputFormValues {
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
   let className = 'os-form-control mb-3'
   if (solution === response && formDisabled) {
-    className += ' os-form-control-correct-answer-choice disabled'
+    className += ' os-form-control-correct-answer-choice os-disabled'
   }
   if (solution !== response && formDisabled) {
-    className += ' os-form-control-wrong-answer-choice disabled'
+    className += ' os-form-control-wrong-answer-choice os-disabled'
   }
   return className
 }
@@ -128,9 +128,9 @@ export const InputProblem = ({
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
-              <div className="os-raise-text-center mt-4">
+              <div className="os-text-center mt-4">
               <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary mt-3">{buttonText}</button></div>
-              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
               <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
           )}
