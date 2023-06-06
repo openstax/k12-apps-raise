@@ -412,9 +412,9 @@ test('returns the correct className string', () => {
   let val = 'B'
   let values = { response: ['A', 'B'] }
   const expectedCorrectClassName =
-    'os-default-answer-choice os-correct-answer-choice os-no-box-shadow os-selected-answer-choice os-form-check'
+    'os-default-answer-choice os-correct-answer-choice os-disabled os-selected-answer-choice os-form-check'
   const expectedIncorrectClassName =
-    'os-default-answer-choice os-wrong-answer-choice os-no-box-shadow os-selected-answer-choice os-form-check'
+    'os-default-answer-choice os-wrong-answer-choice os-disabled os-selected-answer-choice os-form-check'
 
   const correctAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
 

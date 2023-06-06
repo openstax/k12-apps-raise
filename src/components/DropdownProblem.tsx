@@ -17,13 +17,13 @@ interface DropdownFormValues {
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
   let className = 'os-form-select mb-3'
   if (response !== '') {
-    className += ' os-form-select-selected-answer-choice'
+    className += ' os-selected-answer-choice'
   }
   if (solution === response && formDisabled) {
-    className += ' os-form-select-correct-answer-choice os-disabled'
+    className += ' os-correct-answer-choice os-disabled'
   }
   if (solution !== response && formDisabled) {
-    className += ' os-form-select-wrong-answer-choice os-disabled'
+    className += ' os-wrong-answer-choice os-disabled'
   }
   return className
 }

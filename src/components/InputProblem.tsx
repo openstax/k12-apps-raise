@@ -23,10 +23,10 @@ interface InputFormValues {
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
   let className = 'os-form-control mb-3'
   if (solution === response && formDisabled) {
-    className += ' os-form-control-correct-answer-choice os-disabled'
+    className += ' os-correct-answer-choice os-disabled'
   }
   if (solution !== response && formDisabled) {
-    className += ' os-form-control-wrong-answer-choice os-disabled'
+    className += ' os-wrong-answer-choice os-disabled'
   }
   return className
 }

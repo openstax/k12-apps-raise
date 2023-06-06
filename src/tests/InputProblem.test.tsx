@@ -397,8 +397,8 @@ test('Test buildClassName', async () => {
   expect(result).toBe('os-form-control mb-3')
 
   const correct = buildClassName('answer', 'answer', true)
-  expect(correct).toBe('os-form-control mb-3 os-form-control-correct-answer-choice os-disabled')
+  expect(correct).toBe('os-form-control mb-3 os-correct-answer-choice os-disabled')
 
   const incorrect = buildClassName('answer', 'solution', true)
-  expect(incorrect).toBe('os-form-control mb-3 os-form-control-wrong-answer-choice os-disabled')
+  expect(incorrect).toBe('os-form-control mb-3 os-wrong-answer-choice os-disabled')
 })

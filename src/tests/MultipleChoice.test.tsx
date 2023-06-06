@@ -341,15 +341,14 @@ test('returns the correct className string', () => {
   let solution = 'A'
   const response = 'A'
   const showAnswers = true
-  const questionBoxShadow = 'box-shadow'
 
-  let className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
+  let className = buildClassName(val, solution, response, showAnswers)
 
-  expect(className).toEqual('os-form-check os-default-answer-choice os-correct-answer-choice box-shadow os-selected-answer-choice')
+  expect(className).toEqual('os-form-check os-default-answer-choice os-correct-answer-choice os-disabled os-selected-answer-choice')
 
   solution = 'B'
 
-  className = buildClassName(val, solution, response, showAnswers, questionBoxShadow)
+  className = buildClassName(val, solution, response, showAnswers)
 
-  expect(className).toEqual('os-form-check os-default-answer-choice os-wrong-answer-choice box-shadow os-selected-answer-choice')
+  expect(className).toEqual('os-form-check os-default-answer-choice os-wrong-answer-choice os-disabled os-selected-answer-choice')
 })

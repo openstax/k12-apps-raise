@@ -15,13 +15,13 @@ interface MultipleChoiceFormValues {
   response: string
 }
 
-export function buildClassName(val: string, solution: string, response: string, showAnswers: boolean, questionBoxShadow: string): string {
+export function buildClassName(val: string, solution: string, response: string, showAnswers: boolean): string {
   let className = 'os-form-check os-default-answer-choice'
   if (solution === val && response === val && showAnswers) {
-    className += ' os-correct-answer-choice ' + questionBoxShadow
+    className += ' os-correct-answer-choice os-disabled'
   }
   if (solution !== val && response === val && showAnswers) {
-    className += ' os-wrong-answer-choice ' + questionBoxShadow
+    className += ' os-wrong-answer-choice os-disabled'
   }
   if (response === val) {
     className += ' os-selected-answer-choice'
@@ -68,8 +68,6 @@ export const MultipleChoiceProblem = ({
     setFeedback('')
   }
 
-  const questionBoxShadow = `${formDisabled ? 'os-no-box-shadow ' : ''}`
-
   const generateOptions = (
     values: MultipleChoiceFormValues,
     isSubmitting: boolean,
@@ -86,7 +84,7 @@ export const MultipleChoiceProblem = ({
       options.push(
         <div
           key={val}
-          className={buildClassName(val, solution, values.response, showAnswers, questionBoxShadow)}
+          className={buildClassName(val, solution, values.response, showAnswers)}
         >
           <Checkbox
             label={val}

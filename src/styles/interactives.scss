@@ -1,12 +1,13 @@
-$raise-correct-answer-border-color: #019920;
-$raise-selected-focus-border-color: #159eb2;
-$raise-wrong-answer-border-color: #fc0516;
-$raise-default-answer-border-color: #424242;
-$raise-medium-gray: #626262;
-$raise-light-gray: #d9d9d9;
-$raise-answer-background: #f5f5f5;
-$raise-default-box-shadow: #808080;
+$os-correct-answer-border-color: #019920;
+$os-selected-focus-border-color: #159eb2;
+$os-wrong-answer-border-color: #fc0516;
+$os-default-answer-border-color: #424242;
+$os-medium-gray: #626262;
+$os-light-gray: #d9d9d9;
+$os-answer-background: #f5f5f5;
+$os-default-box-shadow: #808080;
 
+// Multiple Choice & Multi Select Styles
 div.os-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -14,41 +15,28 @@ div.os-grid {
 }
 
 div.os-default-answer-choice {
-  border: 2px solid $raise-default-answer-border-color;
+  border: 2px solid $os-default-answer-border-color;
   border-radius: 5px;
-  box-shadow: 0 2px 2px $raise-default-box-shadow;
-}
-
-div.os-default-answer-choice:focus-within {
-  border-color: $raise-selected-focus-border-color;
+  box-shadow: 0 2px 2px $os-default-box-shadow;
 }
 
 div.os-default-answer-choice > div:hover {
-  background-color: $raise-answer-background;
+  background-color: $os-answer-background;
 }
 
-div.os-no-box-shadow {
-  box-shadow: none;
-}
-
-div.os-selected-answer-choice {
-  border-color: $raise-selected-focus-border-color;
-  background-color: $raise-answer-background;
-}
-
-div.os-correct-answer-choice {
-  border-color: $raise-correct-answer-border-color;
-}
-
-div.os-wrong-answer-choice {
-  border-color: $raise-wrong-answer-border-color;
-}
-
-label.os-fill-label-container {
+label.os-label-container {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 100%;
   padding: 1rem 0.5rem 1rem 0.8rem;
   cursor: pointer;
+}
+
+// Multiple Choice Styles
+.os-form-check-input[type="checkbox"] {
+  margin-right: .5rem;
+  margin-top: 0;
 }
 
 input.os-hide-input-button {
@@ -61,36 +49,85 @@ input.os-hide-input-button {
   width: 1px;
 }
 
+// Multi Select Styles
+
+.os-form-check-input.os-form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem #159db271;
+  border-color: $os-selected-focus-border-color;
+}
+
+.os-form-check-input.os-form-check-input:checked {
+  background-color: $os-selected-focus-border-color;
+  border-color: $os-selected-focus-border-color;
+}
+
+// Dropdown Styles
+select.os-form-select:hover {
+  background-color: $os-answer-background;
+}
+
+.os-form-select.os-form-select:focus {
+  border-color: $os-selected-focus-border-color;
+  box-shadow: 0 2px 2px $os-default-box-shadow;
+}
+
+.os-form-select.os-form-select:disabled {
+  background-color: $os-answer-background;
+}
+
+// Input Styles
+.os-form-control.os-form-control:focus {
+  border-color: $os-selected-focus-border-color;
+  box-shadow: 1px 5px 5px -3px $os-default-box-shadow;
+}
+
+// All Interactive Styles
+.os-selected-answer-choice.os-selected-answer-choice {
+  border-color: $os-selected-focus-border-color;
+  background-color: $os-answer-background;
+}
+
+.os-correct-answer-choice.os-correct-answer-choice {
+  border-color: $os-correct-answer-border-color;
+}
+
+.os-wrong-answer-choice.os-wrong-answer-choice {
+  border-color: $os-wrong-answer-border-color;
+}
+
 div.os-feedback-message {
-  background-color: $raise-light-gray;
+  background-color: $os-light-gray;
   padding: 0.5rem;
   border-radius: 5px;
 }
 
 div.os-feedback-message p {
-  color: $raise-medium-gray;
+  color: $os-medium-gray;
 }
 
 p.os-attempts-text {
-  color: $raise-medium-gray;
+  color: $os-medium-gray;
 }
 
 div.os-justify-content-end {
   justify-content: end;
 }
 
-select.os-form-select:hover {
-  background-color: $raise-answer-background;
-}
-
-.os-disabled {
+.os-disabled.os-disabled {
   pointer-events: none;
+  box-shadow: none;
 }
 
+.os-text-center {
+  text-align: center;
+}
+
+// Icon Styles
 .os-ml {
   margin-left: 0.7rem;
 }
 
+// Custom Checkbox Styles
 .os-flex {
   display: flex;
 }
@@ -101,8 +138,4 @@ select.os-form-select:hover {
 
 .os-align-items-center {
   align-items: center;
-}
-
-.os-text-center {
-  text-align: center;
 }

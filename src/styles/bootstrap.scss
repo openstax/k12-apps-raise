@@ -99,75 +99,43 @@
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
 
+  // Variables
+  $os-correct-answer-border-color: #019920;
+  $os-selected-focus-border-color: #159eb2;
+  $os-wrong-answer-border-color: #fc0516;
+  $os-default-answer-border-color: #424242;
+  $os-medium-gray: #626262;
+  $os-answer-background: #f5f5f5;
+  $os-default-box-shadow: #808080;
+
+  // Extends Select Element for Dropdown Styles
   .os-form-select {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-select;
 
-    border: 2px solid #424242;
+    border: 2px solid $os-default-answer-border-color;
     border-radius: 5px;
-    box-shadow: 0 2px 2px #808080;
+    box-shadow: 0 2px 2px $os-default-box-shadow;
     padding: .75rem 2.25rem .75rem .75rem;
     cursor: pointer;
     background-image: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" viewBox="0 0 22 22"%3E%3Cpath fill="currentColor" d="m7 10l5 5l5-5z"%2F%3E%3C%2Fsvg%3E'), linear-gradient(#f5f5f5, #f5f5f5),;
     background-size: 40px 50px;
     background-position: right 0 center;
-    color: #626262;
+    color: $os-medium-gray;
   }
 
-  .os-form-select:focus {
-    background-color: #fff;
-    border-color: #159eb2;
-    box-shadow: 0 2px 2px #808080;
-  }
-
-  .os-form-select:disabled {
-    background-color: #f5f5f5;
-    box-shadow: none;
-  }
-
-  .os-form-select-selected-answer-choice {
-    border-color: #159eb2;
-    background-color: #f5f5f5;
-  }
-
-  .os-form-select-correct-answer-choice {
-    border-color: #019920;
-  }
-
-  .os-form-select-wrong-answer-choice {
-    border-color: #fc0516;
-  }
-
+  // Extends Input Element for Input Styles
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
     width: 98%;
-    border: 1px solid #424242;
+    border: 1px solid $os-default-answer-border-color;
     border-radius: 5px;
-    box-shadow: 1px 5px 5px -3px #808080;
+    box-shadow: 1px 5px 5px -3px $os-default-box-shadow;
   }
 
-  .os-form-control:focus {
-    border-color: #159eb2;
-    box-shadow: 1px 5px 5px -3px #808080;
-
-  }
-
-  .os-form-control-wrong-answer-choice {
-    border-color: #fc0516;
-  }
-
-
-
-  .os-form-control-correct-answer-choice {
-    border-color: #019920;
-  }
-
-  .os-form-control:disabled {
-    box-shadow: none;
-  }
-
+  // Extends Multiple Choice & Multi Select Styles
   .os-form-check {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-check;
@@ -175,49 +143,21 @@
     padding-left: 0;
   }
 
+  // Extends Checkbox for Multi Select Styles
   .os-form-check-input {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-check-input;
 
     min-width: 1.2em;
     min-height: 1.2em;
-    border: 2px solid #000;
+    border: 2px solid $os-default-answer-border-color;
   }
 
-  .os-form-check-input[type="checkbox"] {
-    margin-right: .5rem;
-    margin-top: 0;
-  }
-
-  .os-form-check-input:focus {
-    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-    @extend .form-check-input;
-
-    min-width: 1.2em;
-    min-height: 1.2em;
-    box-shadow: 0 0 0 0.25rem #159db271;
-  }
-
-  .os-form-check-input:checked {
-    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-    @extend .form-check-input;
-
-    min-width: 1.2em;
-    min-height: 1.2em;
-    background-color: #159eb2;
-    border-color: #159eb2;
-  }
-
+  // Extends Check Button for All Interactives
   .os-btn {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .btn;
 
     padding: 8px 32px;
-  }
-
-  .os-raise-bootstrap label {
-    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
-    display: flex;
-    align-items: center;
   }
 }
