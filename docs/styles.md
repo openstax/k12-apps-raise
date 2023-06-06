@@ -13,6 +13,7 @@
     - [Equal Column Wide Tables](#wide-equal-column-table)
     - [Adjustable Column Wide Tables](#wide-adjusted-table)
   * [Double Header Tables](#double-header-table)
+
 * Spacing
   - Margin
     - [No Bottom Margin](#no-margin-bottom-os-raise-mb-0)
@@ -34,8 +35,6 @@
 * Components
   - [Gray Box](#gray-box-os-raise-graybox)
   - [Motivational Message](#motivational-content-os-raise-motivation)
-* Text Styling
-  - [Bold Text](#bold-text)
 
 # Styling Content for RAISE
 
@@ -737,28 +736,3 @@ Any block element or table-cell box (e.g. any element where `text-align` CSS pro
   </tr>
 </table>
 ```
-
----
-
-## Bold Text
-
-This class should be used to apply a bold styling to text.
-If text is meant to convey "strong importance" (things of great seriousness or urgency - such as a warning) then wrap the applicable text in a ```<strong>``` tag instead of applying this class.
-
-**Example**
-
-<div style="text-align: center;">
-    <img src="./static/boldtext.png" width="300">
-</div>
-
-**Availability**
-
-Any element that contains text.
-
-**Usage**
-
-```html
-<p class="os-raise-text-bold">This text is bold.</p>
-```
-
----

@@ -128,7 +128,7 @@ export const InputProblem = ({
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
               className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
-              <div className="text-center">
+              <div className="os-raise-text-center mt-4">
               <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary mt-3">{buttonText}</button></div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
               <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
