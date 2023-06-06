@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH } from '../components/InputProblem'
+import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH, buildClassName } from '../components/InputProblem'
 import '@testing-library/jest-dom'
 
 test('InputProblem renders with content, input and button', async () => {
@@ -24,6 +24,7 @@ test('InputProblem renders with content, input and button', async () => {
   screen.getByText('Content')
   screen.getByRole('textbox')
   expect(document.querySelector('input')).not.toBeNull()
+  await screen.findByText('Attempts left: Unlimited')
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
@@ -47,6 +48,7 @@ test('InputProblem renders without contentId', async () => {
 
   screen.getByText('Content')
   screen.getByRole('textbox')
+  await screen.findByText('Attempts left: Unlimited')
   expect(document.querySelector('input')).not.toBeNull()
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
@@ -64,7 +66,7 @@ test('Text InputProblem button click with correct answer should evaluate to corr
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={''}
-          retryLimit={0}
+          retryLimit={1}
           solution={' Apple '}
           buttonText={'Submit'}
           comparator={'text'}
@@ -73,6 +75,7 @@ test('Text InputProblem button click with correct answer should evaluate to corr
           />
   )
 
+  await screen.findByText('Attempts left: 2/2')
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Apple ' } })
     screen.getByRole('button').click()
@@ -80,6 +83,8 @@ test('Text InputProblem button click with correct answer should evaluate to corr
   await screen.findByText('Correct!')
   expect(screen.getByRole('textbox')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
+  await screen.findByText('Attempts left: 2/2')
+
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
@@ -192,7 +197,7 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
           content={'Content'}
           correctResponse={''}
           encourageResponse={'Try again!'}
-          retryLimit={0}
+          retryLimit={1}
           solution={' 5 '}
           buttonText={'Submit'}
           comparator={'integer'}
@@ -200,10 +205,13 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
           answerResponses={[]}
           />
   )
+
+  await screen.findByText('Attempts left: 2/2')
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/2')
   await screen.findByText('Try again!')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
@@ -231,18 +239,22 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
           answerResponses={[]}
           />
   )
+  await screen.findByText('Attempts left: 4/4')
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
     screen.getByRole('button').click()
     screen.getByRole('button').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/4')
+
   await screen.findByText('Try again!')
 
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 0/4')
 
   await screen.findByText('No more attempts allowed')
   expect(screen.getByRole('textbox')).toBeDisabled()
@@ -378,4 +390,15 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
     true,
     'dataContentId'
   )
+})
+
+test('Test buildClassName', async () => {
+  const result = buildClassName('', 'solution', false)
+  expect(result).toBe('os-form-control mb-3')
+
+  const correct = buildClassName('answer', 'answer', true)
+  expect(correct).toBe('os-form-control mb-3 os-form-control-correct-answer-choice disabled')
+
+  const incorrect = buildClassName('answer', 'solution', true)
+  expect(incorrect).toBe('os-form-control mb-3 os-form-control-wrong-answer-choice disabled')
 })

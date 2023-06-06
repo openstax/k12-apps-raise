@@ -4,6 +4,7 @@ import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
+import { AttemptsCounter } from './AttemptsCounter'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -17,6 +18,17 @@ interface InputSchema {
 
 interface InputFormValues {
   response: string
+}
+
+export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+  let className = 'os-form-control mb-3'
+  if (solution === response && formDisabled) {
+    className += ' os-form-control-correct-answer-choice disabled'
+  }
+  if (solution !== response && formDisabled) {
+    className += ' os-form-control-wrong-answer-choice disabled'
+  }
+  return className
 }
 
 export const InputProblem = ({
@@ -67,7 +79,6 @@ export const InputProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-
     if (evaluateInput(values.response.trim(), solution.trim())) {
       correct = true
       setFeedback(correctResponse)
@@ -78,6 +89,7 @@ export const InputProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setRetriesAllowed(currRetries => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setInputDisabled(true)
@@ -106,18 +118,20 @@ export const InputProblem = ({
           onSubmit={handleSubmit}
           validationSchema={schema}
         >
-          {({ isSubmitting, setFieldValue }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form >
               <Field
               name="response"
+              placeholder="Enter the value."
               disabled={inputDisabled || isSubmitting}
               autoComplete={'off'}
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-              className="os-form-control mb-3" />
+              className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
               <ErrorMessage className="text-danger mb-3" component="div" name="response" />
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="btn btn-outline-primary">{buttonText}</button>
-              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
-
+              <div className="os-raise-text-center mt-4">
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary mt-3">{buttonText}</button></div>
+              {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-raise-feedback-message" /> : null}
+              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
           )}
         </Formik>
