@@ -163,31 +163,53 @@ Users can attempt to answer questions and check their solution. Retries are allo
   <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Input problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Dropdown problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Multiple choice problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Multiselect problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-correct-response">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Correct Answer!</p>
   </div>
   <div class="os-raise-ib-pset-encourage-response">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Encouragement!</p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameZ"` attribute is removed and the user submits answers.
+
+<div style="text-align: center;">
+    <img src="./static/input_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/dropdown_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/multichoice_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/multiselect_problem.png" width="450">
+</div>
+
 
 ##### Problem specific overrides:
 
