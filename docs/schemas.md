@@ -35,8 +35,15 @@ The Content-only block is used to wrap HTML content which should be conditionall
 ```html
 <div class="os-raise-ib-content" data-wait-for-event="eventname" data-schema-version="1.0">
   <!-- INSERT ANY VALID HTML HERE -->
+  <p>Content Input block</p>
 </div>
 ```
+The output if the `data-wait-for-event="eventname"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/content_block.png" width="200">
+</div>
+
 
 Notes on schema:
 
@@ -63,12 +70,21 @@ When the button is clicked, the component will:
 <div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-cta-content">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>CTA block content</p>
   </div>
   <div class="os-raise-ib-cta-prompt">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Click button to see solution</p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameX"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/cta_block.png" width="200">
+</div>
+
 
 Notes on schema:
 
@@ -101,15 +117,25 @@ When the button is clicked, the component will:
 <div class="os-raise-ib-input" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-input-content">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Input content... </p>
   </div>
   <div class="os-raise-ib-input-prompt">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Input prompt... </p>
+
   </div>
   <div class="os-raise-ib-input-ack">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Thank you for your input!</p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameX"` attribute is removed and the user submits an answer.
+
+<div style="text-align: center;">
+    <img src="./static/input_block.png" width="450">
+</div>
 
 Notes on schema:
 

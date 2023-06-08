@@ -597,7 +597,7 @@ Any element
 **Usage**
 
 ```html
-<p class="os-raise-indent">Text in a box</p>
+<p class="os-raise-indent">Indented text</p>
 ```
 
 ---
@@ -620,9 +620,8 @@ Ordered list objects
 
 ```html
 <ol class="os-raise-noindent">
-  <li>Item A</li>
-  <li>Item B</li>
-  <li>Item C</li>
+  <li>Not Indented item 1</li>
+  <li>Not Indented item 2</li>
 </ol>
 ```
 
