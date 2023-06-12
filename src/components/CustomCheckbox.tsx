@@ -27,11 +27,11 @@ export const Checkbox = ({
   return (
     <div className='os-flex os-align-items-center os-height-100'>
         {showCorrectAnswer
-          ? <CorrectAnswerIcon />
+          ? <CorrectAnswerIcon className={'os-ml'} />
           : <></>
         }
         {showWrongAnswer
-          ? <WrongAnswerIcon />
+          ? <WrongAnswerIcon className={'os-ml'} />
           : <></>
         }
       <label className={`form-check-label os-label-container ${showAnswer ? 'os-no-cursor-pointer' : ''} ${type === 'checkbox' ? 'os-flex' : ''}`}>

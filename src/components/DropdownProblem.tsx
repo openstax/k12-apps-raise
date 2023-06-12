@@ -5,6 +5,7 @@ import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
+import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 
 interface DropdownProblemProps extends BaseProblemProps {
   solutionOptions: string
@@ -15,7 +16,7 @@ interface DropdownFormValues {
 }
 
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
-  let className = 'os-form-select mb-3'
+  let className = 'os-form-select'
   if (response !== '') {
     className += ' os-selected-answer-choice'
   }
@@ -108,16 +109,28 @@ export const DropdownProblem = ({
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
-            <Field
-              name="response"
-              as="select"
-              value={values.response}
-              disabled={isSubmitting || formDisabled}
-              className={buildClassName(values.response, solution, formDisabled)}
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-            >
+            <div className='os-flex os-align-items-center'>
+              {solution === values.response && formDisabled &&
+                <div>
+                  <CorrectAnswerIcon className={'os-mr'} />
+                </div>
+              }
+              {solution !== values.response && formDisabled &&
+                <div>
+                  <WrongAnswerIcon className={'os-mr'} />
+                </div>
+              }
+              <Field
+                name="response"
+                as="select"
+                value={values.response}
+                disabled={isSubmitting || formDisabled}
+                className={buildClassName(values.response, solution, formDisabled)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+              >
               {generateOptions()}
-            </Field>
+              </Field>
+            </div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
             <div className="os-text-center mt-4">
               <button

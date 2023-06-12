@@ -125,10 +125,10 @@
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
-    width: 98%;
-    border: 1px solid $os-default-answer-border-color;
+    border: 2px solid $os-default-answer-border-color;
     border-radius: 5px;
-    box-shadow: 1px 5px 5px -3px $os-default-box-shadow;
+    box-shadow: 0 2px 2px $os-default-box-shadow;
+    padding: .75rem;
   }
 
   // Extends Multiple Choice & Multi Select Styles

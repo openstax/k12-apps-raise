@@ -394,11 +394,11 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
 
 test('Test buildClassName', async () => {
   const result = buildClassName('', 'solution', false)
-  expect(result).toBe('os-form-control mb-3')
+  expect(result).toBe('os-form-control')
 
   const correct = buildClassName('answer', 'answer', true)
-  expect(correct).toBe('os-form-control mb-3 os-correct-answer-choice os-disabled')
+  expect(correct).toBe('os-form-control os-correct-answer-choice os-disabled')
 
   const incorrect = buildClassName('answer', 'solution', true)
-  expect(incorrect).toBe('os-form-control mb-3 os-wrong-answer-choice os-disabled')
+  expect(incorrect).toBe('os-form-control os-wrong-answer-choice os-disabled')
 })

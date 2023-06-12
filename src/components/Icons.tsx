@@ -1,12 +1,16 @@
 import React from 'react'
 
-export const CorrectAnswerIcon: React.FC = () => (
+interface IconProps {
+  className?: string
+}
+
+export const CorrectAnswerIcon: React.FC<IconProps> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    className="os-ml"
+    className={className}
   >
     <path
       fill="#019920"
@@ -15,13 +19,13 @@ export const CorrectAnswerIcon: React.FC = () => (
   </svg>
 )
 
-export const WrongAnswerIcon: React.FC = () => (
+export const WrongAnswerIcon: React.FC<IconProps> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
     height="24"
     viewBox="0 0 24 24"
-    className="os-ml"
+    className={className}
   >
     <path
       fill="#fc0516"
