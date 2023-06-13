@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
 import * as Yup from 'yup'
+import { AttemptsCounter } from './AttemptsCounter'
+import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 
 interface DropdownProblemProps extends BaseProblemProps {
   solutionOptions: string
@@ -11,6 +13,20 @@ interface DropdownProblemProps extends BaseProblemProps {
 
 interface DropdownFormValues {
   response: string
+}
+
+export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+  let className = 'os-form-select'
+  if (response !== '') {
+    className += ' os-selected-answer-choice'
+  }
+  if (solution === response && formDisabled) {
+    className += ' os-correct-answer-choice os-disabled'
+  }
+  if (solution !== response && formDisabled) {
+    className += ' os-wrong-answer-choice os-disabled'
+  }
+  return className
 }
 
 export const DropdownProblem = ({
@@ -65,6 +81,7 @@ export const DropdownProblem = ({
       setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      setRetriesAllowed((currRetries) => currRetries + 1)
       setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
@@ -92,19 +109,40 @@ export const DropdownProblem = ({
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
-            <Field
-              name="response"
-              as="select"
-              value={values.response}
-              disabled={isSubmitting || formDisabled}
-              className="os-form-select mb-3"
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-            >
+            <div className='os-flex os-align-items-center'>
+              {solution === values.response && formDisabled &&
+                <div>
+                  <CorrectAnswerIcon className={'os-mr'} />
+                </div>
+              }
+              {solution !== values.response && formDisabled &&
+                <div>
+                  <WrongAnswerIcon className={'os-mr'} />
+                </div>
+              }
+              <Field
+                name="response"
+                as="select"
+                value={values.response}
+                disabled={isSubmitting || formDisabled}
+                className={buildClassName(values.response, solution, formDisabled)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+              >
               {generateOptions()}
-            </Field>
+              </Field>
+            </div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <button type="submit" disabled={isSubmitting || formDisabled} className="btn btn-outline-primary">{buttonText}</button>
-            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3" /> : null }
+            <div className="os-text-center mt-4">
+              <button
+                className="os-btn btn-outline-primary"
+                type="submit"
+                disabled={isSubmitting || formDisabled}
+              >
+                {buttonText}
+              </button>
+            </div>
+            {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null }
+            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>

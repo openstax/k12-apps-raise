@@ -1,5 +1,5 @@
 import { render, screen, act } from '@testing-library/react'
-import { MultipleChoiceProblem } from '../components/MultipleChoiceProblem'
+import { MultipleChoiceProblem, buildClassName } from '../components/MultipleChoiceProblem'
 import '@testing-library/jest-dom'
 
 test('MultipleChoiceProblem renders', async () => {
@@ -98,6 +98,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     answerResponses={[]}
     />
   )
+  await screen.findByText('Attempts left: Unlimited')
 
   await act(async () => {
     screen.getByText('Option 2').click()
@@ -193,6 +194,7 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     answerResponses={[]}
     />
   )
+  await screen.findByText('Attempts left: 4/4')
 
   await act(async () => {
     screen.getByText('Option 1').click()
@@ -200,6 +202,8 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     screen.getByRole('button').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/4')
+
   await screen.findByText('Try again!')
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
@@ -209,6 +213,8 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     screen.getByText('Option 1').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 0/4')
+
   expect(screen.queryByText('Try again!')).toBeNull()
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
@@ -300,11 +306,14 @@ test('MultipleChoiceProblem calls the onProblemAttempt handler', async () => {
     onProblemAttempt={problemAttemptedHandler}
     />
   )
+  await screen.findByText('Attempts left: 2/2')
 
   await act(async () => {
     screen.getByText('Option 1').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/2')
+
   expect(problemAttemptedHandler).toBeCalledTimes(1)
   expect(problemAttemptedHandler).toHaveBeenCalledWith(
     'Option 1',
@@ -325,4 +334,21 @@ test('MultipleChoiceProblem calls the onProblemAttempt handler', async () => {
     true,
     'dataContentId'
   )
+})
+
+test('returns the correct className string', () => {
+  const val = 'A'
+  let solution = 'A'
+  const response = 'A'
+  const showAnswers = true
+
+  let className = buildClassName(val, solution, response, showAnswers)
+
+  expect(className).toEqual('os-form-check os-default-answer-choice os-correct-answer-choice os-disabled os-selected-answer-choice')
+
+  solution = 'B'
+
+  className = buildClassName(val, solution, response, showAnswers)
+
+  expect(className).toEqual('os-form-check os-default-answer-choice os-wrong-answer-choice os-disabled os-selected-answer-choice')
 })

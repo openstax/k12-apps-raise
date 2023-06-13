@@ -69,7 +69,7 @@ test('math and tooltip is rendered in cta blocks', async ({ page }) => {
 
 test('math is rendered in Multiselect question', async ({ page }) => {
   const htmlContent = `
-  <div class="os-raise-ib-pset" data-schema-version="1.0">
+  <div class="os-raise-ib-pset" data-retry-limit="3" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red"]' data-solution-options='["red", "blue", "green"]'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">Multiselect problem content: \\( x^2 \\)</p>
@@ -86,13 +86,16 @@ test('math is rendered in Multiselect question', async ({ page }) => {
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   await page.waitForSelector('#problem .MathJax')
+  await page.waitForSelector('text=Attempts left: 4/4')
   await page.locator('text=green').click()
   await page.locator('text=Check').click()
+  await page.waitForSelector('text=Attempts left: 3/4')
   await page.waitForSelector('#encourage .MathJax')
   await page.check('text=red')
   await page.uncheck('text=green')
   await page.locator('text=Check').click()
   await page.waitForSelector('#correct .MathJax')
+  await page.waitForSelector('text=Attempts left: 3/4')
 })
 
 test('math is rendered in Multiselect answer', async ({ page }) => {
@@ -172,8 +175,7 @@ test('math is rendered in MultipleChoiceProblem question', async ({ page }) => {
   await page.locator('text=green').click()
   await page.locator('text=Check').click()
   await page.waitForSelector('#encourage .MathJax')
-  await page.check('input >> nth=0')
-  await page.uncheck('text=green')
+  await page.check('.form-check-label >> nth=0')
   await page.locator('text=Check').click()
   await page.waitForSelector('#correct .MathJax')
 })
@@ -201,8 +203,10 @@ test('math is rendered in user input answer', async ({ page }) => {
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
   await page.waitForSelector('#problem .MathJax')
+  await page.waitForSelector('text=Attempts left: 4/4')
   await page.fill('input', ' 41')
   await page.click('button')
+  await page.waitForSelector('text=Attempts left: 3/4')
   await page.waitForSelector('#encourage .MathJax')
   await page.fill('input', ' 42')
   await page.click('button')
@@ -232,8 +236,7 @@ test('math is rendered in MultipleChoice answer', async ({ page }) => {
   await page.locator('text=blue').click()
   await page.locator('text=Check').click()
   await page.waitForSelector('#encourage .MathJax')
-  await page.check('input >> nth=0')
-  await page.uncheck('text=green')
+  await page.check('.form-check-label >> nth=0')
   await page.locator('text=Check').click()
   await page.waitForSelector('#correct .MathJax')
 })
