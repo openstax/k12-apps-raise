@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react'
 import { Formik, Form, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
-import { Checkbox } from './CustomCheckbox'
+import { FormSelectable } from './FormSelectable'
 import { AttemptsCounter } from './AttemptsCounter'
 
 interface MultipleChoiceProps extends BaseProblemProps {
@@ -86,7 +86,7 @@ export const MultipleChoiceProblem = ({
           key={val}
           className={buildClassName(val, solution, values.response, showAnswers)}
         >
-          <Checkbox
+          <FormSelectable
             label={val}
             type="radio"
             correct={solution === val}

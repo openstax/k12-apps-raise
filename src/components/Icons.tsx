@@ -1,10 +1,8 @@
-import React from 'react'
-
 interface IconProps {
-  className?: string
+  className: string
 }
 
-export const CorrectAnswerIcon: React.FC<IconProps> = ({ className }) => (
+export const CorrectAnswerIcon = ({ className }: IconProps): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"
@@ -19,7 +17,7 @@ export const CorrectAnswerIcon: React.FC<IconProps> = ({ className }) => (
   </svg>
 )
 
-export const WrongAnswerIcon: React.FC<IconProps> = ({ className }) => (
+export const WrongAnswerIcon = ({ className }: IconProps): JSX.Element => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="24"

@@ -1,6 +1,6 @@
 import { Field } from 'formik'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
-interface CheckboxProps {
+interface FormSelectableProps {
   label: string
   type: string
   correct: boolean
@@ -10,7 +10,7 @@ interface CheckboxProps {
   selected: boolean
 }
 
-export const Checkbox = ({
+export const FormSelectable = ({
   label,
   type,
   correct,
@@ -18,7 +18,7 @@ export const Checkbox = ({
   onChange,
   showAnswer,
   selected
-}: CheckboxProps): JSX.Element => {
+}: FormSelectableProps): JSX.Element => {
   const showCorrectAnswer =
     selected && correct && showAnswer
   const showWrongAnswer =

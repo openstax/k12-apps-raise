@@ -4,7 +4,7 @@ import { determineFeedback } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { Formik, Form, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { Checkbox } from './CustomCheckbox'
+import { FormSelectable } from './FormSelectable'
 import { AttemptsCounter } from './AttemptsCounter'
 
 interface MultiselectProps extends BaseProblemProps {
@@ -98,7 +98,7 @@ export const MultiselectProblem = ({
 
     parsedOptionValues.forEach(val => options.push(
       <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
-        <Checkbox label={val}
+        <FormSelectable label={val}
           type='checkbox'
           correct={solutionArray.includes(val)}
           disabled={isSubmitting || formDisabled}
