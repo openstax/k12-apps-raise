@@ -676,10 +676,46 @@ the side by side content.
 - `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element.
 
 ```html
+<h3>os-raise-d-flex</h3>
+<div class="os-raise-d-flex">
+    <p>P1</p>
+    <h2>H2</h2>
+    <p>P2</p>
+    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+</div>
+
+<h3>os-raise-align-items-center</h3>
 <div class="os-raise-d-flex os-raise-align-items-center">
-  <p>Element 1</p>
-  <p>Element 2</p>
-  <p>Element 3</p>
+    <p>P1</p>
+    <h2>H2</h2>
+    <p>p2</p>
+    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+</div>
+
+<h3>os-raise-justify-content-center</h3>
+<div class="os-raise-d-flex os-raise-justify-content-center">
+    <p>P1</p>
+    <p>P2</p>
+
+
+</div>
+
+<h3>os-raise-justify-content-between</h3>
+<div class="os-raise-d-flex os-raise-justify-content-between">
+    <p>P1</p>
+    <p>P2</p>
+    <p>P3</p>
+    <h3>H3</h3>
+
+</div>
+
+<h3>os-raise-justify-content-evenly</h3>
+<div class="os-raise-d-flex os-raise-justify-content-evenly">
+    <p>P1</p>
+    <p>P2</p>
+    <h3>h3</h3>
+    <p>P2</p>
+
 </div>
 ```
 
