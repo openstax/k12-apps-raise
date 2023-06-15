@@ -68,9 +68,16 @@
   --bs-body-color-rgb: 33, 37, 41;
   --bs-body-bg-rgb: 255, 255, 255;
   /* stylelint-disable-next-line max-line-length */
-  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgb(255 255 255 / 15%), rgb(255 255 255 / 0%));
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", roboto,
+    "Helvetica Neue", "Noto Sans", "Liberation Sans", arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: sfmono-regular, menlo, monaco, consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 15%),
+    rgb(255 255 255 / 0%)
+  );
   --bs-body-font-family: var(--bs-font-sans-serif);
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
@@ -92,17 +99,61 @@
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
 
+  // Variables
+  $os-default-answer-border-color: #424242;
+  $os-medium-gray: #626262;
+  $os-default-box-shadow: #808080;
+
+  // Extends Select Element for Dropdown Styles
   .os-form-select {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-select;
 
-    width: unset;
+    border: 2px solid $os-default-answer-border-color;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px $os-default-box-shadow;
+    padding: .75rem 2.25rem .75rem .75rem;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" viewBox="0 0 22 22"%3E%3Cpath fill="currentColor" d="m7 10l5 5l5-5z"%2F%3E%3C%2Fsvg%3E'), linear-gradient(#f5f5f5, #f5f5f5),;
+    background-size: 40px 50px;
+    background-position: right 0 center;
+    color: $os-medium-gray;
   }
 
+  // Extends Input Element for Input Styles
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
-    width: unset;
+    border: 2px solid $os-default-answer-border-color;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px $os-default-box-shadow;
+    padding: .75rem;
+  }
+
+  // Extends Multiple Choice & Multi Select Styles
+  .os-form-check {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check;
+
+    padding-left: 0;
+  }
+
+  // Extends Checkbox for Multi Select Styles
+  .os-form-check-input {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .form-check-input;
+
+    min-width: 1.2em;
+    min-height: 1.2em;
+    border: 2px solid $os-default-answer-border-color;
+  }
+
+  // Extends Check Button for All Interactives
+  .os-btn {
+    /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
+    @extend .btn;
+
+    padding: 8px 32px;
   }
 }
