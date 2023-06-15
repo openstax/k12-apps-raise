@@ -200,7 +200,7 @@ Users can attempt to answer questions and check their solution. Retries are allo
 </div>
 ```
 
-The output if the `data-wait-for-event="eventnameZ"` attribute is removed and the user submits answers.
+The output if the `data-wait-for-event="eventnameZ"` attribute is removed.
 
 <div style="text-align: center;">
     <img src="./static/input_problem.png" width="450">
