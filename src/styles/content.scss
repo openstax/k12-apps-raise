@@ -151,6 +151,10 @@ table.os-raise-textheavytable {
     text-align: left;
   }
 
+  td {
+    vertical-align: top;
+  }
+
   td:first-child {
     border-left: none;
   }
