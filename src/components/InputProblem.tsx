@@ -134,7 +134,6 @@ export const InputProblem = ({
                 }
                 <Field
                 name="response"
-                placeholder="Enter the value."
                 disabled={inputDisabled || isSubmitting}
                 autoComplete={'off'}
                 onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}

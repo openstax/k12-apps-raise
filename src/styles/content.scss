@@ -150,6 +150,15 @@ table.os-raise-textheavytable {
   td {
     text-align: left;
   }
+  
+  /* stylelint-disable-next-line no-descending-specificity */
+  th {
+    vertical-align: bottom;
+  }
+
+  td {
+    vertical-align: top;
+  }
 
   td:first-child {
     border-left: none;
