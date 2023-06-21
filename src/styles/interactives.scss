@@ -14,7 +14,7 @@ div.os-grid {
   grid-gap: 2rem;
 }
 
-div.os-default-answer-choice {
+.os-default-answer-choice {
   border: 2px solid $os-default-answer-border-color;
   border-radius: 5px;
   box-shadow: 0 2px 2px $os-default-box-shadow;
@@ -120,7 +120,7 @@ div.os-justify-content-end {
   justify-content: end;
 }
 
-.os-disabled.os-disabled {
+.os-disabled {
   pointer-events: none;
   box-shadow: none;
 }
