@@ -14,10 +14,14 @@ div.os-grid {
   grid-gap: 2rem;
 }
 
-div.os-default-answer-choice {
+.os-default-answer-choice {
   border: 2px solid $os-default-answer-border-color;
   border-radius: 5px;
   box-shadow: 0 2px 2px $os-default-box-shadow;
+}
+
+div.os-default-answer-choice:focus-within {
+  border-color: $os-selected-focus-border-color;
 }
 
 div.os-default-answer-choice > div:hover {
@@ -34,11 +38,6 @@ label.os-label-container {
 }
 
 // Multiple Choice Styles
-.os-form-check-input[type="checkbox"] {
-  margin-right: .5rem;
-  margin-top: 0;
-}
-
 input.os-hide-input-button {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
@@ -50,6 +49,10 @@ input.os-hide-input-button {
 }
 
 // Multi Select Styles
+.os-form-check-input[type="checkbox"] {
+  margin-right: .5rem;
+  margin-top: 0;
+}
 
 .os-form-check-input.os-form-check-input:focus {
   box-shadow: 0 0 0 0.25rem #159db271;
@@ -148,4 +151,3 @@ div.os-justify-content-end {
 .os-height-100 {
   height: 100%;
 }
-

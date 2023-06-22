@@ -19,9 +19,13 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
   let className = 'os-default-answer-choice'
 
   if (solutionArray.includes(val) && showAnswers) {
-    className += ' os-correct-answer-choice os-disabled'
+    className += ' os-correct-answer-choice'
   } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
-    className += ' os-wrong-answer-choice os-disabled'
+    className += ' os-wrong-answer-choice'
+  }
+
+  if (showAnswers) {
+    className += ' os-disabled'
   }
 
   if (values.response.includes(val)) {

@@ -17,15 +17,23 @@ interface MultipleChoiceFormValues {
 
 export function buildClassName(val: string, solution: string, response: string, showAnswers: boolean): string {
   let className = 'os-form-check os-default-answer-choice'
+
   if (solution === val && response === val && showAnswers) {
-    className += ' os-correct-answer-choice os-disabled'
+    className += ' os-correct-answer-choice'
   }
+
   if (solution !== val && response === val && showAnswers) {
-    className += ' os-wrong-answer-choice os-disabled'
+    className += ' os-wrong-answer-choice'
   }
+
+  if (showAnswers) {
+    className += ' os-disabled'
+  }
+
   if (response === val) {
     className += ' os-selected-answer-choice'
   }
+
   return className
 }
 
