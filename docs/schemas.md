@@ -35,8 +35,15 @@ The Content-only block is used to wrap HTML content which should be conditionall
 ```html
 <div class="os-raise-ib-content" data-wait-for-event="eventname" data-schema-version="1.0">
   <!-- INSERT ANY VALID HTML HERE -->
+  <p>Content Input block</p>
 </div>
 ```
+The output if the `data-wait-for-event="eventname"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/content_block.png" width="200">
+</div>
+
 
 Notes on schema:
 
@@ -63,12 +70,21 @@ When the button is clicked, the component will:
 <div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-cta-content">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>CTA block content</p>
   </div>
   <div class="os-raise-ib-cta-prompt">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Click button to see solution</p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameX"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/cta_block.png" width="200">
+</div>
+
 
 Notes on schema:
 
@@ -95,21 +111,36 @@ When the button is clicked, the component will:
 * Disable the button
 * Display the acknowledgement HTML
 
+If students are entering something into a text block, be sure to follow these conventions:
+
+- Use the phrase “Enter your answer here:” to prompt students.
+- Use the phrase “Compare your answer:” at the beginning of the displayed answer in the acknowledgement HTML if it is showing a solution.
+
 #### Schema definition
 
 ```html
 <div class="os-raise-ib-input" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-input-content">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Input content... </p>
   </div>
   <div class="os-raise-ib-input-prompt">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Enter your answer here: </p>
+
   </div>
   <div class="os-raise-ib-input-ack">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>“Compare your answer: ... </p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameY"` attribute is removed and the user submits an answer.
+
+<div style="text-align: center;">
+    <img src="./static/input_block.png" width="450">
+</div>
 
 Notes on schema:
 
@@ -137,31 +168,53 @@ Users can attempt to answer questions and check their solution. Retries are allo
   <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Input problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Dropdown problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Multiple choice problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
     <div class="os-raise-ib-pset-problem-content">
       <!-- INSERT ANY VALID HTML HERE -->
+      <p>Multiselect problem content</p>
     </div>
   </div>
   <div class="os-raise-ib-pset-correct-response">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Correct Answer!</p>
   </div>
   <div class="os-raise-ib-pset-encourage-response">
     <!-- INSERT ANY VALID HTML HERE -->
+    <p>Encouragement!</p>
   </div>
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameZ"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/input_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/dropdown_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/multichoice_problem.png" width="450">
+</div>
+<div style="text-align: center;">
+    <img src="./static/multiselect_problem.png" width="450">
+</div>
+
 
 ##### Problem specific overrides:
 
@@ -270,7 +323,7 @@ A Content tooltip block is an in-line block which allows content developers to a
 
 #### Description
 
-The Desmos graphing calculator block displays a graph and an expressions panel. Add expressions to the graph by passing a JSON array into the optional `data-equations` attribute, where each element represents a new equation or point that will be added to the expressions panel. Tables can be added to the expressions panel by adding a JSON array to the `data-tables` attribute. The `data-bottom`, `data-top`, `data-left`, and `data-right` attributes take number values and define where the graph viewport sits. If only the graph is needed, the expressions panel can be removed by passing the optional `data-disable-expressions` attribute. The size of the Desmos interactive can be set by passing an integer value into the `data-width` and `data-height` attributes. 
+The Desmos graphing calculator block displays a graph and an expressions panel. Add expressions to the graph by passing a JSON array into the optional `data-equations` attribute, where each element represents a new equation or point that will be added to the expressions panel. Tables can be added to the expressions panel by adding a JSON array to the `data-tables` attribute. The tables will show up first in the expressions panel. The `data-bottom`, `data-top`, `data-left`, and `data-right` attributes take number values and define where the graph viewport sits. If only the graph is needed, the expressions panel can be removed by passing the optional `data-disable-expressions` attribute. The size of the Desmos interactive can be set by passing an integer value into the `data-width` and `data-height` attributes. 
 
 #### Schema definition
 
@@ -281,12 +334,25 @@ The following template provides an example with a Desmos graphing calculator blo
 </div>
 ```
 
+
+The output if the `data-wait-for-event="eventnameY"` attribute is removed.
+
+<div style="text-align: center;">
+    <img src="./static/desmos-example.png" width="450">
+</div>
+
 The following template is an example with two tables
 
 ```html
 <div class="os-raise-ib-desmos-gc" data-wait-for-event="eventnameY"  data-height="500" data-width="600"  data-equations='["(1,2)","x=5"]' data-tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "x_2", "values": [3, 5]}],[{"variable": "x_3", "values": [10, 13]},{"variable": "x_4", "values": [7, -4]}]]'  data-disable-expressions data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-schema-version="1.0">
 </div>
 ```
+
+The output if the `data-wait-for-event="eventnameY"` and `data-disable-expressions` attributes are removed.
+
+<div style="text-align: center;">
+    <img src="./static/desmos-with-table.png" width="450">
+</div>
 
 Notes on schema:
 
