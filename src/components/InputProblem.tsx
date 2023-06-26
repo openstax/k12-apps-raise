@@ -136,7 +136,7 @@ export const InputProblem = ({
                 name="response"
                 disabled={inputDisabled || isSubmitting}
                 autoComplete={'off'}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
                 className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />

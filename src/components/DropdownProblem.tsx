@@ -126,7 +126,7 @@ export const DropdownProblem = ({
                 value={values.response}
                 disabled={isSubmitting || formDisabled}
                 className={buildClassName(values.response, solution, formDisabled)}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
               >
               {generateOptions()}
               </Field>
