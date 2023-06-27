@@ -48,7 +48,7 @@ export const FormSelectable = ({
           value={label}
       >
       </Field>
-        {label}
+        <span>{label}</span>
       </label>
     </div>
   )
