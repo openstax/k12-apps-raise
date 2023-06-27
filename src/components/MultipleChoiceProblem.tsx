@@ -1,7 +1,7 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { useCallback, useState } from 'react'
-import { Formik, Form, ErrorMessage } from 'formik'
+import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { FormSelectable } from './FormSelectable'
@@ -79,13 +79,14 @@ export const MultipleChoiceProblem = ({
   const generateOptions = (
     values: MultipleChoiceFormValues,
     isSubmitting: boolean,
-    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean) => Promise<void | FormikErrors<MultipleChoiceFormValues>>
   ): JSX.Element[] => {
     const options: JSX.Element[] = []
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
       clearFeedback()
-      setFieldValue('response', e.target.value)
+      void setFieldValue('response', e.target.value)
     }
 
     parsedOptionValues.forEach((val) =>
