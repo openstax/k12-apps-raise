@@ -6,6 +6,9 @@ import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
+import { Mathfield } from './Mathfield'
+import { type MathfieldElement } from 'mathlive'
+import * as KAS from '@khanacademy/kas'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -72,6 +75,19 @@ export const InputProblem = ({
     if (comparator.toLowerCase() === 'float') {
       return parseFloat(input) === parseFloat(answer)
     }
+    if (comparator.toLowerCase() === 'math') {
+      // TODO: This only seems to work in some cases and needs more investigation / work.
+      const parsedInput = KAS.parse(input)
+      const parsedAnswer = KAS.parse(answer)
+
+      if ((parsedInput.parsed !== true) || (parsedAnswer.parsed !== true)) {
+        console.error(`Parsing error with input '${input}' or answer '${answer}':`)
+        console.error(parsedInput)
+        console.error(parsedAnswer)
+        return false
+      }
+      return KAS.compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
+    }
 
     return input.toLowerCase() === answer.toLowerCase()
   }
@@ -132,12 +148,27 @@ export const InputProblem = ({
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                <Field
-                name="response"
-                disabled={inputDisabled || isSubmitting}
-                autoComplete={'off'}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+              {
+                // TODO: Just hacking this in here to test math inputs via Mathfield for now
+                comparator.toLowerCase() === 'math'
+                  ? (
+                  <Field
+                    name="response"
+                    disabled={inputDisabled || isSubmitting}
+                    as={Mathfield}
+                    onChange={(e: React.ChangeEvent<MathfieldElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+                    className="os-form-control mb-3 w-50" />
+                    )
+                  : (
+                    <Field
+                    name="response"
+                    disabled={inputDisabled || isSubmitting}
+                    autoComplete={'off'}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
+                    className="os-form-control mb-3" />
+                    )
+              }
+
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className="os-text-center mt-4">
