@@ -8,10 +8,9 @@ MathfieldElement.soundsDirectory = null
 window.mathVirtualKeyboard.layouts = {
   rows: [
     [
-      '+', '-', '\\times', '\\frac{#@}{#?}', '=', '.',
-      '(', ')', '\\sqrt{#0}', '#@^{#?}'
+      '\\sqrt{#0}', '#@^{#?}', '+', '-', '\\times', '\\frac{#@}{#?}', '\\gt', '\\lt', '\\ge', '\\le', '=', '.', '\\pi'
     ],
-    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'y', 'x', '(', ')']
   ]
 }
 
@@ -20,6 +19,7 @@ window.mathVirtualKeyboard.addEventListener('geometrychange', (ev) => {
   // resize when the undo, redo, ... buttons appear.
   if (window.mathVirtualKeyboard.container !== null) {
     window.mathVirtualKeyboard.container.style.height = `${window.mathVirtualKeyboard.boundingRect.height}px`
+    window.mathVirtualKeyboard.container.style.width = `${window.mathVirtualKeyboard.boundingRect.width}px`
   }
 })
 
@@ -32,13 +32,13 @@ interface MathfieldProps {
 export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
   const mathKeyboardRef = useRef<HTMLDivElement>(null)
-
   useEffect(() => {
     const maybeMathfield = mathfieldRef.current
     const maybeMathKeyboard = mathKeyboardRef.current
     if ((maybeMathfield === null) || (maybeMathKeyboard === null)) {
       return
     }
+    maybeMathfield.style.width = '500px'
 
     maybeMathfield.addEventListener('focusout', (ev) => {
       maybeMathKeyboard.style.display = 'none'
@@ -51,10 +51,10 @@ export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JS
       const r = maybeMathfield.getBoundingClientRect()
       maybeMathKeyboard.style.display = 'block'
       const w = maybeMathKeyboard.offsetWidth
-      maybeMathKeyboard.style.top = `${r.bottom + 16}px`
+      maybeMathKeyboard.style.top = `${r.bottom + 1}px`
       maybeMathKeyboard.style.left = `${r.left + r.width / 2 - w / 2}px`
       maybeMathKeyboard.style.height = '500px'
-      maybeMathKeyboard.style.width = '25vw'
+      maybeMathKeyboard.style.width = '50vw'
       maybeMathKeyboard.style.minWidth = '320px'
       window.mathVirtualKeyboard.show()
     })
@@ -65,7 +65,7 @@ export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JS
         onChange(ev as unknown as React.ChangeEvent<MathfieldElement>) // RN: Yeah, this is a total hack but I didn't want to deal with it during the spike :joy:
       }
     })
-  }, [mathfieldRef, mathKeyboardRef])
+  }, [mathfieldRef, mathKeyboardRef, disabled])
 
   return (
     <div>

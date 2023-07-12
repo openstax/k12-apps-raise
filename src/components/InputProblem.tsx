@@ -157,7 +157,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onChange={(e: React.ChangeEvent<MathfieldElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-                    className="os-form-control mb-3 w-50" />
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
                     )
                   : (
                     <Field
@@ -165,7 +165,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); setFieldValue('response', e.target.value) }}
-                    className="os-form-control mb-3" />
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
                     )
               }
 
