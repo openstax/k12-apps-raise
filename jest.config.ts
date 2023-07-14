@@ -13,4 +13,5 @@ export default {
   },
   setupFiles: ['<rootDir>/jest.setup.ts'],
   verbose: true
+
 }

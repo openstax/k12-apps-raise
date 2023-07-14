@@ -8,7 +8,6 @@ import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
-import * as KAS from '@khanacademy/kas'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -75,19 +74,6 @@ export const InputProblem = ({
     if (comparator.toLowerCase() === 'float') {
       return parseFloat(input) === parseFloat(answer)
     }
-    if (comparator.toLowerCase() === 'math') {
-      // TODO: This only seems to work in some cases and needs more investigation / work.
-      const parsedInput = KAS.parse(input)
-      const parsedAnswer = KAS.parse(answer)
-
-      if ((parsedInput.parsed !== true) || (parsedAnswer.parsed !== true)) {
-        console.error(`Parsing error with input '${input}' or answer '${answer}':`)
-        console.error(parsedInput)
-        console.error(parsedAnswer)
-        return false
-      }
-      return KAS.compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
-    }
 
     return input.toLowerCase() === answer.toLowerCase()
   }
@@ -149,7 +135,6 @@ export const InputProblem = ({
                   </div>
                 }
               {
-                // TODO: Just hacking this in here to test math inputs via Mathfield for now
                 comparator.toLowerCase() === 'math'
                   ? (
                   <Field

@@ -19,7 +19,6 @@ window.mathVirtualKeyboard.addEventListener('geometrychange', (ev) => {
   // resize when the undo, redo, ... buttons appear.
   if (window.mathVirtualKeyboard.container !== null) {
     window.mathVirtualKeyboard.container.style.height = `${window.mathVirtualKeyboard.boundingRect.height}px`
-    window.mathVirtualKeyboard.container.style.width = `${window.mathVirtualKeyboard.boundingRect.width}px`
   }
 })
 
@@ -32,6 +31,7 @@ interface MathfieldProps {
 export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
   const mathKeyboardRef = useRef<HTMLDivElement>(null)
+  console.log(disabled)
   useEffect(() => {
     const maybeMathfield = mathfieldRef.current
     const maybeMathKeyboard = mathKeyboardRef.current
@@ -47,15 +47,15 @@ export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JS
 
     maybeMathfield.addEventListener('focusin', (ev) => {
       window.mathVirtualKeyboard.container = maybeMathKeyboard
-
       const r = maybeMathfield.getBoundingClientRect()
       maybeMathKeyboard.style.display = 'block'
       const w = maybeMathKeyboard.offsetWidth
       maybeMathKeyboard.style.top = `${r.bottom + 1}px`
       maybeMathKeyboard.style.left = `${r.left + r.width / 2 - w / 2}px`
-      maybeMathKeyboard.style.height = '500px'
+      maybeMathKeyboard.style.height = '600px'
       maybeMathKeyboard.style.width = '50vw'
       maybeMathKeyboard.style.minWidth = '320px'
+      maybeMathKeyboard.style.maxWidth = '500px'
       window.mathVirtualKeyboard.show()
     })
 
@@ -71,6 +71,8 @@ export const Mathfield = ({ className, disabled, onChange }: MathfieldProps): JS
     <div>
       <math-field
         class={className}
+        // on change will not work.
+        // onChange={onChange}
         ref={mathfieldRef}
         {...((disabled === true) ? { disabled: true } : {})}
       />

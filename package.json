@@ -16,17 +16,16 @@
     "build:authoring": "tsc && vite build -m authoring"
   },
   "dependencies": {
-    "@khanacademy/kas": "^0.3.1",
     "bootstrap": "^5.3.0",
     "formik": "^2.4.2",
+    "mathlive": "^0.93.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "mathlive": "^0.93.0",
     "uuid": "^9.0.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.35.1",
+    "@playwright/test": "^1.36.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@types/bootstrap": "^5.2.6",
