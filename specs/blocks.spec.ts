@@ -334,7 +334,6 @@ test('Math field component rendered', async ({ page }) => {
   await page.keyboard.type('42')
   await page.waitForSelector('text=42')
   await page.locator('text=Check').click()
-  await page.locator('text=Check').click()
   await page.waitForSelector('text=Correct')
 })
 
