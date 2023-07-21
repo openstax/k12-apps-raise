@@ -4,11 +4,10 @@ import { MathfieldElement } from 'mathlive'
 MathfieldElement.fontsDirectory = ''
 MathfieldElement.soundsDirectory = null
 window.mathVirtualKeyboard.layouts = {
-  // nth root not properly displaying in the calculator / input ('\\sqrt[#0]{#0}').
   rows: [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     [
-      '\\sqrt{#0}', '#@^{#?}', '+', '-', '\\times', '\\frac{#@}{#?}', '|#0|', '\\sqrt[#0]{#0}', '(', ')'
+      '\\sqrt{#0}', '#@^{#?}', '+', '-', '\\times', '\\frac{#@}{#?}', '|#0|', '(', ')'
     ],
     ['\\gt', '\\lt', '\\ge', '\\le', '=', '.', '\\pi', 'y', 'x']
   ]
