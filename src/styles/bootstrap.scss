@@ -167,6 +167,7 @@
   .os-form-control {
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
+    
     border: 2px solid $os-default-answer-border-color;
     border-radius: 5px;
     box-shadow: 0 2px 2px $os-default-box-shadow;
