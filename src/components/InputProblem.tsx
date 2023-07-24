@@ -6,6 +6,8 @@ import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
+import { Mathfield } from './Mathfield'
+import { type MathfieldElement } from 'mathlive'
 
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
@@ -132,12 +134,26 @@ export const InputProblem = ({
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                <Field
-                name="response"
-                disabled={inputDisabled || isSubmitting}
-                autoComplete={'off'}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+              {
+                comparator.toLowerCase() === 'math'
+                  ? (
+                  <Field
+                    name="response"
+                    disabled={inputDisabled || isSubmitting}
+                    as={Mathfield}
+                    onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    )
+                  : (
+                    <Field
+                    name="response"
+                    disabled={inputDisabled || isSubmitting}
+                    autoComplete={'off'}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    )
+              }
+
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className="os-text-center mt-4">

@@ -1,3 +1,6 @@
+import { type MathfieldElementAttributes, type MathfieldElement } from 'mathlive'
+import { type DOMAttributes } from 'react'
+
 declare global {
   interface Window {
     Y?: {
@@ -11,6 +14,11 @@ declare global {
         wwwroot: string
         sesskey: string
       }
+    }
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      ['math-field']: Partial<MathfieldElementAttributes & DOMAttributes<MathfieldElement>>
     }
   }
 }

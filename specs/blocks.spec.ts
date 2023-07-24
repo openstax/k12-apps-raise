@@ -305,6 +305,38 @@ test('attempts-exhausted response overrides answer-specific response', async ({ 
   await page.waitForSelector('#attemptsExhausted')
 })
 
+test('Math field component rendered', async ({ page }) => {
+  const htmlContent = `
+  <div class="os-raise-ib-pset" data-schema-version="1.0" data-retry-limit="3">
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution='42' data-problem-comparator='math'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p id="problem">MultipleChoice problem content: \\( x^2 \\)</p>
+      </div>
+      <div class="os-raise-ib-pset-encourage-response" data-answer="41">
+          <p>Almost there</p>
+      </div>
+      <div class='os-raise-ib-pset-attempts-exhausted-response'>
+          <p id="attemptsExhausted">The answer is 42</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p id="correct">Correct response with math: \\( x=2 \\)</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p id="encourage">Encourage response with math: \\( x=2 \\)</p>
+    </div>
+  </div>
+  `
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+  await page.locator('math-field').click()
+  await page.waitForSelector('.ML__keyboard')
+  await page.keyboard.type('42')
+  await page.waitForSelector('text=42')
+  await page.locator('text=Check').click()
+  await page.waitForSelector('text=Correct')
+})
+
 test('Desmos script loads', async ({ page }) => {
   const htmlDesmosContent = '<div class="os-raise-ib-desmos-gc" data-expressions="false" data-width="600" data-top="50" data-bottom="-50" data-left="-50" data-right="50" data-height="500" data-equations=\'["(1,2)", "x=5"]\'></div>'
 
