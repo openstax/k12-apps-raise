@@ -24,24 +24,12 @@ interface InputFormValues {
   response: string
 }
 
-export function buildClassName(response: string, solution: string, formDisabled: boolean, math: boolean): string {
+export function buildClassName(correct: boolean, formDisabled: boolean): string {
   let className = 'os-form-control'
-  if (math) {
-    const ce = new ComputeEngine()
-    const parsedResponse = parse(ce.serialize(ce.parse(response)))
-    const parsedsolution = parse(ce.serialize(ce.parse(solution)))
-    if (compare(parsedResponse.expr, parsedsolution.expr, { simplify: false, form: true }).equal === true) {
-      className += ' os-correct-answer-choice os-disabled'
-    }
-    if (compare(parsedResponse.expr, parsedsolution.expr, { simplify: false, form: true }).equal === false && formDisabled) {
-      className += ' os-wrong-answer-choice os-disabled'
-    }
-    return className
-  }
-  if (solution === response && formDisabled) {
+  if (correct && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
-  if (solution !== response && formDisabled) {
+  if (!correct && formDisabled) {
     className += ' os-wrong-answer-choice os-disabled'
   }
   return className
@@ -80,7 +68,10 @@ export const InputProblem = ({
     }
   }, [feedback])
 
-  const evaluateInput = (input: string, answer: string): boolean => {
+  const evaluateInput = (input: string | undefined, answer: string): boolean => {
+    if (input === undefined || input === '') {
+      return false
+    }
     if (comparator.toLowerCase() === 'integer') {
       return parseInt(input) === parseInt(answer)
     }
@@ -91,8 +82,9 @@ export const InputProblem = ({
       const ce = new ComputeEngine()
       const parsedInput = parse(ce.serialize(ce.parse(input)))
       const parsedAnswer = parse(ce.serialize(ce.parse(answer)))
-      console.log('Parsed answer: ', parsedAnswer.expr)
-      console.log('Parsed input: ', parsedInput.expr)
+      if (parsedInput.expr === undefined || parsedAnswer.expr === undefined) {
+        return false
+      }
 
       return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
@@ -145,12 +137,13 @@ export const InputProblem = ({
           {({ isSubmitting, setFieldValue, values }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
-                {solution === values.response && inputDisabled &&
+
+                {evaluateInput(values.response.trim(), solution) && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {solution !== values.response && inputDisabled &&
+                {!evaluateInput(values.response.trim(), solution) && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
@@ -163,7 +156,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting, true)} />
+                    className={buildClassName(evaluateInput(values.response.trim(), solution), inputDisabled || isSubmitting)} />
                     )
                   : (
                     <Field
@@ -171,7 +164,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting, false)} />
+                    className={buildClassName(evaluateInput(values.response.trim(), solution), inputDisabled || isSubmitting)} />
                     )
               }
 
