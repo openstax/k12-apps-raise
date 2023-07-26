@@ -35,11 +35,25 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
     mathFieldCurrent.addEventListener('focusout', (ev) => {
       window.mathVirtualKeyboard.hide()
     })
+  }, [])
+
+  useEffect(() => {
+    const mathFieldCurrent = mathfieldRef.current
+    if ((mathFieldCurrent === null)) {
+      return
+    }
 
     if (disabled && mathFieldCurrent.shadowRoot !== null) {
       const pointerEventSpan = mathFieldCurrent.shadowRoot.querySelector('span')
       if (pointerEventSpan !== null && pointerEventSpan !== undefined) {
         pointerEventSpan.style.pointerEvents = 'none'
+      }
+    }
+
+    if (!disabled && mathFieldCurrent.shadowRoot !== null) {
+      const pointerEventSpan = mathFieldCurrent.shadowRoot.querySelector('span')
+      if (pointerEventSpan !== null && pointerEventSpan !== undefined) {
+        pointerEventSpan.style.pointerEvents = 'auto'
       }
     }
   }, [disabled])

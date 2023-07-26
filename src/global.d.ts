@@ -21,7 +21,6 @@ declare global {
       ['math-field']: Partial<MathfieldElementAttributes & DOMAttributes<MathfieldElement>>
     }
   }
-
 }
 
 export {}

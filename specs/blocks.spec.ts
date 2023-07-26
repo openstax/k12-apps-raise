@@ -329,8 +329,8 @@ test('Math field component rendered', async ({ page }) => {
   `
   await mockPageContentRequest(page, htmlContent)
   await page.goto('/')
-  await page.locator('.ML__content').click()
-  await page.waitForSelector('text=y')
+  await page.locator('math-field').click()
+  await page.waitForSelector('.ML__keyboard')
   await page.keyboard.type('42')
   await page.waitForSelector('text=42')
   await page.locator('text=Check').click()

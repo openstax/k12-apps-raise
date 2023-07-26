@@ -146,9 +146,9 @@ export const InputProblem = ({
                   ? (
                   <Field
                     name="response"
-                    disabled={inputDisabled}
+                    disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
-                    onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value); console.log('This is the value:', e.target.value) }}
+                    onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
                     className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
                     )
                   : (
