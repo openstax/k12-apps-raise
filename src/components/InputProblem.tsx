@@ -8,7 +8,8 @@ import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
-
+import { parse, compare } from '@khanacademy/kas'
+import { ComputeEngine } from '@cortex-js/compute-engine'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
@@ -74,7 +75,13 @@ export const InputProblem = ({
     if (comparator.toLowerCase() === 'float') {
       return parseFloat(input) === parseFloat(answer)
     }
+    if (comparator.toLowerCase() === 'math') {
+      const ce = new ComputeEngine()
+      const parsedInput = parse(ce.serialize(ce.parse(input)))
+      const parsedAnswer = parse(ce.serialize(ce.parse(input)))
 
+      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
+    }
     return input.toLowerCase() === answer.toLowerCase()
   }
 

@@ -16,6 +16,8 @@
     "build:authoring": "tsc && vite build -m authoring"
   },
   "dependencies": {
+    "@cortex-js/compute-engine": "^0.12.3",
+    "@khanacademy/kas": "github:openstax/raise-kas#7512402d327e00004830c9598cc99d3cf31841a3",
     "bootstrap": "^5.3.0",
     "formik": "^2.4.2",
     "mathlive": "^0.95.0",
