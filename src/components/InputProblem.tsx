@@ -78,7 +78,7 @@ export const InputProblem = ({
     if (comparator.toLowerCase() === 'math') {
       const ce = new ComputeEngine()
       const parsedInput = parse(ce.serialize(ce.parse(input)))
-      const parsedAnswer = parse(ce.serialize(ce.parse(input)))
+      const parsedAnswer = parse(ce.serialize(ce.parse(answer)))
 
       return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
@@ -89,6 +89,7 @@ export const InputProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
+    console.log( 'Print evaluate input: ', evaluateInput(values.response.trim(), solution.trim()))
     if (evaluateInput(values.response.trim(), solution.trim())) {
       correct = true
       setFeedback(correctResponse)

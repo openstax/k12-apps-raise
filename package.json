@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@cortex-js/compute-engine": "^0.12.3",
-    "@khanacademy/kas": "github:openstax/raise-kas#7512402d327e00004830c9598cc99d3cf31841a3",
+    "@khanacademy/kas": "github:openstax/raise-kas#b455472a7be01faf0434002d2eaaef81e88b3625",
     "bootstrap": "^5.3.0",
     "formik": "^2.4.2",
     "mathlive": "^0.95.0",
