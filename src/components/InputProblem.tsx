@@ -24,8 +24,20 @@ interface InputFormValues {
   response: string
 }
 
-export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+export function buildClassName(response: string, solution: string, formDisabled: boolean, math: boolean): string {
   let className = 'os-form-control'
+  if (math) {
+    const ce = new ComputeEngine()
+    const parsedResponse = parse(ce.serialize(ce.parse(response)))
+    const parsedsolution = parse(ce.serialize(ce.parse(solution)))
+    if (compare(parsedResponse.expr, parsedsolution.expr, { simplify: false, form: true }).equal === true) {
+      className += ' os-correct-answer-choice os-disabled'
+    }
+    if (compare(parsedResponse.expr, parsedsolution.expr, { simplify: false, form: true }).equal === false && formDisabled) {
+      className += ' os-wrong-answer-choice os-disabled'
+    }
+    return className
+  }
   if (solution === response && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
@@ -79,6 +91,8 @@ export const InputProblem = ({
       const ce = new ComputeEngine()
       const parsedInput = parse(ce.serialize(ce.parse(input)))
       const parsedAnswer = parse(ce.serialize(ce.parse(answer)))
+      console.log('Parsed answer: ', parsedAnswer.expr)
+      console.log('Parsed input: ', parsedInput.expr)
 
       return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
@@ -89,7 +103,6 @@ export const InputProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-    console.log( 'Print evaluate input: ', evaluateInput(values.response.trim(), solution.trim()))
     if (evaluateInput(values.response.trim(), solution.trim())) {
       correct = true
       setFeedback(correctResponse)
@@ -150,7 +163,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting, true)} />
                     )
                   : (
                     <Field
@@ -158,7 +171,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting, false)} />
                     )
               }
 
