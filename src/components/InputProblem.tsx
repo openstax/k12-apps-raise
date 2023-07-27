@@ -69,7 +69,7 @@ export const InputProblem = ({
   }, [feedback])
 
   const evaluateInput = (input: string | undefined, answer: string): boolean => {
-    if (input === undefined || input === '') {
+    if (input === undefined) {
       return false
     }
     if (comparator.toLowerCase() === 'integer') {
