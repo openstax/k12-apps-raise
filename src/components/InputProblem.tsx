@@ -80,13 +80,22 @@ export const InputProblem = ({
     }
     if (comparator.toLowerCase() === 'math') {
       const ce = new ComputeEngine()
-      const parsedInput = parse(ce.serialize(ce.parse(input)))
-      const parsedAnswer = parse(ce.serialize(ce.parse(answer)))
+
+      let parsedInput = parse(ce.serialize(ce.parse(input)))
+      let parsedAnswer = parse(ce.serialize(ce.parse(answer)))
+
+      if (!parsedInput.parsed) {
+        parsedInput = parse(input)
+      }
+      if (!parsedAnswer.parsed) {
+        parsedAnswer = parse(answer)
+      }
+
       if (parsedInput.expr === undefined || parsedAnswer.expr === undefined) {
         return false
       }
 
-      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
+      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: false }).equal
     }
     return input.toLowerCase() === answer.toLowerCase()
   }
