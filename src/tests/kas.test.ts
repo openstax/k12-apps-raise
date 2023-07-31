@@ -136,7 +136,6 @@ test('Test kas with compute engine and edge cases', async () => {
   ]
   // If the options simplify is true the nth root tests fail.
   consideredEqual.forEach((val) => {
-    console.log(compare(parse(val.expr1).expr, parse(val.expr2).expr, options).equal)
     expect(compare(parse(val.expr1).expr, parse(val.expr2).expr, options).equal).toBe(true)
   })
 })
