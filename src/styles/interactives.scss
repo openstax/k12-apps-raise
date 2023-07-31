@@ -92,6 +92,10 @@ select.os-form-select:hover {
   background-color: $os-answer-background;
 }
 
+math-field.os-form-control.os-disabled {
+  background-color: $os-answer-background;
+}
+
 // All Interactive Styles
 .os-selected-answer-choice.os-selected-answer-choice {
   border-color: $os-selected-focus-border-color;
