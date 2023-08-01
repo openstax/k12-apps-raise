@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { MathfieldElement } from 'mathlive'
 
-MathfieldElement.fontsDirectory = ''
+MathfieldElement.fontsDirectory = 'https://unpkg.com/mathlive/dist/fonts/'
 MathfieldElement.soundsDirectory = null
 window.mathVirtualKeyboard.layouts = {
   rows: [
