@@ -64,6 +64,7 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
         class={className}
         ref={mathfieldRef}
         onInput={onInput}
+        tabIndex={disabled ? '-1' : '0'}
       />
     </>
   )
