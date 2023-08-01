@@ -283,7 +283,7 @@ Individual problems can also display HTML for when users exhaust the amount of a
 * Valid values for `data-problem-comparator` include: `integer`, `float`, `text`, `math`
   * If the comparator is `integer` or `float`, user input will be converted to values of the corresponding type before comparing
   * If the comparator is `text`, user input is compared using a case-insensitive match
-  * If the comparator is `math`, the user will have access to an equation editor keyboard. User input will be converted to values that will be compared for mathamatical equvalancy. The `data-solution` attribute must be a valid [LaTeX expression](https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf). 
+  * If the comparator is `math`, the user will have access to an equation editor keyboard. User input will be converted to values that will be compared for mathematical equvalancy. The `data-solution` attribute must be a valid LaTeX expression
 
 ##### Attributes specific to `dropdown` problem type:
 * `data-solution-options` should be a JSON array with a list of choices. For example: `data-solution-options='["Option 1", "Option2", "Option 3"]'"`

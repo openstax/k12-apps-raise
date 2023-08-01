@@ -68,10 +68,9 @@ export const InputProblem = ({
     }
   }, [feedback])
 
-  const evaluateInput = (input: string | undefined, answer: string): boolean => {
-    if (input === undefined) {
-      return false
-    }
+  const evaluateInput = (input: string, answer: string): boolean => {
+    input = input.trim()
+    answer = answer.trim()
     if (comparator.toLowerCase() === 'integer') {
       return parseInt(input) === parseInt(answer)
     }
@@ -84,6 +83,9 @@ export const InputProblem = ({
       let parsedInput = parse(ce.serialize(ce.parse(input)))
       let parsedAnswer = parse(ce.serialize(ce.parse(answer)))
 
+      // Sometimes compute engine produces an output that the KAS parse method does understand
+      // If that is the case we can try to parse again with the raw input and answer
+      // An example of an expression that requires this is x>5
       if (!parsedInput.parsed) {
         parsedInput = parse(input)
       }
@@ -91,11 +93,12 @@ export const InputProblem = ({
         parsedAnswer = parse(answer)
       }
 
-      if (parsedInput.expr === undefined || parsedAnswer.expr === undefined) {
+      if (!parsedInput.parsed || !parsedAnswer.parsed) {
+        console.warn(`Unable to parse input '${input}' or answer '${answer}' when comparing math.`)
         return false
       }
 
-      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: false }).equal
+      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
     return input.toLowerCase() === answer.toLowerCase()
   }
@@ -104,7 +107,7 @@ export const InputProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-    if (evaluateInput(values.response.trim(), solution.trim())) {
+    if (evaluateInput(values.response, solution)) {
       correct = true
       setFeedback(correctResponse)
       solvedCallback()
@@ -147,12 +150,12 @@ export const InputProblem = ({
             <Form >
               <div className='os-flex os-align-items-center'>
 
-                {evaluateInput(values.response.trim(), solution) && inputDisabled &&
+                {evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {!evaluateInput(values.response.trim(), solution) && inputDisabled &&
+                {!evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
@@ -165,7 +168,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response.trim(), solution), inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
                     )
                   : (
                     <Field
@@ -173,7 +176,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response.trim(), solution), inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
                     )
               }
 
