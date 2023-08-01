@@ -69,38 +69,38 @@ export const InputProblem = ({
   }, [feedback])
 
   const evaluateInput = (input: string, answer: string): boolean => {
-    input = input.trim()
-    answer = answer.trim()
+    const trimmedInput = input.trim()
+    const trimmedAnswer = answer.trim()
     if (comparator.toLowerCase() === 'integer') {
-      return parseInt(input) === parseInt(answer)
+      return parseInt(trimmedInput) === parseInt(trimmedAnswer)
     }
     if (comparator.toLowerCase() === 'float') {
-      return parseFloat(input) === parseFloat(answer)
+      return parseFloat(trimmedInput) === parseFloat(trimmedAnswer)
     }
     if (comparator.toLowerCase() === 'math') {
       const ce = new ComputeEngine()
 
-      let parsedInput = parse(ce.serialize(ce.parse(input)))
-      let parsedAnswer = parse(ce.serialize(ce.parse(answer)))
+      let parsedInput = parse(ce.serialize(ce.parse(trimmedInput)))
+      let parsedAnswer = parse(ce.serialize(ce.parse(trimmedAnswer)))
 
-      // Sometimes compute engine produces an output that the KAS parse method does understand
-      // If that is the case we can try to parse again with the raw input and answer
+      // Sometimes compute engine produces an output that the KAS parse method does not understand
+      // If that is the case we can try to parse again with the raw trimmed input and answer
       // An example of an expression that requires this is x>5
       if (!parsedInput.parsed) {
-        parsedInput = parse(input)
+        parsedInput = parse(trimmedInput)
       }
       if (!parsedAnswer.parsed) {
-        parsedAnswer = parse(answer)
+        parsedAnswer = parse(trimmedAnswer)
       }
 
       if (!parsedInput.parsed || !parsedAnswer.parsed) {
-        console.warn(`Unable to parse input '${input}' or answer '${answer}' when comparing math.`)
+        console.warn(`Unable to parse input '${trimmedInput}' or answer '${trimmedAnswer}' when comparing math.`)
         return false
       }
 
       return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
     }
-    return input.toLowerCase() === answer.toLowerCase()
+    return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
