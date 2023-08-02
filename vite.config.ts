@@ -42,7 +42,9 @@ export default defineConfig(({ mode }) => {
   }
 
   config.build['rollupOptions'].output.manualChunks = {
-    mathlive: ['mathlive']
+    mathlive: ['mathlive'],
+    cortexjs: ['@cortex-js/compute-engine']
+
   }
 
   return config

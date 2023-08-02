@@ -8,7 +8,8 @@ import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
-
+import { parse, compare } from '@khanacademy/kas'
+import { ComputeEngine } from '@cortex-js/compute-engine'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
@@ -23,12 +24,12 @@ interface InputFormValues {
   response: string
 }
 
-export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
+export function buildClassName(correct: boolean, formDisabled: boolean): string {
   let className = 'os-form-control'
-  if (solution === response && formDisabled) {
+  if (correct && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
-  if (solution !== response && formDisabled) {
+  if (!correct && formDisabled) {
     className += ' os-wrong-answer-choice os-disabled'
   }
   return className
@@ -68,21 +69,44 @@ export const InputProblem = ({
   }, [feedback])
 
   const evaluateInput = (input: string, answer: string): boolean => {
+    const trimmedInput = input.trim()
+    const trimmedAnswer = answer.trim()
     if (comparator.toLowerCase() === 'integer') {
-      return parseInt(input) === parseInt(answer)
+      return parseInt(trimmedInput) === parseInt(trimmedAnswer)
     }
     if (comparator.toLowerCase() === 'float') {
-      return parseFloat(input) === parseFloat(answer)
+      return parseFloat(trimmedInput) === parseFloat(trimmedAnswer)
     }
+    if (comparator.toLowerCase() === 'math') {
+      const ce = new ComputeEngine()
 
-    return input.toLowerCase() === answer.toLowerCase()
+      let parsedInput = parse(ce.serialize(ce.parse(trimmedInput)))
+      let parsedAnswer = parse(ce.serialize(ce.parse(trimmedAnswer)))
+
+      // Sometimes compute engine produces an output that the KAS parse method does not understand
+      // If that is the case we can try to parse again with the raw trimmed input and answer
+      // An example of an expression that requires this is x>5
+      if (!parsedInput.parsed) {
+        parsedInput = parse(trimmedInput)
+      }
+      if (!parsedAnswer.parsed) {
+        parsedAnswer = parse(trimmedAnswer)
+      }
+
+      if (!parsedInput.parsed || !parsedAnswer.parsed) {
+        return false
+      }
+
+      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
+    }
+    return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
   const handleSubmit = async (values: InputFormValues): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-    if (evaluateInput(values.response.trim(), solution.trim())) {
+    if (evaluateInput(values.response, solution)) {
       correct = true
       setFeedback(correctResponse)
       solvedCallback()
@@ -124,12 +148,13 @@ export const InputProblem = ({
           {({ isSubmitting, setFieldValue, values }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
-                {solution === values.response && inputDisabled &&
+
+                {evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {solution !== values.response && inputDisabled &&
+                {!evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
@@ -142,7 +167,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
                     )
                   : (
                     <Field
@@ -150,7 +175,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(values.response, solution, inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
                     )
               }
 

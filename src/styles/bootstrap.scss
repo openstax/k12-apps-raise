@@ -171,7 +171,21 @@
     border: 2px solid $os-default-answer-border-color;
     border-radius: 5px;
     box-shadow: 0 2px 2px $os-default-box-shadow;
-    padding: .75rem;
+  }
+
+  input.os-form-control {
+    padding: 0.75rem;
+  }
+
+  math-field.os-form-control {
+    padding: 0;
+  }
+
+  math-field::part(content) {
+    cursor: text;
+    min-height: 24px;
+    padding: 0.75rem;
+
   }
 
   // Extends Multiple Choice & Multi Select Styles
