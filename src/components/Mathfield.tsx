@@ -7,12 +7,11 @@ window.mathVirtualKeyboard.layouts = {
   rows: [
     ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
     [
-      '\\sqrt{#0}', '\\sqrt[#1]{#0}', '#@^{#?}', '+', '-', '\\times', '\\frac{#@}{#?}', '|#0|', '(', ')'
+      '\\sqrt{#@}', '\\sqrt[#?]{#@}', '#@^{#?}', '+', '-', '\\times', '\\frac{#@}{#?}', '|#@|', '(', ')'
     ],
     ['\\gt', '\\lt', '\\ge', '\\le', '=', '.', '\\pi', 'y', 'x']
   ]
 }
-
 interface MathfieldProps {
   onInput: (event: React.ChangeEvent<MathfieldElement>) => void
   className: string
@@ -27,7 +26,7 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
       return
     }
     mathFieldCurrent.mathVirtualKeyboardPolicy = 'manual'
-
+    mathFieldCurrent.minFontScale = 0.7
     mathFieldCurrent.addEventListener('focusin', (ev) => {
       window.mathVirtualKeyboard.show()
     })

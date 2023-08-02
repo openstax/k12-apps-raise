@@ -94,7 +94,6 @@ export const InputProblem = ({
       }
 
       if (!parsedInput.parsed || !parsedAnswer.parsed) {
-        console.warn(`Unable to parse input '${trimmedInput}' or answer '${trimmedAnswer}' when comparing math.`)
         return false
       }
 
