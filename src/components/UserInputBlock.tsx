@@ -83,7 +83,9 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
             <Form>
               <Field name="response" as="textarea" disabled={isSubmitting || responseSubmitted} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={isSubmitting || responseSubmitted} className="btn btn-outline-primary mb-3">{buttonText}</button>
+              <div className='os-text-center mt-4'>
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+              </div>
             </Form>
           )}
         </Formik>
