@@ -74,7 +74,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const maybeAck = !responseSubmitted
     ? null
     : (
-      < div className='mb-3' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
+      < div className='my-3 os-feedback-message ' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
   return (
