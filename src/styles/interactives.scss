@@ -160,6 +160,12 @@ div.os-justify-content-end {
   height: 100%;
 }
 
+// Math-field Styles
 math-field::part(virtual-keyboard-toggle) {
   display: none;
+}
+
+// Textarea Styles
+.os-overflow-hidden {
+  overflow: hidden;
 }
