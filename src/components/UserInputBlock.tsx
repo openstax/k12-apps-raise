@@ -30,9 +30,9 @@ interface InputFormValues {
 }
 
 export function buildClassName(formDisabled: boolean): string {
-  let className = 'os-form-control os-overflow-hidden'
+  let className = 'os-form-control'
   if (formDisabled) {
-    className += ' os-disabled'
+    className += ' os-textarea-disabled'
   }
   return className
 }

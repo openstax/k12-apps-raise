@@ -96,7 +96,7 @@ math-field.os-form-control.os-disabled {
   background-color: $os-answer-background;
 }
 
-// All Interactive Styles
+// All Interactive Styles (Textarea only uses os-feedback-message)
 .os-selected-answer-choice.os-selected-answer-choice {
   border-color: $os-selected-focus-border-color;
   background-color: $os-answer-background;
@@ -166,6 +166,6 @@ math-field::part(virtual-keyboard-toggle) {
 }
 
 // Textarea Styles
-.os-overflow-hidden {
-  overflow: hidden;
+.os-textarea-disabled.os-textarea-disabled {
+  box-shadow: none;
 }
