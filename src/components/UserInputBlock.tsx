@@ -29,6 +29,14 @@ interface InputFormValues {
   response: string
 }
 
+export function buildClassName(formDisabled: boolean): string {
+  let className = 'os-form-control'
+  if (formDisabled) {
+    className += ' os-textarea-disabled'
+  }
+  return className
+}
+
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
   const contentLoadedContext = useContext(ContentLoadedContext)
@@ -66,7 +74,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const maybeAck = !responseSubmitted
     ? null
     : (
-      < div className='mb-3' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
+      < div className='my-3 os-feedback-message ' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
   return (
@@ -81,9 +89,16 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         >
           {({ isSubmitting }) => (
             <Form>
-              <Field name="response" as="textarea" disabled={isSubmitting || responseSubmitted} rows={DEFAULT_TEXTAREA_ROWS} className="form-control my-3"/>
+              <Field
+              name="response"
+              as="textarea"
+              disabled={isSubmitting || responseSubmitted}
+              rows={DEFAULT_TEXTAREA_ROWS}
+              className={buildClassName(responseSubmitted)}/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <button type="submit" disabled={isSubmitting || responseSubmitted} className="btn btn-outline-primary mb-3">{buttonText}</button>
+              <div className='os-text-center mt-4'>
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+              </div>
             </Form>
           )}
         </Formik>
