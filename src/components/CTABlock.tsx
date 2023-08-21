@@ -25,7 +25,7 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
       mathifyElement(node)
-      tooltipify(node)
+      void tooltipify(node)
     }
   }, [])
 

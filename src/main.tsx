@@ -16,7 +16,7 @@ const processPage = (): void => {
   // If we fetched content elements, we're done
   if (contentElements === 0) {
     // Render blocks for Moodle storage
-    tooltipify(document.body)
+    void tooltipify(document.body)
     renderContentOnlyBlocks(document.body)
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)

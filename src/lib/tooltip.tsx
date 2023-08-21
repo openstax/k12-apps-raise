@@ -5,7 +5,7 @@ import { ENV } from '../lib/env'
 
 const OS_RAISE_IB_TOOLTIP_CLASS = 'os-raise-ib-tooltip'
 
-interface GlossaryElement {
+export interface GlossaryElement {
   term: string
   definition: string
 }
