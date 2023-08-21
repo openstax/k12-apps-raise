@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test'
 import type { ContentResponse } from '../src/components/ContentLoader'
-
+import type { GlossaryElement } from '../src/lib/tooltip'
 const TEST_CONTENT_URL_PREFIX = 'http://localhost:8800/contents'
 
 const createContentJSON = (htmlContent: string): string => {
@@ -49,6 +49,37 @@ export const mockVariantContentRequest = async (page: Page, mainContent: string,
       route.fulfill({
         status: 200,
         body: createVariantContentJSON(mainContent, variantContent)
+      }).catch(() => {})
+    }
+  )
+}
+
+const createTooltipGlossaryJSON = (): string => {
+  const response: GlossaryElement = {
+    id: 'test',
+    content: [{
+      term: 'absolute value',
+      definition: 'absolute value definition'
+    }, {
+      term: 'binomial',
+      definition: 'binomial definition'
+    },
+    {
+      term: 'annuity',
+      definition: 'annuity definition'
+    }]
+  }
+
+  return JSON.stringify(response)
+}
+
+export const mockTooltipGlossaryRequest = async (page: Page): Promise<void> => {
+  await page.route(
+    `${TEST_CONTENT_URL_PREFIX}/*/glossary-tooltip.json`,
+    route => {
+      route.fulfill({
+        status: 200,
+        body: createTooltipGlossaryJSON()
       }).catch(() => {})
     }
   )

@@ -4,6 +4,19 @@ import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import '@testing-library/jest-dom'
 import { ContentLoadedContext } from '../lib/contexts'
 import { queueIbInputSubmittedV1Event } from '../lib/events'
+import { setupServer } from 'msw/node'
+import 'whatwg-fetch'
+import { rest } from 'msw'
+
+const server = setupServer(
+  rest.get('http://contentapi/contents/version/glossary-tooltip.json', async (req, res, ctx) => {
+    return await res(ctx.json({
+      content: [{ term: 'absolute value', definition: 'The distance between a number and \\( 0 \\) on the number line.' }]
+    }))
+  }))
+beforeAll(() => { server.listen() })
+afterEach(() => { server.resetHandlers() })
+afterAll(() => { server.close() })
 
 jest.mock('../lib/env.ts', () => {})
 
