@@ -1,5 +1,6 @@
 import variantMappings from '../../data/variant-mappings.json'
 import type { ContentVariant } from '../components/ContentLoader'
+import * as contentVersions from '../../data/content-versions.json'
 
 export const loadScriptTag = async (srcValue: string): Promise<void> => {
   const head = document.getElementsByTagName('head')[0]
@@ -71,4 +72,17 @@ export const getVariant = (variants: ContentVariant[]): ContentVariant | undefin
   const maybeMatch = variants.find(item => item.variant === courseVariant) ?? variants.find(item => item.variant === defaultVariant)
 
   return maybeMatch
+}
+
+export const getVersionId = (): string => {
+  const { courseId, host } = getCurrentContext()
+  const defaultVersionId = contentVersions.defaultVersion
+
+  if (courseId === undefined || host === undefined) {
+    return defaultVersionId
+  }
+
+  const maybeOverride = (contentVersions as any).overrides[host]?.[courseId]
+
+  return maybeOverride ?? defaultVersionId
 }

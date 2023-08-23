@@ -10,7 +10,7 @@ import { rest } from 'msw'
 const server = setupServer(
   rest.get('http://contentapi/contents/version/glossary-tooltip.json', async (req, res, ctx) => {
     return await res(ctx.json({
-      content: [{ term: 'absolute value', definition: 'The distance between a number and \\( 0 \\) on the number line.' }]
+      'absolute value': 'The distance between a number and \\( 0 \\) on the number line.'
     }))
   }))
 

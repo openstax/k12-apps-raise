@@ -7,11 +7,17 @@ import { setupServer } from 'msw/node'
 import 'whatwg-fetch'
 import { rest } from 'msw'
 
+jest.mock('../lib/env.ts', () => ({
+  ENV: {
+    OS_RAISE_CONTENT_URL_PREFIX: 'http://contentapi/contents'
+  }
+}))
+
 const server = setupServer(
   rest.get('http://contentapi/contents/version/glossary-tooltip.json', async (req, res, ctx) => {
-    return await res(ctx.json({
-      content: [{ term: 'absolute value', definition: 'The distance between a number and \\( 0 \\) on the number line.' }]
-    }))
+    return await res(ctx.json([{
+      'absolute value': 'The distance between a number and \\( 0 \\) on the number line.'
+    }]))
   }))
 
 beforeAll(() => { server.listen() })

@@ -1,7 +1,13 @@
 import type { Page } from '@playwright/test'
 import type { ContentResponse } from '../src/components/ContentLoader'
-import type { GlossaryElement } from '../src/lib/tooltip'
+
 const TEST_CONTENT_URL_PREFIX = 'http://localhost:8800/contents'
+
+const TOOLTIP_DATA = {
+  'absolute value': 'The distance between a number and \\( 0 \\) on the number line',
+  binomial: 'A polynomial with exactly two terms.',
+  annuity: 'An investment that is a sequence of equal periodic deposits.'
+}
 
 const createContentJSON = (htmlContent: string): string => {
   const response: ContentResponse = {
@@ -22,6 +28,16 @@ export const mockPageContentRequest = async (page: Page, htmlContent: string): P
       route.fulfill({
         status: 200,
         body: createContentJSON(htmlContent)
+      }).catch(() => {})
+    }
+  )
+
+  await page.route(
+    `${TEST_CONTENT_URL_PREFIX}/*/glossary-tooltip.json`,
+    route => {
+      route.fulfill({
+        status: 200,
+        body: JSON.stringify(TOOLTIP_DATA)
       }).catch(() => {})
     }
   )
@@ -49,37 +65,6 @@ export const mockVariantContentRequest = async (page: Page, mainContent: string,
       route.fulfill({
         status: 200,
         body: createVariantContentJSON(mainContent, variantContent)
-      }).catch(() => {})
-    }
-  )
-}
-
-const createTooltipGlossaryJSON = (): string => {
-  const response: GlossaryElement = {
-    id: 'test',
-    content: [{
-      term: 'absolute value',
-      definition: 'absolute value definition'
-    }, {
-      term: 'binomial',
-      definition: 'binomial definition'
-    },
-    {
-      term: 'annuity',
-      definition: 'annuity definition'
-    }]
-  }
-
-  return JSON.stringify(response)
-}
-
-export const mockTooltipGlossaryRequest = async (page: Page): Promise<void> => {
-  await page.route(
-    `${TEST_CONTENT_URL_PREFIX}/*/glossary-tooltip.json`,
-    route => {
-      route.fulfill({
-        status: 200,
-        body: createTooltipGlossaryJSON()
       }).catch(() => {})
     }
   )
