@@ -67,7 +67,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
       mathifyElement(node)
-      void tooltipify(node)
+      tooltipify(node).catch((error) => { console.error(error) })
     }
   }, [])
 

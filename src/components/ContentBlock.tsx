@@ -12,7 +12,7 @@ export const ContentBlock = ({ content, waitForEvent }: ContentBlockProps): JSX.
   const contentRefCallback = useCallback((node: HTMLDivElement | null): void => {
     if (node != null) {
       mathifyElement(node)
-      void tooltipify(node)
+      tooltipify(node).catch((error) => { console.error(error) })
     }
   }, [])
 
