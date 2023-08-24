@@ -8,6 +8,7 @@ import {
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'
+
 const processPage = (): void => {
   // Load any content that needs to be fetched and inserted into the page
   const contentElements = renderContentElements()

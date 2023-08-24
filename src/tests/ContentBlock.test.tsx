@@ -7,12 +7,6 @@ import { setupServer } from 'msw/node'
 import 'whatwg-fetch'
 import { rest } from 'msw'
 
-jest.mock('../lib/env.ts', () => ({
-  ENV: {
-    OS_RAISE_CONTENT_URL_PREFIX: 'http://contentapi/contents'
-  }
-}))
-
 const server = setupServer(
   rest.get('http://contentapi/contents/version/glossary-tooltip.json', async (req, res, ctx) => {
     return await res(ctx.json([{

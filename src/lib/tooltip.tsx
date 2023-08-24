@@ -63,9 +63,9 @@ export const tooltipify = async (element: HTMLElement): Promise<void> => {
     }
 
     createRoot(htmlElem).render(
-        <React.StrictMode>
-          <TooltipBlock text={elementText} tip={elementMatchingData}/>
-        </React.StrictMode>
+      <React.StrictMode>
+        <TooltipBlock text={elementText} tip={elementMatchingData}/>
+      </React.StrictMode>
     )
   })
 }
