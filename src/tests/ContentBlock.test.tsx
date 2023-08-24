@@ -3,20 +3,6 @@ import { ContentBlock } from '../components/ContentBlock'
 import '@testing-library/jest-dom'
 import { parseContentOnlyBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import { mathifyElement } from '../lib/math'
-import { setupServer } from 'msw/node'
-import 'whatwg-fetch'
-import { rest } from 'msw'
-
-const server = setupServer(
-  rest.get('http://contentapi/contents/version/glossary-tooltip.json', async (req, res, ctx) => {
-    return await res(ctx.json([{
-      'absolute value': 'The distance between a number and \\( 0 \\) on the number line.'
-    }]))
-  }))
-
-beforeAll(() => { server.listen() })
-afterEach(() => { server.resetHandlers() })
-afterAll(() => { server.close() })
 
 jest.mock('../lib/math.ts', () => ({
   mathifyElement: jest.fn()

@@ -1,4 +1,4 @@
-import { getVersionId } from '../lib/content'
+import { getVersionId } from '../lib/utils'
 
 jest.mock('../lib/env.ts', () => {})
 

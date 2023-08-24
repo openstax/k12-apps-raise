@@ -12,27 +12,19 @@ const glossaryLookup = (key: string, data: Definitions): string | undefined => {
 
   return glossaryMap.get(key)
 }
-let fetchPromise: Promise<Definitions>
-let fetchResolver: ((definitions: Definitions) => void)
+let glossaryFetchPromise: Promise<Response>
+let glossaryJSONPromise: Promise<Definitions>
 
 const getGlossaryData = async (): Promise<Definitions> => {
-  if (fetchPromise == null) {
-    const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${getVersionId()}/glossary-tooltip.json`)
-    fetchPromise = fetch(request)
-      .then(async response => {
-        if (!response.ok) {
-          throw new Error(`Request for content returned ${response.status}`)
-        }
-        return await response.json()
-      })
-      .then(glossary => {
-        if (fetchResolver != null) {
-          fetchResolver(glossary)
-        }
-        return glossary
-      })
+  const request = new Request(`${ENV.OS_RAISE_CONTENT_URL_PREFIX}/${getVersionId()}/glossary-tooltip.json`)
+  glossaryFetchPromise = glossaryFetchPromise ?? fetch(request)
+  const response = await glossaryFetchPromise
+  if (!response.ok) {
+    throw new Error(`Request for glossary-tooltip.json returned ${response.status}`)
   }
-  return await fetchPromise
+  glossaryJSONPromise = glossaryJSONPromise ?? response.json()
+
+  return await glossaryJSONPromise
 }
 
 export const tooltipify = async (element: HTMLElement): Promise<void> => {
