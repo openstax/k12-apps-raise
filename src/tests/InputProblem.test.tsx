@@ -394,14 +394,18 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
 
 test('Test buildClassName', async () => {
   // If answer is incorrect and disabled is false
-  const result = buildClassName(false, false)
+  const result = buildClassName(false, false, undefined)
   expect(result).toBe('os-form-control')
 
   // If answer is correct and disabled is true
-  const correct = buildClassName(true, true)
+  const correct = buildClassName(true, true, undefined)
   expect(correct).toBe('os-form-control os-correct-answer-choice os-disabled')
 
   // If answer is incorrect and disabled is true
-  const incorrect = buildClassName(false, true)
+  const incorrect = buildClassName(false, true, undefined)
   expect(incorrect).toBe('os-form-control os-wrong-answer-choice os-disabled')
+
+  // If a validation error occurs
+  const validationError = buildClassName(false, false, 'error')
+  expect(validationError).toBe('os-form-control os-wrong-answer-choice')
 })

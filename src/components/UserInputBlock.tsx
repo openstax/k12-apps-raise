@@ -47,12 +47,11 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
   const schema = Yup.object({
     response: Yup.string()
-      .trim()
       .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, 'Input is too long')
   })
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
-    if (values.response === '') {
+    if (values.response.trim() === '') {
       setFieldError('response', NON_EMPTY_VALUE_ERROR)
     } else {
       setResponseSubmitted(true)
@@ -94,6 +93,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
           validationSchema={schema}
+          validateOnBlur={false}
         >
           {({ isSubmitting, errors }) => (
             <Form>

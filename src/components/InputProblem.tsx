@@ -61,7 +61,7 @@ export const InputProblem = ({
       })
     }
     return Yup.object({
-      response: Yup.string().trim().max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
+      response: Yup.string().max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
     })
   }
 
@@ -110,7 +110,7 @@ export const InputProblem = ({
     let finalAttempt = false
     const attempt = retriesAllowed + 1
 
-    if (values.response === '') {
+    if (values.response.trim() === '') {
       if ((comparator.toLowerCase() === 'integer') || (comparator.toLowerCase() === 'float')) {
         setFieldError('response', NUMERIC_INPUT_ERROR)
       } else {
@@ -157,6 +157,7 @@ export const InputProblem = ({
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
           validationSchema={schema}
+          validateOnBlur={false}
         >
           {({ isSubmitting, setFieldValue, values, errors }) => (
             <Form >
