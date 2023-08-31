@@ -310,7 +310,7 @@ The `multiselect` and `multiplechoice` problem types support using MathJax math 
 
 #### Description
 
-A Content tooltip block is an in-line block which allows content developers to associate a `<span>` element with a datastore. The datastore consists of keys and values, and if the text within the `<span>` matches a key (case-insensitive match). Available datastores can be found as JSON files [here](../data) in this repository. A datastore can be referenced in attributes by dropping the extension (e.g. the datastore in `mydata.json` can be referenced as name `mydata`). The content block encapsulates the following components:
+A Content tooltip block is an in-line block which allows content developers to associate a `<span>` element with a datastore. The datastore consists of keys and values, and if the text within the `<span>` matches a key (case-insensitive match). A datastore can be referenced in attributes by dropping the extension (e.g. the datastore in `mydata.json` can be referenced as name `mydata`). The content block encapsulates the following components:
 
 * A tooltip displayed on hover / focus
 
