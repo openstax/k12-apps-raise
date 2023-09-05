@@ -102,6 +102,7 @@ test('UserInputBlock requires non-empty input', async () => {
 
   await act(async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '   ' } })
+    screen.getByRole('button').click()
   })
 
   screen.getByText('Please provide valid input')

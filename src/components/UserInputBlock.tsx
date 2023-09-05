@@ -1,5 +1,5 @@
 import { EventControlledContent } from './EventControlledContent'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
 import { useState, useCallback, useContext } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -29,10 +29,13 @@ interface InputFormValues {
   response: string
 }
 
-export function buildClassName(formDisabled: boolean): string {
+export function buildClassName(formDisabled: boolean, errorResponse: string | undefined): string {
   let className = 'os-form-control'
   if (formDisabled) {
     className += ' os-textarea-disabled'
+  }
+  if (errorResponse !== undefined) {
+    className += ' os-wrong-answer-choice'
   }
   return className
 }
@@ -40,16 +43,22 @@ export function buildClassName(formDisabled: boolean): string {
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
   const contentLoadedContext = useContext(ContentLoadedContext)
+  const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
+  const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
 
   const schema = Yup.object({
     response: Yup.string()
-      .trim()
-      .required('Please provide valid input')
-      .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, 'Input is too long')
+      .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
   })
 
-  const handleSubmit = async (values: InputFormValues): Promise<void> => {
+  const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
+    if (values.response.trim() === '') {
+      setFieldError('response', NON_EMPTY_VALUE_ERROR)
+      return
+    }
+
     setResponseSubmitted(true)
+
     if (fireEvent !== undefined) {
       const submitEvent = new CustomEvent(fireEvent)
       document.dispatchEvent(submitEvent)
@@ -86,15 +95,16 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
           validationSchema={schema}
+          validateOnBlur={false}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, errors }) => (
             <Form>
               <Field
               name="response"
               as="textarea"
               disabled={isSubmitting || responseSubmitted}
               rows={DEFAULT_TEXTAREA_ROWS}
-              className={buildClassName(responseSubmitted)}/>
+              className={buildClassName(responseSubmitted, errors.response)}/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className='os-text-center mt-4'>
               <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>

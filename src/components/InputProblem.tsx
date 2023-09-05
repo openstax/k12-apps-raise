@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
@@ -17,20 +17,23 @@ interface InputProblemProps extends BaseProblemProps {
 }
 
 interface InputSchema {
-  response: string | number
+  response?: string | number
 }
 
 interface InputFormValues {
   response: string
 }
 
-export function buildClassName(correct: boolean, formDisabled: boolean): string {
+export function buildClassName(correct: boolean, formDisabled: boolean, errorResponse: string | undefined): string {
   let className = 'os-form-control'
   if (correct && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
   if (!correct && formDisabled) {
     className += ' os-wrong-answer-choice os-disabled'
+  }
+  if (errorResponse !== undefined) {
+    className += ' os-wrong-answer-choice'
   }
   return className
 }
@@ -49,16 +52,16 @@ export const InputProblem = ({
   const schema = (): Yup.Schema<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
-        response: Yup.number().integer(NUMERIC_INPUT_ERROR).typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
+        response: Yup.number().integer(NUMERIC_INPUT_ERROR).typeError(NUMERIC_INPUT_ERROR)
       })
     }
     if (comparator.toLowerCase() === 'float') {
       return Yup.object({
-        response: Yup.number().typeError(NUMERIC_INPUT_ERROR).required(NUMERIC_INPUT_ERROR)
+        response: Yup.number().typeError(NUMERIC_INPUT_ERROR)
       })
     }
     return Yup.object({
-      response: Yup.string().trim().required(NON_EMPTY_VALUE_ERROR).max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
+      response: Yup.string().max(MAX_CHARACTER_INPUT_PROBLEM_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
     })
   }
 
@@ -102,10 +105,20 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
-  const handleSubmit = async (values: InputFormValues): Promise<void> => {
+  const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
+
+    if (values.response.trim() === '') {
+      if ((comparator.toLowerCase() === 'integer') || (comparator.toLowerCase() === 'float')) {
+        setFieldError('response', NUMERIC_INPUT_ERROR)
+      } else {
+        setFieldError('response', NON_EMPTY_VALUE_ERROR)
+      }
+      return
+    }
+
     if (evaluateInput(values.response, solution)) {
       correct = true
       setFeedback(correctResponse)
@@ -144,8 +157,9 @@ export const InputProblem = ({
           initialValues={{ response: '' }}
           onSubmit={handleSubmit}
           validationSchema={schema}
+          validateOnBlur={false}
         >
-          {({ isSubmitting, setFieldValue, values }) => (
+          {({ isSubmitting, setFieldValue, values, errors }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
 
@@ -167,7 +181,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting, errors.response)} />
                     )
                   : (
                     <Field
@@ -175,10 +189,9 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting)} />
+                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting, errors.response)} />
                     )
               }
-
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className="os-text-center mt-4">
