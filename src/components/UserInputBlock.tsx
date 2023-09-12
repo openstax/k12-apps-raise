@@ -68,25 +68,29 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
   const updateInteractiveState = async (): Promise<void> => {
     try {
-      if (contentId !== undefined && persistor !== undefined) {
-        const currentLocalStorageState = await persistor.get(contentId)
-        if (currentLocalStorageState !== null) {
-          const parsedLocalStorage = JSON.parse(currentLocalStorageState)
-          setInteractiveState(() => {
-            return {
-              userResponse: parsedLocalStorage.userResponse,
-              responseSubmitted: parsedLocalStorage.responseSubmitted
-            }
-          })
-          setResponseSubmitted(parsedLocalStorage.responseSubmitted)
-        } else {
-          setInteractiveState(() => {
-            return {
-              userResponse: '',
-              responseSubmitted: false
-            }
-          })
+      if (contentId === undefined || persistor === undefined) {
+        setInteractiveState({
+          userResponse: '',
+          responseSubmitted: false
         }
+        )
+        setPersistorStatus(PersistorStatus.Success)
+        return
+      }
+
+      const currentLocalStorageState = await persistor.get(contentId)
+      if (currentLocalStorageState !== null) {
+        const parsedLocalStorage = JSON.parse(currentLocalStorageState)
+        setInteractiveState({
+          userResponse: parsedLocalStorage.userResponse,
+          responseSubmitted: parsedLocalStorage.responseSubmitted
+        })
+        setResponseSubmitted(parsedLocalStorage.responseSubmitted)
+      } else {
+        setInteractiveState({
+          userResponse: '',
+          responseSubmitted: false
+        })
       }
       setPersistorStatus(PersistorStatus.Success)
     } catch (err) {
@@ -111,11 +115,9 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         const currentLocalStorageState = await persistor.get(contentId)
         if (currentLocalStorageState !== null) {
           const parsedLocalStorage = JSON.parse(currentLocalStorageState)
-          setInteractiveState(() => {
-            return {
-              userResponse: parsedLocalStorage.userResponse,
-              responseSubmitted: parsedLocalStorage.responseSubmitted
-            }
+          setInteractiveState({
+            userResponse: parsedLocalStorage.userResponse,
+            responseSubmitted: parsedLocalStorage.responseSubmitted
           })
         }
       }
