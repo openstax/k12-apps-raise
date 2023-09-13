@@ -75,9 +75,9 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
       const persistedState = await persistor.get(contentId)
       if (persistedState !== null) {
-        const parsedLocalStorage = JSON.parse(persistedState)
-        setResponse(parsedLocalStorage.userResponse)
-        setResponseSubmitted(parsedLocalStorage.responseSubmitted)
+        const parsedPersistedState = JSON.parse(persistedState)
+        setResponse(parsedPersistedState.userResponse)
+        setResponseSubmitted(parsedPersistedState.responseSubmitted)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
