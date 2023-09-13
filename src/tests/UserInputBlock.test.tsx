@@ -215,7 +215,7 @@ test('UserInputBlock calls onInputSumbitted callback', async () => {
       {generatedContentBlock as JSX.Element}
     </ContentLoadedContext.Provider>
   )
-
+  await screen.findByRole('textbox')
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
   await act(async () => {
     screen.getByRole('button').click()
@@ -250,7 +250,7 @@ test('UserInputBlock does not call onInputSumbitted on default context', async (
   render(
     generatedContentBlock as JSX.Element
   )
-
+  await screen.findByRole('textbox')
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
   await act(async () => {
     screen.getByRole('button').click()
