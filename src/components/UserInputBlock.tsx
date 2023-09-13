@@ -31,13 +31,13 @@ interface InputFormValues {
   response: string
 }
 
-interface PersistorState {
+interface PersistorData {
   userResponse: string
   responseSubmitted: boolean
 }
 
-enum PersistorStatus {
-  Impersistent,
+enum PersistorGetStatus {
+  Uninitialized,
   Success,
   Failure
 }
@@ -55,8 +55,8 @@ export function buildClassName(formDisabled: boolean, errorResponse: string | un
 
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted, persistor }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
-  const [interactiveState, setInteractiveState] = useState<PersistorState | null>(null)
-  const [persistorStatus, setPersistorStatus] = useState<number>(PersistorStatus.Impersistent)
+  const [response, setResponse] = useState('')
+  const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
@@ -66,41 +66,27 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
   })
 
-  const updateInteractiveState = async (): Promise<void> => {
+  const getPersistedState = async (): Promise<void> => {
     try {
       if (contentId === undefined || persistor === undefined) {
-        setInteractiveState({
-          userResponse: '',
-          responseSubmitted: false
-        }
-        )
-        setPersistorStatus(PersistorStatus.Success)
+        setPersistorGetStatus(PersistorGetStatus.Success)
         return
       }
 
-      const currentLocalStorageState = await persistor.get(contentId)
-      if (currentLocalStorageState !== null) {
-        const parsedLocalStorage = JSON.parse(currentLocalStorageState)
-        setInteractiveState({
-          userResponse: parsedLocalStorage.userResponse,
-          responseSubmitted: parsedLocalStorage.responseSubmitted
-        })
+      const persistedState = await persistor.get(contentId)
+      if (persistedState !== null) {
+        const parsedLocalStorage = JSON.parse(persistedState)
+        setResponse(parsedLocalStorage.userResponse)
         setResponseSubmitted(parsedLocalStorage.responseSubmitted)
-      } else {
-        setInteractiveState({
-          userResponse: '',
-          responseSubmitted: false
-        })
       }
-      setPersistorStatus(PersistorStatus.Success)
+      setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
-      setPersistorStatus(PersistorStatus.Failure)
-      console.error(err)
+      setPersistorGetStatus(PersistorGetStatus.Failure)
     }
   }
 
   useEffect(() => {
-    updateInteractiveState().catch(() => { })
+    getPersistedState().catch(() => { })
   }, [])
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
@@ -111,19 +97,12 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
     try {
       if (contentId !== undefined && persistor !== undefined) {
-        await persistor.put(contentId, JSON.stringify({ userResponse: values.response, responseSubmitted: true }))
-        const currentLocalStorageState = await persistor.get(contentId)
-        if (currentLocalStorageState !== null) {
-          const parsedLocalStorage = JSON.parse(currentLocalStorageState)
-          setInteractiveState({
-            userResponse: parsedLocalStorage.userResponse,
-            responseSubmitted: parsedLocalStorage.responseSubmitted
-          })
-        }
+        const newPersistedData: PersistorData = { userResponse: values.response, responseSubmitted: true }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
       }
     } catch (error) {
-      setPersistorStatus(PersistorStatus.Failure)
-      console.error(error)
+      setFieldError('response', 'Error saving response. Please try again.')
+      return
     }
 
     setResponseSubmitted(true)
@@ -155,40 +134,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       < div className='my-3 os-feedback-message ' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
-  if (interactiveState !== null && persistorStatus === PersistorStatus.Success) {
-    return (
-      <EventControlledContent waitForEvent={waitForEvent}>
-        <div className="os-raise-bootstrap">
-          <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
-          <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
-          <Formik
-            initialValues={{ response: interactiveState.userResponse }}
-            onSubmit={handleSubmit}
-            validationSchema={schema}
-            validateOnBlur={false}
-          >
-            {({ isSubmitting, errors }) => (
-              <Form>
-                <Field
-                name="response"
-                as="textarea"
-                disabled={isSubmitting || responseSubmitted}
-                rows={DEFAULT_TEXTAREA_ROWS}
-                className={buildClassName(responseSubmitted, errors.response)}/>
-                <ErrorMessage className="text-danger my-3" component="div" name="response" />
-                <div className='os-text-center mt-4'>
-                <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-          {maybeAck}
-        </div>
-      </EventControlledContent>
-    )
-  }
-
-  if (persistorStatus === PersistorStatus.Failure) {
+  if (persistorGetStatus === PersistorGetStatus.Failure) {
     return (
       <div className="os-raise-bootstrap">
         <div className="text-center">
@@ -198,13 +144,46 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     )
   }
 
-  return (
-    <div className="os-raise-bootstrap">
-      <div className="text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+  if (persistorGetStatus === PersistorGetStatus.Uninitialized) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
       </div>
-    </div>
+    )
+  }
+
+  return (
+    <EventControlledContent waitForEvent={waitForEvent}>
+      <div className="os-raise-bootstrap">
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
+        <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
+        <Formik
+          initialValues={{ response }}
+          onSubmit={handleSubmit}
+          validationSchema={schema}
+          validateOnBlur={false}
+        >
+          {({ isSubmitting, errors }) => (
+            <Form>
+              <Field
+              name="response"
+              as="textarea"
+              disabled={isSubmitting || responseSubmitted}
+              rows={DEFAULT_TEXTAREA_ROWS}
+              className={buildClassName(responseSubmitted, errors.response)}/>
+              <ErrorMessage className="text-danger my-3" component="div" name="response" />
+              <div className='os-text-center mt-4'>
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+              </div>
+            </Form>
+          )}
+        </Formik>
+        {maybeAck}
+      </div>
+    </EventControlledContent>
   )
 }
