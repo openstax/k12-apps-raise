@@ -228,6 +228,33 @@ table.os-raise-horizontaltable {
   }
 }
 
+table.os-raise-textheavyadjustedtable {
+  @extend %os-raise-basictable;
+
+  width: 100%;
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  th,
+  td {
+    text-align: left;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  th {
+    vertical-align: bottom;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  td {
+    vertical-align: top;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  td:first-child {
+    border-left: none;
+  }
+}
+
 .os-raise-mb-0 {
   margin-bottom: 0;
 }
