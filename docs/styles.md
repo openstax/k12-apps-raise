@@ -4,6 +4,7 @@
   - [Styling Content for RAISE](#styling-content-for-raise)
 - Tables
   - [Text Heavy Tables](#text-heavy-table)
+  - [Text Heavy Adjusted Tables](#text-heavy-adjusted-table)
   - [Horizontal Tables](#horizontal-table)
   - [Mid-Sized Tables](#mid-size-table)
   - Skinny Tables
@@ -76,6 +77,64 @@ Add as a class attribute to a table html tag.
       <td>
         <p>Partial coverage: Lesson provides content that covers part of this TEKS. The parts that are covered have been underlined</p>
       </td>
+    </tr>
+  </tbody>
+</table>
+```
+
+---
+
+## Text Heavy Adjusted Table
+
+Adds a solid border, styled table header, and padding to a table with column widths determined by the widest content in a column.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/textheavyadjustedtable.png" width="600">
+</div>
+
+**Availability**
+
+Add as a class attribute to a table html tag.
+
+**Usage**
+
+```html
+<table class="os-raise-textheavyadjustedtable">
+  <thead>
+    <tr>
+      <th scope="col">Lesson Number</th>
+      <th scope="col">Lesson Title</th>
+      <th scope="col">Associated Texas Essential Knowledge and Skills [TEKS]</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.1</td>
+      <td>Exploring Expressions and Equations</td>
+      <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
+        <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
+    </tr>
+    <tr>
+      <td>1.2</td>
+      <td>Writing Equations to Model Relationships (Part 1)</td>
+      <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
+        <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
+    </tr>
+    <tr>
+      <td>1.3</td>
+      <td>Writing Equations to Model Relationships (Part 2)</td>
+      <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
+        <p>A1(C) select tools, including real objects, manipulatives, paper and pencil, and technology as appropriate, and techniques, including mental math, estimation, and number sense as appropriate, to solve problems</p>
+        <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description.</p></td>
+    </tr>
+    <tr>
+      <td>1.4</td>
+      <td>Equations and Their Solutions</td>
+      <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
+        <p>A1(C) select tools, including real objects, manipulatives, paper and pencil, and technology as appropriate, and techniques, including mental math, estimation, and number sense as appropriate, to solve problems</p>
+        <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
     </tr>
   </tbody>
 </table>
