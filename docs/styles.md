@@ -111,27 +111,27 @@ Add as a class attribute to a table html tag.
   </thead>
   <tbody>
     <tr>
-      <td><p>1.1</p></td>
-      <td><p>Exploring Expressions and Equations</p></td>
+      <td>1.1</td>
+      <td>Exploring Expressions and Equations</td>
       <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
         <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
     </tr>
     <tr>
-      <td><p>1.2</p></td>
-      <td><p>Writing Equations to Model Relationships (Part 1)</p></td>
+      <td>1.2</td>
+      <td>Writing Equations to Model Relationships (Part 1)</td>
       <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
         <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
     </tr>
     <tr>
-      <td><p>1.3</p></td>
-      <td><p>Writing Equations to Model Relationships (Part 2)</p></td>
+      <td>1.3</td>
+      <td>Writing Equations to Model Relationships (Part 2)</td>
       <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
         <p>A1(C) select tools, including real objects, manipulatives, paper and pencil, and technology as appropriate, and techniques, including mental math, estimation, and number sense as appropriate, to solve problems</p>
         <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description.</p></td>
     </tr>
     <tr>
-      <td><p>1.4</p></td>
-      <td><p>Equations and Their Solutions</p></td>
+      <td>1.4</td>
+      <td>Equations and Their Solutions</td>
       <td><p>A1(A) apply mathematics to problems arising in everyday life, society, and the workplace</p>
         <p>A1(C) select tools, including real objects, manipulatives, paper and pencil, and technology as appropriate, and techniques, including mental math, estimation, and number sense as appropriate, to solve problems</p>
         <p>A2(C) write linear equations in two variables given a table of values, a graph, and a verbal description</p></td>
