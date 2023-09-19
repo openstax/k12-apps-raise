@@ -4,7 +4,7 @@
   - [Styling Content for RAISE](#styling-content-for-raise)
 - Tables
   - [Text Heavy Tables](#text-heavy-table)
-  - [Adjustable Column Text Heavy Tables](#text-heavy-adjusted-table)
+  - [Text Heavy Adjusted Tables](#text-heavy-adjusted-table)
   - [Horizontal Tables](#horizontal-table)
   - [Mid-Sized Tables](#mid-size-table)
   - Skinny Tables
@@ -84,7 +84,7 @@ Add as a class attribute to a table html tag.
 
 ---
 
-## Adjustable Column Text Heavy Table
+## Text Heavy Adjusted Table
 
 Adds a solid border, styled table header, and padding to a table with column widths determined by the widest content in a column.
 
