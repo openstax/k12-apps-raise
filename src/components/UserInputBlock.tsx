@@ -1,10 +1,11 @@
 import { EventControlledContent } from './EventControlledContent'
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
-import { useState, useCallback, useContext } from 'react'
+import { useState, useCallback, useContext, useEffect } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { tooltipify } from '../lib/tooltip'
 import { ContentLoadedContext } from '../lib/contexts'
+import { type Persistor } from '../lib/persistor'
 
 const DEFAULT_TEXTAREA_ROWS = 2
 export const MAX_CHARACTER_INPUT_BLOCK_LENGTH = 5000
@@ -23,10 +24,22 @@ interface UserInputBlockProps {
     response: string,
     inputContentId: string | undefined
   ) => void
+  persistor?: Persistor
 }
 
 interface InputFormValues {
   response: string
+}
+
+interface PersistorData {
+  userResponse: string
+  responseSubmitted: boolean
+}
+
+enum PersistorGetStatus {
+  Uninitialized,
+  Success,
+  Failure
 }
 
 export function buildClassName(formDisabled: boolean, errorResponse: string | undefined): string {
@@ -40,8 +53,10 @@ export function buildClassName(formDisabled: boolean, errorResponse: string | un
   return className
 }
 
-export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted }: UserInputBlockProps): JSX.Element => {
+export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted, persistor }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
+  const [response, setResponse] = useState('')
+  const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
@@ -51,9 +66,42 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       .max(MAX_CHARACTER_INPUT_BLOCK_LENGTH, EXCEEDED_MAX_INPUT_ERROR)
   })
 
+  const getPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        setPersistorGetStatus(PersistorGetStatus.Success)
+        return
+      }
+
+      const persistedState = await persistor.get(contentId)
+      if (persistedState !== null) {
+        const parsedPersistedState = JSON.parse(persistedState)
+        setResponse(parsedPersistedState.userResponse)
+        setResponseSubmitted(parsedPersistedState.responseSubmitted)
+      }
+      setPersistorGetStatus(PersistorGetStatus.Success)
+    } catch (err) {
+      setPersistorGetStatus(PersistorGetStatus.Failure)
+    }
+  }
+
+  useEffect(() => {
+    getPersistedState().catch(() => { })
+  }, [])
+
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     if (values.response.trim() === '') {
       setFieldError('response', NON_EMPTY_VALUE_ERROR)
+      return
+    }
+
+    try {
+      if (contentId !== undefined && persistor !== undefined) {
+        const newPersistedData: PersistorData = { userResponse: values.response, responseSubmitted: true }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      }
+    } catch (error) {
+      setFieldError('response', 'Error saving response. Please try again.')
       return
     }
 
@@ -86,13 +134,35 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       < div className='my-3 os-feedback-message ' ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: ack }} />
       )
 
+  if (persistorGetStatus === PersistorGetStatus.Failure) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <span className="text-danger">There was an error loading content. Please try refreshing the page.</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (persistorGetStatus === PersistorGetStatus.Uninitialized) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
       <div className="os-raise-bootstrap">
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
         <Formik
-          initialValues={{ response: '' }}
+          initialValues={{ response }}
           onSubmit={handleSubmit}
           validationSchema={schema}
           validateOnBlur={false}

@@ -13,6 +13,7 @@ import {
 } from '../components/ProblemSetBlock'
 import { UserInputBlock } from '../components/UserInputBlock'
 import { queueIbPsetProblemAttemptedV1Event, queueIbInputSubmittedV1Event } from './events'
+import { browserPersistor } from './persistor'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
@@ -222,6 +223,7 @@ export const parseUserInputBlock = (element: HTMLElement): JSX.Element | null =>
     fireEvent={fireEvent}
     contentId={contentId}
     onInputSubmitted={onInputSubmitted}
+    persistor={browserPersistor}
   />
 }
 

@@ -5,6 +5,7 @@ import { InputProblem } from './InputProblem'
 import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
 import { ContentLoadedContext } from '../lib/contexts'
+import { browserPersistor } from '../lib/persistor'
 
 export interface ProblemData {
   type: string
@@ -188,6 +189,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     if (prob.type === PROBLEM_TYPE_DROPDOWN) {
       children.push(<DropdownProblem
         solutionOptions={prob.solutionOptions as string}
+        persistor={browserPersistor}
         {...sharedProps}
       />)
     }

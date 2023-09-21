@@ -2,24 +2,36 @@ import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
+import { type Persistor } from '../lib/persistor'
 
 interface DropdownProblemProps extends BaseProblemProps {
   solutionOptions: string
+  persistor?: Persistor
 }
 
 interface DropdownFormValues {
   response: string
 }
 
+interface PersistorData {
+  userResponse: string
+  formDisabled: boolean
+  retriesAllowed: number
+  feedback: string
+}
+
+enum PersistorGetStatus {
+  Uninitialized,
+  Success,
+  Failure
+}
+
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
   let className = 'os-form-select'
-  if (response !== '') {
-    className += ' os-selected-answer-choice'
-  }
   if (solution === response && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
@@ -32,11 +44,13 @@ export function buildClassName(response: string, solution: string, formDisabled:
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
   encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
-  onProblemAttempt
+  onProblemAttempt, persistor
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
   const [retriesAllowed, setRetriesAllowed] = useState(0)
+  const [response, setResponse] = useState('')
+  const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -66,10 +80,53 @@ export const DropdownProblem = ({
     return input === answer
   }
 
+  const setPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+
+      if (response !== '' || formDisabled || retriesAllowed !== 0) {
+        const newPersistedData: PersistorData = { userResponse: response, formDisabled, retriesAllowed, feedback }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const getPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        setPersistorGetStatus(PersistorGetStatus.Success)
+        return
+      }
+
+      const persistedState = await persistor.get(contentId)
+      if (persistedState !== null) {
+        const parsedPersistedState = JSON.parse(persistedState)
+        setResponse(parsedPersistedState.userResponse)
+        setFormDisabled(parsedPersistedState.formDisabled)
+        setRetriesAllowed(parsedPersistedState.retriesAllowed)
+        setFeedback(parsedPersistedState.feedback)
+      }
+      setPersistorGetStatus(PersistorGetStatus.Success)
+    } catch (err) {
+      setPersistorGetStatus(PersistorGetStatus.Failure)
+    }
+  }
+
+  useEffect(() => {
+    setPersistedState().catch(() => { })
+    getPersistedState().catch(() => { })
+  }, [response, formDisabled, retriesAllowed])
+
   const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
+
+    setResponse(values.response)
 
     if (evaluateInput(values.response, solution)) {
       correct = true
@@ -99,23 +156,46 @@ export const DropdownProblem = ({
     }
   }
 
+  if (persistorGetStatus === PersistorGetStatus.Failure) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <span className="text-danger">There was an error loading content. Please try refreshing the page.</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (persistorGetStatus === PersistorGetStatus.Uninitialized) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="os-raise-bootstrap">
       <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
-        initialValues={{ response: '' }}
+        initialValues={{ response }}
         onSubmit={handleSubmit}
         validationSchema={schema}
+        enableReinitialize={true}
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
             <div className='os-flex os-align-items-center'>
-              {solution === values.response && formDisabled &&
+              {solution === response && formDisabled &&
                 <div>
                   <CorrectAnswerIcon className={'os-mr'} />
                 </div>
               }
-              {solution !== values.response && formDisabled &&
+              {solution !== response && formDisabled &&
                 <div>
                   <WrongAnswerIcon className={'os-mr'} />
                 </div>
@@ -123,9 +203,9 @@ export const DropdownProblem = ({
               <Field
                 name="response"
                 as="select"
-                value={values.response}
+                value={formDisabled ? response : values.response}
                 disabled={isSubmitting || formDisabled}
-                className={buildClassName(values.response, solution, formDisabled)}
+                className={buildClassName(response, solution, formDisabled)}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
               >
               {generateOptions()}
