@@ -196,6 +196,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     if (prob.type === PROBLEM_TYPE_MULTISELECT) {
       children.push(<MultiselectProblem
         solutionOptions={prob.solutionOptions as string}
+        persistor={browserPersistor}
         {...sharedProps}
       />)
     }
