@@ -6,11 +6,9 @@ import React, { useCallback, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
-import { type Persistor } from '../lib/persistor'
 
 interface DropdownProblemProps extends BaseProblemProps {
   solutionOptions: string
-  persistor?: Persistor
 }
 
 interface DropdownFormValues {

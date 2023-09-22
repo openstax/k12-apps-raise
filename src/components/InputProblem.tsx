@@ -10,12 +10,10 @@ import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
 import { parse, compare } from '@khanacademy/kas'
 import { ComputeEngine } from '@cortex-js/compute-engine'
-import { type Persistor } from '../lib/persistor'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
   comparator: string
-  persistor: Persistor
 }
 
 interface InputSchema {

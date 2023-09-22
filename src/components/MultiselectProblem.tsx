@@ -6,11 +6,9 @@ import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
 import * as Yup from 'yup'
 import { FormSelectable } from './FormSelectable'
 import { AttemptsCounter } from './AttemptsCounter'
-import { type Persistor } from '../lib/persistor'
 
 interface MultiselectProps extends BaseProblemProps {
   solutionOptions: string
-  persistor?: Persistor
 }
 
 interface MultiselectFormValues {

@@ -5,7 +5,7 @@ import { InputProblem } from './InputProblem'
 import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
 import { ContentLoadedContext } from '../lib/contexts'
-import { browserPersistor } from '../lib/persistor'
+import { type Persistor, browserPersistor } from '../lib/persistor'
 
 export interface ProblemData {
   type: string
@@ -47,6 +47,7 @@ export interface BaseProblemProps {
     finalAttempt: boolean,
     psetProblemContentId: string | undefined
   ) => void
+  persistor?: Persistor
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
@@ -178,33 +179,30 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       buttonText: prob.buttonText,
       attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
       answerResponses: prob.answerResponses,
-      onProblemAttempt: problemAttemptedCallbackFactory(prob.type)
+      onProblemAttempt: problemAttemptedCallbackFactory(prob.type),
+      persistor: browserPersistor
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
         comparator={prob.comparator as string}
-        persistor={browserPersistor}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_DROPDOWN) {
       children.push(<DropdownProblem
         solutionOptions={prob.solutionOptions as string}
-        persistor={browserPersistor}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_MULTISELECT) {
       children.push(<MultiselectProblem
         solutionOptions={prob.solutionOptions as string}
-        persistor={browserPersistor}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_MULTIPLECHOICE) {
       children.push(<MultipleChoiceProblem
         solutionOptions={prob.solutionOptions as string}
-        persistor={browserPersistor}
         {...sharedProps}
       />)
     }

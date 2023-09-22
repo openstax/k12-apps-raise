@@ -6,11 +6,9 @@ import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { FormSelectable } from './FormSelectable'
 import { AttemptsCounter } from './AttemptsCounter'
-import { type Persistor } from '../lib/persistor'
 
 interface MultipleChoiceProps extends BaseProblemProps {
   solutionOptions: string
-  persistor?: Persistor
 }
 
 interface MultipleChoiceFormValues {
