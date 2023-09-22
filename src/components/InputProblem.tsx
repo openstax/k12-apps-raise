@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
@@ -24,6 +24,19 @@ interface InputFormValues {
   response: string
 }
 
+interface PersistorData {
+  userResponse: string
+  inputDisabled: boolean
+  retriesAllowed: number
+  feedback: string
+}
+
+enum PersistorGetStatus {
+  Uninitialized,
+  Success,
+  Failure
+}
+
 export function buildClassName(correct: boolean, formDisabled: boolean, errorResponse: string | undefined): string {
   let className = 'os-form-control'
   if (correct && formDisabled) {
@@ -40,11 +53,14 @@ export function buildClassName(correct: boolean, formDisabled: boolean, errorRes
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
-  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt
+  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt,
+  persistor
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const [response, setResponse] = useState('')
+  const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
@@ -105,10 +121,53 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
+  const setPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+
+      if (response !== '' || inputDisabled || retriesAllowed !== 0) {
+        const newPersistedData: PersistorData = { userResponse: response, inputDisabled, retriesAllowed, feedback }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const getPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        setPersistorGetStatus(PersistorGetStatus.Success)
+        return
+      }
+
+      const persistedState = await persistor.get(contentId)
+      if (persistedState !== null) {
+        const parsedPersistedState = JSON.parse(persistedState)
+        setResponse(parsedPersistedState.userResponse)
+        setInputDisabled(parsedPersistedState.inputDisabled)
+        setRetriesAllowed(parsedPersistedState.retriesAllowed)
+        setFeedback(parsedPersistedState.feedback)
+      }
+      setPersistorGetStatus(PersistorGetStatus.Success)
+    } catch (err) {
+      setPersistorGetStatus(PersistorGetStatus.Failure)
+    }
+  }
+
+  useEffect(() => {
+    setPersistedState().catch(() => { })
+    getPersistedState().catch(() => { })
+  }, [response, inputDisabled, retriesAllowed])
+
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
+
+    setResponse(values.response)
 
     if (values.response.trim() === '') {
       if ((comparator.toLowerCase() === 'integer') || (comparator.toLowerCase() === 'float')) {
@@ -149,26 +208,50 @@ export const InputProblem = ({
   const clearFeedback = (): void => {
     setFeedback('')
   }
+
+  if (persistorGetStatus === PersistorGetStatus.Failure) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <span className="text-danger">There was an error loading content. Please try refreshing the page.</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (persistorGetStatus === PersistorGetStatus.Uninitialized) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
   <div className="os-raise-bootstrap">
 
     <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
     <Formik
-          initialValues={{ response: '' }}
+          initialValues={{ response }}
           onSubmit={handleSubmit}
           validationSchema={schema}
           validateOnBlur={false}
+          enableReinitialize={true}
         >
           {({ isSubmitting, setFieldValue, values, errors }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
 
-                {evaluateInput(values.response, solution) && inputDisabled &&
+                {evaluateInput(response, solution) && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {!evaluateInput(values.response, solution) && inputDisabled &&
+                {!evaluateInput(response, solution) && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
