@@ -10,10 +10,12 @@ import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
 import { parse, compare } from '@khanacademy/kas'
 import { ComputeEngine } from '@cortex-js/compute-engine'
+import { type Persistor } from '../lib/persistor'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
   comparator: string
+  persistor?: Persistor
 }
 
 interface InputSchema {
@@ -28,7 +30,6 @@ interface PersistorData {
   userResponse: string
   inputDisabled: boolean
   retriesAllowed: number
-  feedback: string
 }
 
 enum PersistorGetStatus {
@@ -121,19 +122,17 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
-  const setPersistedState = async (): Promise<void> => {
-    try {
-      if (contentId === undefined || persistor === undefined) {
-        return
-      }
-
-      if (response !== '' || inputDisabled || retriesAllowed !== 0) {
-        const newPersistedData: PersistorData = { userResponse: response, inputDisabled, retriesAllowed, feedback }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
-      }
-    } catch (err) {
-      console.error(err)
+  const handleFeedback = (userResponse: string, userAttempts: number): string => {
+    if (evaluateInput(userResponse, solution)) {
+      setFeedback(correctResponse)
+    } else if (retryLimit === 0 || userAttempts !== retryLimit + 1) {
+      const attemptsRemainingResponse = determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput)
+      setFeedback(attemptsRemainingResponse)
+    } else {
+      setFeedback(attemptsExhaustedResponse)
     }
+
+    return feedback
   }
 
   const getPersistedState = async (): Promise<void> => {
@@ -149,7 +148,7 @@ export const InputProblem = ({
         setResponse(parsedPersistedState.userResponse)
         setInputDisabled(parsedPersistedState.inputDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        setFeedback(parsedPersistedState.feedback)
+        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
@@ -158,16 +157,20 @@ export const InputProblem = ({
   }
 
   useEffect(() => {
-    setPersistedState().catch(() => { })
     getPersistedState().catch(() => { })
-  }, [response, inputDisabled, retriesAllowed])
+  }, [])
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
 
-    setResponse(values.response)
+    const setPersistedState = async (persistorData: PersistorData): Promise<void> => {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+      await persistor.put(contentId, JSON.stringify(persistorData))
+    }
 
     if (values.response.trim() === '') {
       if ((comparator.toLowerCase() === 'integer') || (comparator.toLowerCase() === 'float')) {
@@ -180,20 +183,44 @@ export const InputProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+
+      try {
+        await setPersistedState({ userResponse: values.response, inputDisabled: true, retriesAllowed })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
+      handleFeedback(values.response, retriesAllowed)
       solvedCallback()
       setInputDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+      try {
+        await setPersistedState({ userResponse: values.response, inputDisabled, retriesAllowed: retriesAllowed + 1 })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
+      handleFeedback(values.response, retriesAllowed + 1)
       allowedRetryCallback()
     } else {
+      try {
+        await setPersistedState({ userResponse: values.response, inputDisabled: true, retriesAllowed: retriesAllowed + 1 })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
+      handleFeedback(values.response, retriesAllowed + 1)
       exhaustedCallback()
       setInputDisabled(true)
       finalAttempt = true
     }
+
+    setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

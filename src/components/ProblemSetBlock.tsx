@@ -5,7 +5,7 @@ import { InputProblem } from './InputProblem'
 import { MultipleChoiceProblem } from './MultipleChoiceProblem'
 import { MultiselectProblem } from './MultiselectProblem'
 import { ContentLoadedContext } from '../lib/contexts'
-import { type Persistor, browserPersistor } from '../lib/persistor'
+import { type Persistor } from '../lib/persistor'
 
 export interface ProblemData {
   type: string
@@ -47,7 +47,6 @@ export interface BaseProblemProps {
     finalAttempt: boolean,
     psetProblemContentId: string | undefined
   ) => void
-  persistor?: Persistor
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'
@@ -79,9 +78,10 @@ interface ProblemSetBlockProps {
     psetContentId: string | undefined,
     psetProblemContentId: string | undefined
   ) => void
+  persistor?: Persistor
 }
 
-export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems, onProblemAttempt }: ProblemSetBlockProps): JSX.Element => {
+export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOpportunityEvent, contentId, problems, onProblemAttempt, persistor }: ProblemSetBlockProps): JSX.Element => {
   const generateInitialProblemResults = (): Map<number, ProblemResult> => {
     const initProblems = new Map<number, ProblemResult>()
     problems.forEach((_, indx) => {
@@ -180,7 +180,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
       answerResponses: prob.answerResponses,
       onProblemAttempt: problemAttemptedCallbackFactory(prob.type),
-      persistor: browserPersistor
+      persistor
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
