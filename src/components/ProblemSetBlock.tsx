@@ -47,6 +47,7 @@ export interface BaseProblemProps {
     finalAttempt: boolean,
     psetProblemContentId: string | undefined
   ) => void
+  persistor?: Persistor
 }
 
 export const NO_MORE_ATTEMPTS_MESSAGE = 'No more attempts allowed'

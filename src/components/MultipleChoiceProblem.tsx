@@ -1,7 +1,7 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
 import { useCallback, useEffect, useState } from 'react'
-import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
+import { Formik, Form, ErrorMessage, type FormikErrors, type FormikHelpers } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
 import { FormSelectable } from './FormSelectable'
@@ -19,7 +19,6 @@ interface PersistorData {
   userResponse: string
   formDisabled: boolean
   retriesAllowed: number
-  feedback: string
   showAnswers: boolean
 }
 
@@ -132,18 +131,13 @@ export const MultipleChoiceProblem = ({
     return input === answer
   }
 
-  const setPersistedState = async (): Promise<void> => {
-    try {
-      if (contentId === undefined || persistor === undefined) {
-        return
-      }
-
-      if (response !== '' || formDisabled || retriesAllowed !== 0) {
-        const newPersistedData: PersistorData = { userResponse: response, formDisabled, retriesAllowed, feedback, showAnswers }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
-      }
-    } catch (err) {
-      console.error(err)
+  const handleFeedback = (userResponse: string, userAttempts: number): void => {
+    if (evaluateInput(userResponse, solution)) {
+      setFeedback(correctResponse)
+    } else if (retryLimit === 0 || userAttempts !== retryLimit) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
     }
   }
 
@@ -160,7 +154,7 @@ export const MultipleChoiceProblem = ({
         setResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        setFeedback(parsedPersistedState.feedback)
+        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
         setShowAnswers(parsedPersistedState.showAnswers)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
@@ -170,44 +164,63 @@ export const MultipleChoiceProblem = ({
   }
 
   useEffect(() => {
-    setPersistedState().catch(() => { })
     getPersistedState().catch(() => { })
-  }, [response, formDisabled, retriesAllowed])
+  }, [])
 
   const handleSubmit = async (
-    values: MultipleChoiceFormValues
+    values: MultipleChoiceFormValues, { setFieldError }: FormikHelpers<MultipleChoiceFormValues>
   ): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
 
-    setResponse(values.response)
+    const setPersistedState = async (persistorData: PersistorData): Promise<void> => {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+      await persistor.put(contentId, JSON.stringify(persistorData))
+    }
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed, showAnswers: true })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled, retriesAllowed: retriesAllowed + 1, showAnswers })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(
-        determineFeedback(
-          values.response,
-          encourageResponse,
-          answerResponses,
-          evaluateInput
-        )
-      )
       allowedRetryCallback()
     } else {
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed: retriesAllowed + 1, showAnswers: true })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setShowAnswers(true)
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(values.response, retriesAllowed)
+    setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

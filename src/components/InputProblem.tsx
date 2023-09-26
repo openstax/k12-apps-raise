@@ -10,12 +10,10 @@ import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
 import { parse, compare } from '@khanacademy/kas'
 import { ComputeEngine } from '@cortex-js/compute-engine'
-import { type Persistor } from '../lib/persistor'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
   comparator: string
-  persistor?: Persistor
 }
 
 interface InputSchema {
@@ -122,17 +120,14 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
-  const handleFeedback = (userResponse: string, userAttempts: number): string => {
+  const handleFeedback = (userResponse: string, userAttempts: number): void => {
     if (evaluateInput(userResponse, solution)) {
       setFeedback(correctResponse)
-    } else if (retryLimit === 0 || userAttempts !== retryLimit + 1) {
-      const attemptsRemainingResponse = determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput)
-      setFeedback(attemptsRemainingResponse)
+    } else if (retryLimit === 0 || userAttempts !== retryLimit) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
     }
-
-    return feedback
   }
 
   const getPersistedState = async (): Promise<void> => {
@@ -148,7 +143,7 @@ export const InputProblem = ({
         setResponse(parsedPersistedState.userResponse)
         setInputDisabled(parsedPersistedState.inputDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed)
+        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
@@ -191,7 +186,6 @@ export const InputProblem = ({
         return
       }
 
-      handleFeedback(values.response, retriesAllowed)
       solvedCallback()
       setInputDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
@@ -203,7 +197,6 @@ export const InputProblem = ({
       }
 
       setRetriesAllowed(currRetries => currRetries + 1)
-      handleFeedback(values.response, retriesAllowed + 1)
       allowedRetryCallback()
     } else {
       try {
@@ -214,12 +207,12 @@ export const InputProblem = ({
       }
 
       setRetriesAllowed(currRetries => currRetries + 1)
-      handleFeedback(values.response, retriesAllowed + 1)
       exhaustedCallback()
       setInputDisabled(true)
       finalAttempt = true
     }
 
+    handleFeedback(values.response, retriesAllowed)
     setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
