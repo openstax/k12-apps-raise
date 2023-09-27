@@ -118,7 +118,7 @@ export const MultipleChoiceProblem = ({
             disabled={isSubmitting || formDisabled}
             onChange={onChange}
             showAnswer={showAnswers}
-            selected={response === val}
+            selected={values.response === val}
           />
         </div>
       )
@@ -262,7 +262,6 @@ export const MultipleChoiceProblem = ({
         initialValues={{ response }}
         onSubmit={handleSubmit}
         validationSchema={schema}
-        enableReinitialize={true}
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>

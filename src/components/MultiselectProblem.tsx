@@ -28,12 +28,12 @@ enum PersistorGetStatus {
   Failure
 }
 
-export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, response: string[]): string {
+export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
   let className = 'os-default-answer-choice'
 
   if (solutionArray.includes(val) && showAnswers) {
     className += ' os-correct-answer-choice'
-  } else if (!solutionArray.includes(val) && response.includes(val) && showAnswers) {
+  } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
     className += ' os-wrong-answer-choice'
   }
 
@@ -41,11 +41,11 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
     className += ' os-disabled'
   }
 
-  if (response.includes(val)) {
+  if (values.response.includes(val)) {
     className += ' os-selected-answer-choice'
   }
 
-  if (response.includes(val) && showAnswers) {
+  if (values.response.includes(val) && showAnswers) {
     className += ' os-form-check'
   }
 
@@ -118,14 +118,14 @@ export const MultiselectProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); void setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values.response)}>
+      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
         <FormSelectable label={val}
           type='checkbox'
           correct={solutionArray.includes(val)}
           disabled={isSubmitting || formDisabled}
           onChange={onChange}
           showAnswer={showAnswers}
-          selected={response.includes(val)}
+          selected={values.response.includes(val)}
         />
       </div>
     ))
@@ -278,7 +278,6 @@ export const MultiselectProblem = ({
         initialValues={{ response }}
         onSubmit={handleSubmit}
         validationSchema={schema}
-        enableReinitialize={true}
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>

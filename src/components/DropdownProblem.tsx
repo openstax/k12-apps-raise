@@ -29,6 +29,9 @@ enum PersistorGetStatus {
 
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
   let className = 'os-form-select'
+  if (response !== '') {
+    className += ' os-selected-answer-choice'
+  }
   if (solution === response && formDisabled) {
     className += ' os-correct-answer-choice os-disabled'
   }
@@ -203,17 +206,16 @@ export const DropdownProblem = ({
         initialValues={{ response }}
         onSubmit={handleSubmit}
         validationSchema={schema}
-        enableReinitialize={true}
       >
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
             <div className='os-flex os-align-items-center'>
-              {solution === response && formDisabled &&
+              {solution === values.response && formDisabled &&
                 <div>
                   <CorrectAnswerIcon className={'os-mr'} />
                 </div>
               }
-              {solution !== response && formDisabled &&
+              {solution !== values.response && formDisabled &&
                 <div>
                   <WrongAnswerIcon className={'os-mr'} />
                 </div>
@@ -221,9 +223,9 @@ export const DropdownProblem = ({
               <Field
                 name="response"
                 as="select"
-                value={formDisabled ? response : values.response}
+                value={values.response}
                 disabled={isSubmitting || formDisabled}
-                className={buildClassName(response, solution, formDisabled)}
+                className={buildClassName(values.response, solution, formDisabled)}
                 onChange={(e: React.ChangeEvent<HTMLSelectElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
               >
               {generateOptions()}

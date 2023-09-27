@@ -260,18 +260,17 @@ export const InputProblem = ({
           onSubmit={handleSubmit}
           validationSchema={schema}
           validateOnBlur={false}
-          enableReinitialize={true}
         >
           {({ isSubmitting, setFieldValue, values, errors }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
 
-                {evaluateInput(response, solution) && inputDisabled &&
+                {evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {!evaluateInput(response, solution) && inputDisabled &&
+                {!evaluateInput(values.response, solution) && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
