@@ -49,7 +49,7 @@ export const DropdownProblem = ({
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
   const [retriesAllowed, setRetriesAllowed] = useState(0)
-  const [response, setResponse] = useState('')
+  const [initialResponse, setInitialResponse] = useState('')
   const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
 
   const schema = Yup.object({
@@ -100,7 +100,7 @@ export const DropdownProblem = ({
       const persistedState = await persistor.get(contentId)
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
-        setResponse(parsedPersistedState.userResponse)
+        setInitialResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
         handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
@@ -164,7 +164,6 @@ export const DropdownProblem = ({
     }
 
     handleFeedback(values.response, retriesAllowed)
-    setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
@@ -203,7 +202,7 @@ export const DropdownProblem = ({
     <div className="os-raise-bootstrap">
       <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
-        initialValues={{ response }}
+        initialValues={{ response: initialResponse }}
         onSubmit={handleSubmit}
         validationSchema={schema}
       >

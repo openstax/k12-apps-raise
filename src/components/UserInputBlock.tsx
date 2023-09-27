@@ -55,7 +55,7 @@ export function buildClassName(formDisabled: boolean, errorResponse: string | un
 
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted, persistor }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
-  const [response, setResponse] = useState('')
+  const [initialResponse, setInitialResponse] = useState('')
   const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
@@ -76,7 +76,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       const persistedState = await persistor.get(contentId)
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
-        setResponse(parsedPersistedState.userResponse)
+        setInitialResponse(parsedPersistedState.userResponse)
         setResponseSubmitted(parsedPersistedState.responseSubmitted)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
@@ -162,7 +162,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
         <Formik
-          initialValues={{ response }}
+          initialValues={{ response: initialResponse }}
           onSubmit={handleSubmit}
           validationSchema={schema}
           validateOnBlur={false}

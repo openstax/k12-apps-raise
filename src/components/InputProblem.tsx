@@ -213,7 +213,6 @@ export const InputProblem = ({
     }
 
     handleFeedback(values.response, retriesAllowed)
-    setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

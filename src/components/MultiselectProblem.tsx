@@ -75,7 +75,7 @@ export const MultiselectProblem = ({
   const solutionArray: string[] = JSON.parse(solution)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
   const [showAnswers, setShowAnswers] = useState(false)
-  const [response, setResponse] = useState<string[]>([])
+  const [initialResponse, setInitialResponse] = useState<string[]>([])
   const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
 
   const schema = Yup.object({
@@ -169,7 +169,7 @@ export const MultiselectProblem = ({
       const persistedState = await persistor.get(contentId)
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
-        setResponse(parsedPersistedState.userResponse)
+        setInitialResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
         handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
@@ -236,7 +236,6 @@ export const MultiselectProblem = ({
     }
 
     handleFeedback(values.response, retriesAllowed)
-    setResponse(values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
@@ -275,7 +274,7 @@ export const MultiselectProblem = ({
     <div className="os-raise-bootstrap" ref={contentRefCallback}>
       <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
-        initialValues={{ response }}
+        initialValues={{ response: initialResponse }}
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
