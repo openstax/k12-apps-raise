@@ -340,6 +340,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     waitForEvent={waitForEvent}
     contentId={contentId}
     onProblemAttempt={problemAttemptedCallback}
+    persistor={browserPersistor}
   />
 }
 

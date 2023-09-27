@@ -1,8 +1,8 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
 import { mathifyElement } from '../lib/math'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
@@ -13,6 +13,18 @@ interface DropdownProblemProps extends BaseProblemProps {
 
 interface DropdownFormValues {
   response: string
+}
+
+interface PersistorData {
+  userResponse: string
+  formDisabled: boolean
+  retriesAllowed: number
+}
+
+enum PersistorGetStatus {
+  Uninitialized,
+  Success,
+  Failure
 }
 
 export function buildClassName(response: string, solution: string, formDisabled: boolean): string {
@@ -32,11 +44,13 @@ export function buildClassName(response: string, solution: string, formDisabled:
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
   encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
-  onProblemAttempt
+  onProblemAttempt, persistor
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
   const [retriesAllowed, setRetriesAllowed] = useState(0)
+  const [initialResponse, setInitialResponse] = useState('')
+  const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -66,27 +80,90 @@ export const DropdownProblem = ({
     return input === answer
   }
 
-  const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
+  const handleFeedback = (userResponse: string, userAttempts: number): void => {
+    if (evaluateInput(userResponse, solution)) {
+      setFeedback(correctResponse)
+    } else if (retryLimit === 0 || userAttempts !== retryLimit) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
+  }
+
+  const getPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        setPersistorGetStatus(PersistorGetStatus.Success)
+        return
+      }
+
+      const persistedState = await persistor.get(contentId)
+      if (persistedState !== null) {
+        const parsedPersistedState = JSON.parse(persistedState)
+        setInitialResponse(parsedPersistedState.userResponse)
+        setFormDisabled(parsedPersistedState.formDisabled)
+        setRetriesAllowed(parsedPersistedState.retriesAllowed)
+        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
+      }
+      setPersistorGetStatus(PersistorGetStatus.Success)
+    } catch (err) {
+      setPersistorGetStatus(PersistorGetStatus.Failure)
+    }
+  }
+
+  useEffect(() => {
+    getPersistedState().catch(() => { })
+  }, [])
+
+  const handleSubmit = async (values: DropdownFormValues, { setFieldError }: FormikHelpers<DropdownFormValues>): Promise<void> => {
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
 
+    const setPersistedState = async (persistorData: PersistorData): Promise<void> => {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+      await persistor.put(contentId, JSON.stringify(persistorData))
+    }
+
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled, retriesAllowed: retriesAllowed + 1 })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
+      try {
+        await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed: retriesAllowed + 1 })
+      } catch (error) {
+        setFieldError('response', 'Error saving response. Please try again.')
+        return
+      }
+
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(values.response, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
@@ -99,11 +176,33 @@ export const DropdownProblem = ({
     }
   }
 
+  if (persistorGetStatus === PersistorGetStatus.Failure) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <span className="text-danger">There was an error loading content. Please try refreshing the page.</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (persistorGetStatus === PersistorGetStatus.Uninitialized) {
+    return (
+      <div className="os-raise-bootstrap">
+        <div className="text-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="os-raise-bootstrap">
       <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
-        initialValues={{ response: '' }}
+        initialValues={{ response: initialResponse }}
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
