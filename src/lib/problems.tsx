@@ -7,5 +7,5 @@ export const determineFeedback = (userResponse: string | string[], encourageResp
       response = val.response
     }
   })
-  return response === undefined ? encourageResponse : response
+  return response ?? encourageResponse
 }
