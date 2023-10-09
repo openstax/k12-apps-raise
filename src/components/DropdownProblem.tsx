@@ -1,5 +1,5 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { determineFeedback } from '../lib/problems'
+import { determineFeedback, retriesRemaining } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useState } from 'react'
@@ -37,6 +37,7 @@ export const DropdownProblem = ({
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
   const [retriesAllowed, setRetriesAllowed] = useState(0)
+  const [userResponseCorrect, setUserResponseCorrect] = useState(false)
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -66,6 +67,16 @@ export const DropdownProblem = ({
     return input === answer
   }
 
+  const handleFeedback = (correct: boolean, userAttempts: number): void => {
+    if (correct) {
+      setFeedback(correctResponse)
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
+      setFeedback(determineFeedback(encourageResponse, answerResponses))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
+  }
+
   const handleSubmit = async (values: DropdownFormValues): Promise<void> => {
     let correct = false
     let finalAttempt = false
@@ -73,20 +84,20 @@ export const DropdownProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+      setUserResponseCorrect(true)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
@@ -110,12 +121,12 @@ export const DropdownProblem = ({
         {({ isSubmitting, values, setFieldValue }) => (
           <Form>
             <div className='os-flex os-align-items-center'>
-              {solution === values.response && formDisabled &&
+              {userResponseCorrect && formDisabled &&
                 <div>
                   <CorrectAnswerIcon className={'os-mr'} />
                 </div>
               }
-              {solution !== values.response && formDisabled &&
+              {!userResponseCorrect && formDisabled &&
                 <div>
                   <WrongAnswerIcon className={'os-mr'} />
                 </div>

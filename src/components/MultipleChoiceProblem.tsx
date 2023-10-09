@@ -1,5 +1,5 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { determineFeedback } from '../lib/problems'
+import { determineFeedback, retriesRemaining } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
 import { mathifyElement } from '../lib/math'
@@ -58,6 +58,7 @@ export const MultipleChoiceProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [showAnswers, setShowAnswers] = useState(false)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
+  const [userResponseCorrect, setUserResponseCorrect] = useState(false) //Do we need?
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -115,6 +116,16 @@ export const MultipleChoiceProblem = ({
     return input === answer
   }
 
+  const handleFeedback = (correct: boolean, userAttempts: number): void => {
+    if (correct) {
+      setFeedback(correctResponse)
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
+      setFeedback(determineFeedback(encourageResponse, answerResponses))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
+  }
+
   const handleSubmit = async (
     values: MultipleChoiceFormValues
   ): Promise<void> => {
@@ -124,29 +135,22 @@ export const MultipleChoiceProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+      setUserResponseCorrect(true)
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(
-        determineFeedback(
-          values.response,
-          encourageResponse,
-          answerResponses,
-          evaluateInput
-        )
-      )
       allowedRetryCallback()
     } else {
       setShowAnswers(true)
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
