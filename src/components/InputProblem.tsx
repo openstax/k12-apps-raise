@@ -106,11 +106,11 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
-  const handleFeedback = (correct: boolean, userAttempts: number): void => {
+  const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
     } else if (retriesRemaining(retryLimit, userAttempts)) {
-      setFeedback(determineFeedback(encourageResponse, answerResponses))
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
     }
@@ -145,8 +145,7 @@ export const InputProblem = ({
       finalAttempt = true
     }
 
-    handleFeedback(correct, retriesAllowed)
-    handleFeedback(correct, retriesAllowed)
+    handleFeedback(values.response, correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

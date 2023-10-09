@@ -117,11 +117,15 @@ export const MultiselectProblem = ({
     return options
   }
 
-  const handleFeedback = (correct: boolean, userAttempts: number): void => {
+  const evaluateInput = (input: string[], answer: string): boolean => {
+    return compareForm(input, JSON.parse(answer))
+  }
+
+  const handleFeedback = (userResponse: string[], correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
     } else if (retriesRemaining(retryLimit, userAttempts)) {
-      setFeedback(determineFeedback(encourageResponse, answerResponses))
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
     }
@@ -159,7 +163,7 @@ export const MultiselectProblem = ({
       finalAttempt = true
     }
 
-    handleFeedback(correct, retriesAllowed)
+    handleFeedback(values.response, correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
