@@ -135,7 +135,7 @@ export const InputProblem = ({
       setUserResponseCorrect(true)
       solvedCallback()
       setInputDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed(currRetries => currRetries + 1)
       allowedRetryCallback()
     } else {
@@ -145,6 +145,7 @@ export const InputProblem = ({
       finalAttempt = true
     }
 
+    handleFeedback(correct, retriesAllowed)
     handleFeedback(correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {

@@ -58,7 +58,6 @@ export const MultipleChoiceProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [showAnswers, setShowAnswers] = useState(false)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
-  const [userResponseCorrect, setUserResponseCorrect] = useState(false) //Do we need?
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -135,11 +134,10 @@ export const MultipleChoiceProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setUserResponseCorrect(true)
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
       allowedRetryCallback()
     } else {

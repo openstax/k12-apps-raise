@@ -61,7 +61,6 @@ export const MultiselectProblem = ({
   const solutionArray: string[] = JSON.parse(solution)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
   const [showAnswers, setShowAnswers] = useState(false)
-  const [userResponseCorrect, setUserResponseCorrect] = useState(false)
 
   const schema = Yup.object({
     response: Yup.array().min(1, 'Please select an answer')
@@ -118,10 +117,6 @@ export const MultiselectProblem = ({
     return options
   }
 
-  const evaluateInput = (input: string[], answer: string): boolean => { // What to do with this?
-    return compareForm(input, JSON.parse(answer))
-  }
-
   const handleFeedback = (correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
@@ -150,11 +145,10 @@ export const MultiselectProblem = ({
     const attempt = retriesAllowed + 1
     if (compareForm(values.response, solutionArray)) {
       correct = true
-      setUserResponseCorrect(true)
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
       allowedRetryCallback()
     } else {
