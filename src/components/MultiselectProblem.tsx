@@ -15,12 +15,12 @@ interface MultiselectFormValues {
   response: string[]
 }
 
-export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
+export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, response: string[]): string {
   let className = 'os-default-answer-choice'
 
   if (solutionArray.includes(val) && showAnswers) {
     className += ' os-correct-answer-choice'
-  } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
+  } else if (!solutionArray.includes(val) && response.includes(val) && showAnswers) {
     className += ' os-wrong-answer-choice'
   }
 
@@ -28,11 +28,11 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
     className += ' os-disabled'
   }
 
-  if (values.response.includes(val)) {
+  if (response.includes(val)) {
     className += ' os-selected-answer-choice'
   }
 
-  if (values.response.includes(val) && showAnswers) {
+  if (response.includes(val) && showAnswers) {
     className += ' os-form-check'
   }
 
@@ -102,7 +102,7 @@ export const MultiselectProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); void setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
+      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values.response)}>
         <FormSelectable label={val}
           type='checkbox'
           correct={solutionArray.includes(val)}
