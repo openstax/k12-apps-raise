@@ -2,7 +2,9 @@ export interface GetUserResponse {
   uuid: string
   jwt: string
 }
-
+export interface PersistorGetResponse {
+  value: string | null
+}
 export class MoodleApi {
   private readonly wwwroot: string
   private readonly sesskey: string
@@ -40,5 +42,49 @@ export class MoodleApi {
     userUrl += this.sesskey
     userUrl += '&info=' + endpointMethod
     return userUrl
+  }
+
+  async putData(courseId: number, key: string, value: string): Promise<void> {
+    const methodName = 'local_persist_put'
+
+    const userRequest = {
+      index: 0,
+      methodname: methodName,
+      args: {
+        courseid: courseId,
+        key,
+        value
+      }
+    }
+
+    const url = this.getMoodleAjaxUrl(methodName)
+    const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
+    const responseJSON = await response.json()
+    if (responseJSON.error !== undefined) {
+      throw new Error(responseJSON.error)
+    }
+    console.log(responseJSON)
+  }
+
+  async getData(courseId: number, key: string): Promise<PersistorGetResponse> {
+    const methodName = 'local_persist_get'
+    const userRequest = {
+      index: 0,
+      methodname: methodName,
+      args: {
+        courseid: courseId,
+        key
+      }
+    }
+    const url = this.getMoodleAjaxUrl(methodName)
+    const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
+    const responseJSON = await response.json()
+    if (responseJSON.error !== undefined) {
+      throw new Error(responseJSON.error)
+    }
+
+    return {
+      value: responseJSON[0].data.value
+    }
   }
 }
