@@ -63,7 +63,6 @@ export class MoodleApi {
     if (responseJSON.error !== undefined) {
       throw new Error(responseJSON.error)
     }
-    console.log(responseJSON)
   }
 
   async getData(courseId: number, key: string): Promise<PersistorGetResponse> {
