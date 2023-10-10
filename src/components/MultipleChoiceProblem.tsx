@@ -1,5 +1,5 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { determineFeedback } from '../lib/problems'
+import { determineFeedback, retriesRemaining } from '../lib/problems'
 import { useCallback, useState } from 'react'
 import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
 import { mathifyElement } from '../lib/math'
@@ -115,6 +115,16 @@ export const MultipleChoiceProblem = ({
     return input === answer
   }
 
+  const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
+    if (correct) {
+      setFeedback(correctResponse)
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
+  }
+
   const handleSubmit = async (
     values: MultipleChoiceFormValues
   ): Promise<void> => {
@@ -124,29 +134,21 @@ export const MultipleChoiceProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(
-        determineFeedback(
-          values.response,
-          encourageResponse,
-          answerResponses,
-          evaluateInput
-        )
-      )
       allowedRetryCallback()
     } else {
       setShowAnswers(true)
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(values.response, correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

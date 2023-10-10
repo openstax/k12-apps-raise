@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { mathifyElement } from '../lib/math'
-import { determineFeedback } from '../lib/problems'
+import { determineFeedback, retriesRemaining } from '../lib/problems'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { Formik, Form, ErrorMessage, type FormikErrors } from 'formik'
 import * as Yup from 'yup'
@@ -15,12 +15,12 @@ interface MultiselectFormValues {
   response: string[]
 }
 
-export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, values: { response: string[] }): string {
+export function buildClassName(solutionArray: string[], showAnswers: boolean, val: string, response: string[]): string {
   let className = 'os-default-answer-choice'
 
   if (solutionArray.includes(val) && showAnswers) {
     className += ' os-correct-answer-choice'
-  } else if (!solutionArray.includes(val) && values.response.includes(val) && showAnswers) {
+  } else if (!solutionArray.includes(val) && response.includes(val) && showAnswers) {
     className += ' os-wrong-answer-choice'
   }
 
@@ -28,11 +28,11 @@ export function buildClassName(solutionArray: string[], showAnswers: boolean, va
     className += ' os-disabled'
   }
 
-  if (values.response.includes(val)) {
+  if (response.includes(val)) {
     className += ' os-selected-answer-choice'
   }
 
-  if (values.response.includes(val) && showAnswers) {
+  if (response.includes(val) && showAnswers) {
     className += ' os-form-check'
   }
 
@@ -102,7 +102,7 @@ export const MultiselectProblem = ({
     const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => { clearFeedback(); void setFieldValue('response', modifyModel(values, e)) }
 
     parsedOptionValues.forEach(val => options.push(
-      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values)}>
+      <div key={val} className={buildClassName(solutionArray, showAnswers, val, values.response)}>
         <FormSelectable label={val}
           type='checkbox'
           correct={solutionArray.includes(val)}
@@ -117,11 +117,21 @@ export const MultiselectProblem = ({
     return options
   }
 
-  const evaluateInput = (input: string[], answer: string): boolean => {
-    return compareForm(input, JSON.parse(answer))
+  const handleFeedback = (userResponse: string[], correct: boolean, userAttempts: number): void => {
+    const comparator = (input: string[], answer: string): boolean => {
+      return evaluateInput(input, JSON.parse(answer))
+    }
+
+    if (correct) {
+      setFeedback(correctResponse)
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, comparator))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
   }
 
-  const compareForm = (form: string[], solution: string[]): boolean => {
+  const evaluateInput = (form: string[], solution: string[]): boolean => {
     if (form.length !== solution.length) {
       return false
     }
@@ -137,31 +147,23 @@ export const MultiselectProblem = ({
     let correct = false
     let finalAttempt = false
     const attempt = retriesAllowed + 1
-    if (compareForm(values.response, solutionArray)) {
+    if (evaluateInput(values.response, solutionArray)) {
       correct = true
-      setFeedback(correctResponse)
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
-      setFeedback(
-        determineFeedback(
-          values.response,
-          encourageResponse,
-          answerResponses,
-          evaluateInput
-        )
-      )
       allowedRetryCallback()
     } else {
       setShowAnswers(true)
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(values.response, correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
