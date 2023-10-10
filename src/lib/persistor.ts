@@ -1,4 +1,4 @@
-import { MoodleApi} from '../moodleapi'
+import { MoodleApi } from '../moodleapi'
 import { getCurrentContext } from './utils'
 
 export interface Persistor {
