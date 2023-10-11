@@ -191,11 +191,11 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
               className={buildClassName(responseSubmitted, errors.response)}/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className='os-text-center mt-4 os-flex os-justify-space-evenly'>
-              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
-              {
-              (persistor != null) &&
-              <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: '' } }) }} className="os-btn btn-outline-primary">Reset</button>
-              }
+                <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+                {
+                  (persistor != null) &&
+                  <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: '' } }) }} className="os-btn btn-outline-primary">Reset</button>
+                }
               </div>
             </Form>
           )}

@@ -121,6 +121,10 @@ export const InputProblem = ({
   }
 
   const handleFeedback = (userResponse: string, userAttempts: number): void => {
+    if (userResponse === '') {
+      return
+    }
+
     if (evaluateInput(userResponse, solution)) {
       setFeedback(correctResponse)
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
@@ -154,6 +158,21 @@ export const InputProblem = ({
   useEffect(() => {
     getPersistedState().catch(() => { })
   }, [])
+
+  const clearPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId !== undefined && persistor !== undefined) {
+        const newPersistedData: PersistorData = { userResponse: '', inputDisabled: false, retriesAllowed: 0 }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      }
+
+      setResponse('')
+      setInputDisabled(false)
+      setRetriesAllowed(0)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     let correct = false
@@ -260,7 +279,7 @@ export const InputProblem = ({
           validationSchema={schema}
           validateOnBlur={false}
         >
-          {({ isSubmitting, setFieldValue, values, errors }) => (
+          {({ isSubmitting, setFieldValue, values, errors, resetForm }) => (
             <Form >
               <div className='os-flex os-align-items-center'>
 
@@ -295,8 +314,13 @@ export const InputProblem = ({
               }
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <div className="os-text-center mt-4">
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button></div>
+              <div className="os-text-center mt-4 os-flex os-justify-space-evenly">
+                <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button>
+                {
+                  (persistor != null) &&
+                  <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: '' } }); clearFeedback() }} className="os-btn btn-outline-primary">Reset</button>
+                }
+              </div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
               <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
