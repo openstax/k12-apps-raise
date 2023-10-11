@@ -39,12 +39,17 @@ export const loadScriptTag = async (srcValue: string): Promise<void> => {
   await loadedPromise
 }
 
-export const getCurrentContext = (): { courseId: number | undefined, host: string | undefined } => {
+export const getCurrentContext = (): { courseId: number | undefined, host: string | undefined, moodleWWWRoot: string | undefined, moodleSessKey: string | undefined } => {
   const courseId = window.M?.cfg.courseId
   const host = window.location.host
+  const moodleWWWRoot = window.M?.cfg.wwwroot
+  const moodleSessKey = window.M?.cfg.sesskey
+
   return {
     courseId,
-    host
+    host,
+    moodleWWWRoot,
+    moodleSessKey
   }
 }
 

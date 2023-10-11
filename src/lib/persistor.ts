@@ -1,4 +1,5 @@
 import { MoodleApi } from '../moodleapi'
+import { ENV } from './env'
 import { getCurrentContext } from './utils'
 
 export interface Persistor {
@@ -7,13 +8,14 @@ export interface Persistor {
 }
 
 export const getMoodlePersistor = (): Persistor | undefined => {
-  const { courseId } = getCurrentContext()
+  const { courseId, host, moodleWWWRoot, moodleSessKey } = getCurrentContext()
 
-  if (courseId === undefined || window.M === undefined) {
+  if (courseId === undefined || moodleWWWRoot === undefined || moodleSessKey === undefined || host === undefined ||
+     !ENV.OS_RAISE_ENABLE_MOODLE_PERSISTOR_HOSTS.includes(host)) {
     return undefined
   }
 
-  const moodleApi = new MoodleApi(window.M.cfg.wwwroot, window.M.cfg.sesskey)
+  const moodleApi = new MoodleApi(moodleWWWRoot, moodleSessKey)
   return {
     get: async (key: string): Promise<string | null> => {
       const data = await moodleApi.getData(courseId, key)
