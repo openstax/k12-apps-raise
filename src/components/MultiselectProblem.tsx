@@ -150,6 +150,10 @@ export const MultiselectProblem = ({
   }
 
   const handleFeedback = (userResponse: string[], userAttempts: number): void => {
+    if (userResponse.length === 0) {
+      return
+    }
+
     if (evaluateInput(userResponse, solution)) {
       setFeedback(correctResponse)
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
@@ -184,6 +188,22 @@ export const MultiselectProblem = ({
   useEffect(() => {
     getPersistedState().catch(() => { })
   }, [])
+
+  const clearPersistedState = async (): Promise<void> => {
+    try {
+      if (contentId !== undefined && persistor !== undefined) {
+        const newPersistedData: PersistorData = { userResponse: [], formDisabled: false, retriesAllowed: 0, showAnswers: false }
+        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      }
+
+      setInitialResponse([])
+      setFormDisabled(false)
+      setRetriesAllowed(0)
+      setShowAnswers(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const handleSubmit = async (values: MultiselectFormValues, { setFieldError }: FormikHelpers<MultiselectFormValues>): Promise<void> => {
     let correct = false
@@ -278,11 +298,11 @@ export const MultiselectProblem = ({
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
-        {({ isSubmitting, setFieldValue, values }) => (
+        {({ isSubmitting, setFieldValue, values, resetForm }) => (
           <Form>
             <div className='os-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <div className='os-text-center mt-4'>
+            <div className='os-text-center mt-4 os-flex os-justify-space-evenly'>
               <button
                 className="os-btn btn-outline-primary"
                 type="submit"
@@ -290,6 +310,10 @@ export const MultiselectProblem = ({
               >
                 {buttonText}
               </button>
+              {
+                (persistor != null) &&
+                <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: [] } }); clearFeedback() }} className="os-btn btn-outline-primary">Reset</button>
+              }
             </div>
 
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
