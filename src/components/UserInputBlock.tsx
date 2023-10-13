@@ -1,5 +1,5 @@
 import { EventControlledContent } from './EventControlledContent'
-import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers, type FormikErrors } from 'formik'
 import { useState, useCallback, useContext, useEffect } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -89,6 +89,25 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     getPersistedState().catch(() => { })
   }, [])
 
+  const resetPersistedState = async (
+    setFieldError: (field: string, message: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<InputFormValues>>
+  ): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+
+      const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
+      setResponseSubmitted(false)
+      void setFieldValue('response', '', false)
+    } catch (err) {
+      setFieldError('response', 'Error resetting question. Please try again.')
+    }
+  }
+
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     if (values.response.trim() === '') {
       setFieldError('response', NON_EMPTY_VALUE_ERROR)
@@ -167,7 +186,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
           validationSchema={schema}
           validateOnBlur={false}
         >
-          {({ isSubmitting, errors }) => (
+          {({ isSubmitting, errors, setFieldValue, setFieldError, setTouched }) => (
             <Form>
               <Field
               name="response"
@@ -176,8 +195,21 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
               rows={DEFAULT_TEXTAREA_ROWS}
               className={buildClassName(responseSubmitted, errors.response)}/>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <div className='os-text-center mt-4'>
-              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+              <div className='os-text-center mt-4 os-flex os-justify-space-evenly'>
+                <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+                {
+                  (persistor !== undefined) &&
+                  <button
+                    type="button"
+                    onClick={(): void => {
+                      void resetPersistedState(setFieldError, setFieldValue)
+                      void setTouched({ response: true }, false)
+                    }}
+                    className="os-btn btn-outline-primary"
+                  >
+                    Reset
+                  </button>
+                }
               </div>
             </Form>
           )}

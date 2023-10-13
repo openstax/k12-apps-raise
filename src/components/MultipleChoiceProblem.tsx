@@ -132,6 +132,10 @@ export const MultipleChoiceProblem = ({
   }
 
   const handleFeedback = (userResponse: string, userAttempts: number): void => {
+    if (userResponse === '') {
+      return
+    }
+
     if (evaluateInput(userResponse, solution)) {
       setFeedback(correctResponse)
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
@@ -166,6 +170,28 @@ export const MultipleChoiceProblem = ({
   useEffect(() => {
     getPersistedState().catch(() => { })
   }, [])
+
+  const resetPersistedState = async (
+    setFieldError: (field: string, message: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<MultipleChoiceFormValues>>
+  ): Promise<void> => {
+    try {
+      if (contentId === undefined || persistor === undefined) {
+        return
+      }
+
+      const newPersistedData: PersistorData = { userResponse: '', formDisabled: false, retriesAllowed: 0, showAnswers: false }
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
+      setFormDisabled(false)
+      setRetriesAllowed(0)
+      setShowAnswers(false)
+      clearFeedback()
+      void setFieldValue('response', '', false)
+    } catch (err) {
+      setFieldError('response', 'Error resetting question. Please try again.')
+    }
+  }
 
   const handleSubmit = async (
     values: MultipleChoiceFormValues, { setFieldError }: FormikHelpers<MultipleChoiceFormValues>
@@ -262,7 +288,7 @@ export const MultipleChoiceProblem = ({
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
-        {({ isSubmitting, setFieldValue, values }) => (
+        {({ isSubmitting, setFieldValue, values, setFieldError, setTouched }) => (
           <Form>
             <div className="os-grid">
               {generateOptions(values, isSubmitting, setFieldValue)}
@@ -272,7 +298,7 @@ export const MultipleChoiceProblem = ({
               component="div"
               name="response"
             />
-            <div className="os-text-center mt-4">
+            <div className="os-text-center mt-4 os-flex os-justify-space-evenly">
               <button
                 className="os-btn btn-outline-primary"
                 type="submit"
@@ -280,6 +306,19 @@ export const MultipleChoiceProblem = ({
               >
                 {buttonText}
               </button>
+              {
+                (persistor !== undefined) &&
+                <button
+                  type="button"
+                  onClick={(): void => {
+                    void resetPersistedState(setFieldError, setFieldValue)
+                    void setTouched({ response: true }, false)
+                  }}
+                  className="os-btn btn-outline-primary"
+                >
+                  Reset
+                </button>
+                }
             </div>
             {feedback !== ''
               ? (
