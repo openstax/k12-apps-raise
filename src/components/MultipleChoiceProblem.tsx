@@ -183,7 +183,6 @@ export const MultipleChoiceProblem = ({
 
       const newPersistedData: PersistorData = { userResponse: '', formDisabled: false, retriesAllowed: 0, showAnswers: false }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
-      setInitialResponse('')
       setFormDisabled(false)
       setRetriesAllowed(0)
       setShowAnswers(false)

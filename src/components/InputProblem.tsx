@@ -171,7 +171,6 @@ export const InputProblem = ({
 
       const newPersistedData: PersistorData = { userResponse: '', inputDisabled: false, retriesAllowed: 0 }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
-      setResponse('')
       setInputDisabled(false)
       setRetriesAllowed(0)
       clearFeedback()

@@ -131,7 +131,6 @@ export const DropdownProblem = ({
 
       const newPersistedData: PersistorData = { userResponse: '', formDisabled: false, retriesAllowed: 0 }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
-      setInitialResponse('')
       setFormDisabled(false)
       setRetriesAllowed(0)
       clearFeedback()

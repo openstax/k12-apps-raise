@@ -101,7 +101,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
       const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
-      setInitialResponse('')
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
     } catch (err) {
