@@ -1,6 +1,6 @@
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback } from '../lib/problems'
-import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers, type FormikErrors } from 'formik'
 import { mathifyElement } from '../lib/math'
 import React, { useCallback, useEffect, useState } from 'react'
 import * as Yup from 'yup'
@@ -119,18 +119,25 @@ export const DropdownProblem = ({
     getPersistedState().catch(() => { })
   }, [])
 
-  const clearPersistedState = async (): Promise<void> => {
+  const resetPersistedState = async (
+    setFieldError: (field: string, message: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<DropdownFormValues>>
+  ): Promise<void> => {
     try {
-      if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { userResponse: '', formDisabled: false, retriesAllowed: 0 }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      if (contentId === undefined || persistor === undefined) {
+        return
       }
 
+      const newPersistedData: PersistorData = { userResponse: '', formDisabled: false, retriesAllowed: 0 }
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
       setInitialResponse('')
       setFormDisabled(false)
       setRetriesAllowed(0)
+      clearFeedback()
+      void setFieldValue('response', '', false)
     } catch (err) {
-      console.log(err)
+      setFieldError('response', 'Error resetting question. Please try again.')
     }
   }
 
@@ -225,7 +232,7 @@ export const DropdownProblem = ({
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
-        {({ isSubmitting, values, setFieldValue, resetForm }) => (
+        {({ isSubmitting, values, setFieldValue, setFieldError, setTouched }) => (
           <Form>
             <div className='os-flex os-align-items-center'>
               {solution === values.response && formDisabled &&
@@ -259,9 +266,18 @@ export const DropdownProblem = ({
                 {buttonText}
               </button>
               {
-                (persistor != null) &&
-                <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: '' } }); clearFeedback() }} className="os-btn btn-outline-primary">Reset</button>
-              }
+                (persistor !== undefined) &&
+                <button
+                  type="button"
+                  onClick={(): void => {
+                    void resetPersistedState(setFieldError, setFieldValue)
+                    void setTouched({ response: true }, false)
+                  }}
+                  className="os-btn btn-outline-primary"
+                >
+                  Reset
+                </button>
+                }
             </div>
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null }
             <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />

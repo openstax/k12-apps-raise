@@ -1,5 +1,5 @@
 import { EventControlledContent } from './EventControlledContent'
-import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
+import { Formik, Form, Field, ErrorMessage, type FormikHelpers, type FormikErrors } from 'formik'
 import { useState, useCallback, useContext, useEffect } from 'react'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -89,17 +89,23 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     getPersistedState().catch(() => { })
   }, [])
 
-  const clearPersistedState = async (): Promise<void> => {
+  const resetPersistedState = async (
+    setFieldError: (field: string, message: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<InputFormValues>>
+  ): Promise<void> => {
     try {
-      if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      if (contentId === undefined || persistor === undefined) {
+        return
       }
 
+      const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
       setInitialResponse('')
       setResponseSubmitted(false)
+      void setFieldValue('response', '', false)
     } catch (err) {
-      console.log(err)
+      setFieldError('response', 'Error resetting question. Please try again.')
     }
   }
 
@@ -181,7 +187,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
           validationSchema={schema}
           validateOnBlur={false}
         >
-          {({ isSubmitting, errors, resetForm }) => (
+          {({ isSubmitting, errors, setFieldValue, setFieldError, setTouched }) => (
             <Form>
               <Field
               name="response"
@@ -193,8 +199,17 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
               <div className='os-text-center mt-4 os-flex os-justify-space-evenly'>
                 <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
                 {
-                  (persistor != null) &&
-                  <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: '' } }) }} className="os-btn btn-outline-primary">Reset</button>
+                  (persistor !== undefined) &&
+                  <button
+                    type="button"
+                    onClick={(): void => {
+                      void resetPersistedState(setFieldError, setFieldValue)
+                      void setTouched({ response: true }, false)
+                    }}
+                    className="os-btn btn-outline-primary"
+                  >
+                    Reset
+                  </button>
                 }
               </div>
             </Form>

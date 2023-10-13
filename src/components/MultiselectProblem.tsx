@@ -189,19 +189,26 @@ export const MultiselectProblem = ({
     getPersistedState().catch(() => { })
   }, [])
 
-  const clearPersistedState = async (): Promise<void> => {
+  const resetPersistedState = async (
+    setFieldError: (field: string, message: string) => void,
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
+    setFieldValue: (field: string, value: any, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<MultiselectFormValues>>
+  ): Promise<void> => {
     try {
-      if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { userResponse: [], formDisabled: false, retriesAllowed: 0, showAnswers: false }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
+      if (contentId === undefined || persistor === undefined) {
+        return
       }
 
+      const newPersistedData: PersistorData = { userResponse: [], formDisabled: false, retriesAllowed: 0, showAnswers: false }
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
       setInitialResponse([])
       setFormDisabled(false)
       setRetriesAllowed(0)
       setShowAnswers(false)
+      clearFeedback()
+      void setFieldValue('response', [], false)
     } catch (err) {
-      console.log(err)
+      setFieldError('response', 'Error resetting question. Please try again.')
     }
   }
 
@@ -298,7 +305,7 @@ export const MultiselectProblem = ({
         onSubmit={handleSubmit}
         validationSchema={schema}
       >
-        {({ isSubmitting, setFieldValue, values, resetForm }) => (
+        {({ isSubmitting, setFieldValue, values, setFieldError, setTouched }) => (
           <Form>
             <div className='os-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
             <ErrorMessage className="text-danger my-3" component="div" name="response" />
@@ -311,9 +318,18 @@ export const MultiselectProblem = ({
                 {buttonText}
               </button>
               {
-                (persistor != null) &&
-                <button type="reset" onClick={(): void => { void clearPersistedState(); resetForm({ values: { response: [] } }); clearFeedback() }} className="os-btn btn-outline-primary">Reset</button>
-              }
+                (persistor !== undefined) &&
+                <button
+                  type="button"
+                  onClick={(): void => {
+                    void resetPersistedState(setFieldError, setFieldValue)
+                    void setTouched({ response: true }, false)
+                  }}
+                  className="os-btn btn-outline-primary"
+                >
+                  Reset
+                </button>
+                }
             </div>
 
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
