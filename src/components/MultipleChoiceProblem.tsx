@@ -131,17 +131,20 @@ export const MultipleChoiceProblem = ({
     return input === answer
   }
 
-  const handleFeedback = (userResponse: string, userAttempts: number): void => {
+  const handleProblemResult = (correct: boolean, userAttempts: number, userResponse: string): void => {
     if (userResponse === '') {
       return
     }
 
-    if (evaluateInput(userResponse, solution)) {
+    if (correct) {
       setFeedback(correctResponse)
+      solvedCallback()
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+      allowedRetryCallback()
     } else {
       setFeedback(attemptsExhaustedResponse)
+      exhaustedCallback()
     }
   }
 
@@ -158,7 +161,11 @@ export const MultipleChoiceProblem = ({
         setInitialResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
+        handleProblemResult(
+          evaluateInput(parsedPersistedState.userResponse, solution),
+          parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
+          parsedPersistedState.userResponse
+        )
         setShowAnswers(parsedPersistedState.showAnswers)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
@@ -218,7 +225,6 @@ export const MultipleChoiceProblem = ({
       }
 
       setShowAnswers(true)
-      solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       try {
@@ -229,7 +235,6 @@ export const MultipleChoiceProblem = ({
       }
 
       setRetriesAllowed((currRetries) => currRetries + 1)
-      allowedRetryCallback()
     } else {
       try {
         await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed: retriesAllowed + 1, showAnswers: true })
@@ -240,12 +245,11 @@ export const MultipleChoiceProblem = ({
 
       setShowAnswers(true)
       setRetriesAllowed((currRetries) => currRetries + 1)
-      exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
 
-    handleFeedback(values.response, retriesAllowed)
+    handleProblemResult(correct, retriesAllowed, values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

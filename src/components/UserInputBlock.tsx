@@ -78,6 +78,10 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         const parsedPersistedState = JSON.parse(persistedState)
         setInitialResponse(parsedPersistedState.userResponse)
         setResponseSubmitted(parsedPersistedState.responseSubmitted)
+        if (fireEvent !== undefined && parsedPersistedState.responseSubmitted === true) {
+          const submitEvent = new CustomEvent(fireEvent)
+          document.dispatchEvent(submitEvent)
+        }
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {

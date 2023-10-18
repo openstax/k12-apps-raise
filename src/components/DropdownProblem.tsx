@@ -80,17 +80,20 @@ export const DropdownProblem = ({
     return input === answer
   }
 
-  const handleFeedback = (userResponse: string, userAttempts: number): void => {
+  const handleProblemResult = (correct: boolean, userAttempts: number, userResponse: string): void => {
     if (userResponse === '') {
       return
     }
 
-    if (evaluateInput(userResponse, solution)) {
+    if (correct) {
       setFeedback(correctResponse)
+      solvedCallback()
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+      allowedRetryCallback()
     } else {
       setFeedback(attemptsExhaustedResponse)
+      exhaustedCallback()
     }
   }
 
@@ -107,7 +110,11 @@ export const DropdownProblem = ({
         setInitialResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
+        handleProblemResult(
+          evaluateInput(parsedPersistedState.userResponse, solution),
+          parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
+          parsedPersistedState.userResponse
+        )
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
@@ -162,7 +169,6 @@ export const DropdownProblem = ({
         return
       }
 
-      solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       try {
@@ -173,7 +179,6 @@ export const DropdownProblem = ({
       }
 
       setRetriesAllowed(currRetries => currRetries + 1)
-      allowedRetryCallback()
     } else {
       try {
         await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed: retriesAllowed + 1 })
@@ -183,12 +188,11 @@ export const DropdownProblem = ({
       }
 
       setRetriesAllowed((currRetries) => currRetries + 1)
-      exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
 
-    handleFeedback(values.response, retriesAllowed)
+    handleProblemResult(correct, retriesAllowed, values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(

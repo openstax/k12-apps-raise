@@ -133,11 +133,7 @@ export const MultiselectProblem = ({
     return options
   }
 
-  const evaluateInput = (input: string[], answer: string): boolean => {
-    return compareForm(input, JSON.parse(answer))
-  }
-
-  const compareForm = (form: string[], solution: string[]): boolean => {
+  const evaluateInput = (form: string[], solution: string[]): boolean => {
     if (form.length !== solution.length) {
       return false
     }
@@ -149,17 +145,24 @@ export const MultiselectProblem = ({
     return true
   }
 
-  const handleFeedback = (userResponse: string[], userAttempts: number): void => {
+  const handleProblemResult = (correct: boolean, userAttempts: number, userResponse: string[]): void => {
     if (userResponse.length === 0) {
       return
     }
 
-    if (evaluateInput(userResponse, solution)) {
+    const comparator = (input: string[], answer: string): boolean => {
+      return evaluateInput(input, JSON.parse(answer))
+    }
+
+    if (correct) {
       setFeedback(correctResponse)
+      solvedCallback()
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
-      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, comparator))
+      allowedRetryCallback()
     } else {
       setFeedback(attemptsExhaustedResponse)
+      exhaustedCallback()
     }
   }
 
@@ -176,7 +179,11 @@ export const MultiselectProblem = ({
         setInitialResponse(parsedPersistedState.userResponse)
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
+        handleProblemResult(
+          evaluateInput(parsedPersistedState.userResponse, solutionArray),
+          parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
+          parsedPersistedState.userResponse
+        )
         setShowAnswers(parsedPersistedState.showAnswers)
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
@@ -223,7 +230,7 @@ export const MultiselectProblem = ({
       await persistor.put(contentId, JSON.stringify(persistorData))
     }
 
-    if (compareForm(values.response, solutionArray)) {
+    if (evaluateInput(values.response, solutionArray)) {
       correct = true
 
       try {
@@ -234,7 +241,6 @@ export const MultiselectProblem = ({
       }
 
       setShowAnswers(true)
-      solvedCallback()
       setFormDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       try {
@@ -245,7 +251,6 @@ export const MultiselectProblem = ({
       }
 
       setRetriesAllowed((currRetries) => currRetries + 1)
-      allowedRetryCallback()
     } else {
       try {
         await setPersistedState({ userResponse: values.response, formDisabled: true, retriesAllowed: retriesAllowed + 1, showAnswers: true })
@@ -256,12 +261,11 @@ export const MultiselectProblem = ({
 
       setShowAnswers(true)
       setRetriesAllowed(currRetries => currRetries + 1)
-      exhaustedCallback()
       setFormDisabled(true)
       finalAttempt = true
     }
 
-    handleFeedback(values.response, retriesAllowed)
+    handleProblemResult(correct, retriesAllowed, values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
