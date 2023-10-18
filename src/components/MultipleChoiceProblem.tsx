@@ -162,7 +162,7 @@ export const MultipleChoiceProblem = ({
         setFormDisabled(parsedPersistedState.formDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
         handleProblemResult(
-          parsedPersistedState.userResponse === solution,
+          evaluateInput(parsedPersistedState.userResponse, solution),
           parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
           parsedPersistedState.userResponse
         )

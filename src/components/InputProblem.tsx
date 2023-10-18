@@ -151,7 +151,7 @@ export const InputProblem = ({
         setInputDisabled(parsedPersistedState.inputDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
         handleProblemResult(
-          parsedPersistedState.userResponse === solution,
+          evaluateInput(parsedPersistedState.userResponse, solution),
           parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
           parsedPersistedState.userResponse
         )
