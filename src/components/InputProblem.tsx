@@ -120,17 +120,20 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
-  const handleFeedback = (userResponse: string, userAttempts: number): void => {
+  const handleProblemResult = (correct: boolean, userAttempts: number, userResponse: string): void => {
     if (userResponse === '') {
       return
     }
 
-    if (evaluateInput(userResponse, solution)) {
+    if (correct) {
       setFeedback(correctResponse)
+      solvedCallback()
     } else if (retryLimit === 0 || userAttempts !== retryLimit) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+      allowedRetryCallback()
     } else {
       setFeedback(attemptsExhaustedResponse)
+      exhaustedCallback()
     }
   }
 
@@ -147,7 +150,11 @@ export const InputProblem = ({
         setResponse(parsedPersistedState.userResponse)
         setInputDisabled(parsedPersistedState.inputDisabled)
         setRetriesAllowed(parsedPersistedState.retriesAllowed)
-        handleFeedback(parsedPersistedState.userResponse, parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0)
+        handleProblemResult(
+          parsedPersistedState.userResponse === solution,
+          parsedPersistedState.retriesAllowed > 0 ? parsedPersistedState.retriesAllowed - 1 : 0,
+          parsedPersistedState.userResponse
+        )
       }
       setPersistorGetStatus(PersistorGetStatus.Success)
     } catch (err) {
@@ -211,7 +218,6 @@ export const InputProblem = ({
         return
       }
 
-      solvedCallback()
       setInputDisabled(true)
     } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
       try {
@@ -222,7 +228,6 @@ export const InputProblem = ({
       }
 
       setRetriesAllowed(currRetries => currRetries + 1)
-      allowedRetryCallback()
     } else {
       try {
         await setPersistedState({ userResponse: values.response, inputDisabled: true, retriesAllowed: retriesAllowed + 1 })
@@ -232,12 +237,11 @@ export const InputProblem = ({
       }
 
       setRetriesAllowed(currRetries => currRetries + 1)
-      exhaustedCallback()
       setInputDisabled(true)
       finalAttempt = true
     }
 
-    handleFeedback(values.response, retriesAllowed)
+    handleProblemResult(correct, retriesAllowed, values.response)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
