@@ -107,6 +107,11 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       await persistor.put(contentId, JSON.stringify(newPersistedData))
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
+      if (fireEvent !== undefined) {
+        const unfireEvent = `${fireEvent}-unfire`
+        const submitEvent = new CustomEvent(unfireEvent)
+        document.dispatchEvent(submitEvent)
+      }
     } catch (err) {
       setFieldError('response', 'Error resetting question. Please try again.')
     }
