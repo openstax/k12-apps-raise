@@ -42,7 +42,7 @@ export function buildClassName(response: string, solution: string, formDisabled:
 }
 
 export const DropdownProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, resetCallback, content, contentId, buttonText, solutionOptions,
   encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
   onProblemAttempt, persistor
 }: DropdownProblemProps): JSX.Element => {
@@ -142,6 +142,7 @@ export const DropdownProblem = ({
       setRetriesAllowed(0)
       clearFeedback()
       void setFieldValue('response', '', false)
+      resetCallback()
     } catch (err) {
       setFieldError('response', 'Error resetting question. Please try again.')
     }

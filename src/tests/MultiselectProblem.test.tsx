@@ -9,6 +9,7 @@ test('MultiselectProblem renders', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Question Content</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -34,6 +35,7 @@ test('MultiselectProblem renders without contentId', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Question Content</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -58,6 +60,7 @@ test('Multiselect shows message if user does not select an option', async () => 
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -79,6 +82,7 @@ test('Multiselect shows correct response, invokes callback, and disables self on
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -86,6 +90,7 @@ test('Multiselect shows correct response, invokes callback, and disables self on
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Great job!</p>'}
     encourageResponse={''}
@@ -106,6 +111,7 @@ test('Multiselect shows correct response, invokes callback, and disables self on
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(resetHandler).toBeCalledTimes(0)
   expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
@@ -116,6 +122,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -123,6 +130,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Great job!</p>'}
     encourageResponse={'<p>Try again!'}
@@ -144,6 +152,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 1'))
     screen.getByRole('button').click()
@@ -152,6 +161,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
   expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
@@ -162,6 +172,7 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -169,6 +180,7 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -188,6 +200,7 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('MultiselectProblem clears encourage response when user changes answer', async () => {
@@ -197,6 +210,7 @@ test('MultiselectProblem clears encourage response when user changes answer', as
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -223,6 +237,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -230,6 +245,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -253,6 +269,7 @@ test('MultiselectProblem exhausts and disables itself after configured number of
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(resetHandler).toBeCalledTimes(0)
 
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 2'))
@@ -275,6 +292,7 @@ test('MultiselectProblem renders answer specific responses', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -282,6 +300,7 @@ test('MultiselectProblem renders answer specific responses', async () => {
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Correct</p>'}
     encourageResponse={'<p>Try again!</p>'}
@@ -325,6 +344,7 @@ test('MultiselectProblem renders answer specific responses only on submit', asyn
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultiselectProblem
@@ -332,6 +352,7 @@ test('MultiselectProblem renders answer specific responses only on submit', asyn
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Correct</p>'}
     encourageResponse={'<p>Try again!</p>'}
@@ -367,6 +388,7 @@ test('multiselect calls the onProblemAttempt handler', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Correct</p>'}
     encourageResponse={'<p>Try again!</p>'}

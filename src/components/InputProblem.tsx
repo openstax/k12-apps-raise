@@ -51,7 +51,7 @@ export function buildClassName(correct: boolean, formDisabled: boolean, errorRes
 }
 
 export const InputProblem = ({
-  solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
+  solvedCallback, exhaustedCallback, allowedRetryCallback, resetCallback, attemptsExhaustedResponse,
   solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt,
   persistor
 }: InputProblemProps): JSX.Element => {
@@ -181,6 +181,7 @@ export const InputProblem = ({
       setInputDisabled(false)
       setRetriesAllowed(0)
       clearFeedback()
+      resetCallback()
       void setFieldValue('response', '', false)
     } catch (err) {
       setFieldError('response', 'Error resetting question. Please try again.')

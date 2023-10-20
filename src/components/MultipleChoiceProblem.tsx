@@ -54,6 +54,7 @@ export const MultipleChoiceProblem = ({
   solvedCallback,
   exhaustedCallback,
   allowedRetryCallback,
+  resetCallback,
   content,
   contentId,
   buttonText,
@@ -195,6 +196,7 @@ export const MultipleChoiceProblem = ({
       setShowAnswers(false)
       clearFeedback()
       void setFieldValue('response', '', false)
+      resetCallback()
     } catch (err) {
       setFieldError('response', 'Error resetting question. Please try again.')
     }
