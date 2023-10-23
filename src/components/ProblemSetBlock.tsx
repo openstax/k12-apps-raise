@@ -101,7 +101,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     // are either solved or exhausted
     const solvedCount = Array.from(problemResults.values()).reduce((acc, prob) => (prob.solved ? acc + 1 : acc), 0)
     const exhaustedCount = Array.from(problemResults.values()).reduce((acc, prob) => (prob.exhausted ? acc + 1 : acc), 0)
-    const problemResultsResetValue = Array.from(problemResults.values())[0].reset
+    const problemResultsResetValue = Array.from(problemResults.values()).reduce((acc, prob) => (prob.reset ? true : acc), false)
 
     if (fireSuccessEvent !== undefined && solvedCount === problems.length) {
       const psetEvent = new CustomEvent(fireSuccessEvent)
