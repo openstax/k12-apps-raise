@@ -9,6 +9,7 @@ test('MultipleChoiceProblem renders', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -35,6 +36,7 @@ test('MultipleChoiceProblem renders without contentId', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -60,6 +62,7 @@ test('MultipleChoiceProblem shows message if user does not select an option', as
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -81,6 +84,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultipleChoiceProblem
@@ -88,6 +92,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Great job!</p>'}
     encourageResponse={''}
@@ -108,6 +113,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(resetHandler).toBeCalledTimes(0)
   expect(screen.getByLabelText('Option 1')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
 })
@@ -116,6 +122,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultipleChoiceProblem
@@ -123,6 +130,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -142,6 +150,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('MultipleChoiceProblem clears encourage response when user changes answer', async () => {
@@ -151,6 +160,7 @@ test('MultipleChoiceProblem clears encourage response when user changes answer',
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -177,6 +187,7 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <MultipleChoiceProblem
@@ -184,6 +195,7 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -208,6 +220,7 @@ test('MultipleChoiceProblem exhausts and disables itself after configured number
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(resetHandler).toBeCalledTimes(0)
 
   await act(async () => {
     screen.getByText('Option 1').click()
@@ -231,6 +244,7 @@ test('MultipleChoiceProblem renders answer specific responses', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -264,6 +278,7 @@ test('MultipleChoiceProblem renders answer specific responses only on button cli
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -294,6 +309,7 @@ test('MultipleChoiceProblem calls the onProblemAttempt handler', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}

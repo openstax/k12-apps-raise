@@ -31,6 +31,7 @@ export interface BaseProblemProps {
   solvedCallback: () => void
   exhaustedCallback: () => void
   allowedRetryCallback: () => void
+  resetCallback: () => void
   contentId?: string
   content: string
   correctResponse: string
@@ -59,6 +60,7 @@ export const PROBLEM_TYPE_MULTIPLECHOICE = 'multiplechoice'
 interface ProblemResult {
   solved: boolean
   exhausted: boolean
+  reset: boolean
   attempts: number
 }
 
@@ -86,7 +88,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
   const generateInitialProblemResults = (): Map<number, ProblemResult> => {
     const initProblems = new Map<number, ProblemResult>()
     problems.forEach((_, indx) => {
-      initProblems.set(indx, { solved: false, exhausted: false, attempts: 0 })
+      initProblems.set(indx, { solved: false, exhausted: false, reset: false, attempts: 0 })
     })
     return initProblems
   }
@@ -99,6 +101,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     // are either solved or exhausted
     const solvedCount = Array.from(problemResults.values()).reduce((acc, prob) => (prob.solved ? acc + 1 : acc), 0)
     const exhaustedCount = Array.from(problemResults.values()).reduce((acc, prob) => (prob.exhausted ? acc + 1 : acc), 0)
+    const problemResultsResetValue = Array.from(problemResults.values()).reduce((acc, prob) => (prob.reset ? true : acc), false)
 
     if (fireSuccessEvent !== undefined && solvedCount === problems.length) {
       const psetEvent = new CustomEvent(fireSuccessEvent)
@@ -108,6 +111,15 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     if (fireLearningOpportunityEvent !== undefined && (solvedCount + exhaustedCount) === problems.length && solvedCount !== problems.length) {
       const psetEvent = new CustomEvent(fireLearningOpportunityEvent)
       document.dispatchEvent(psetEvent)
+    }
+
+    if ((fireSuccessEvent !== undefined || fireLearningOpportunityEvent !== undefined) && problemResultsResetValue) {
+      const unfireSuccessEvent = `${fireSuccessEvent}-unfire`
+      const unfireLearningOpportunityEvent = `${fireLearningOpportunityEvent}-unfire`
+      const submitUnfireSuccessEvent = new CustomEvent(unfireSuccessEvent)
+      const submitUnfireLearningOpportunityEvent = new CustomEvent(unfireLearningOpportunityEvent)
+      document.dispatchEvent(submitUnfireSuccessEvent)
+      document.dispatchEvent(submitUnfireLearningOpportunityEvent)
     }
   }, [problemResults])
 
@@ -124,15 +136,19 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
   }
 
   const solvedCallbackFactory = (problemNumber: number): () => void => {
-    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1, solved: true } }))
+    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1, solved: true, reset: false } }))
   }
 
   const exhaustedCallbackFactory = (problemNumber: number): () => void => {
-    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1, exhausted: true } }))
+    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1, exhausted: true, reset: false } }))
   }
 
   const allowedRetryCallbackFactory = (problemNumber: number): () => void => {
-    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1 } }))
+    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: prevResult.attempts + 1, reset: false } }))
+  }
+
+  const resetCallBackFactory = (problemNumber: number): () => void => {
+    return callbackFactory(problemNumber, prevResult => ({ ...prevResult, ...{ attempts: 0, solved: false, exhausted: false, reset: true } }))
   }
 
   const problemAttemptedCallbackFactory = (problemType: string): (
@@ -171,6 +187,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       solvedCallback: solvedCallbackFactory(indx),
       exhaustedCallback: exhaustedCallbackFactory(indx),
       allowedRetryCallback: allowedRetryCallbackFactory(indx),
+      resetCallback: resetCallBackFactory(indx),
       contentId: prob.contentId,
       solution: prob.solution,
       retryLimit: prob.retryLimit,

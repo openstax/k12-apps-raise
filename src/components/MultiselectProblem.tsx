@@ -56,6 +56,7 @@ export const MultiselectProblem = ({
   solvedCallback,
   exhaustedCallback,
   allowedRetryCallback,
+  resetCallback,
   content,
   contentId,
   buttonText,
@@ -213,6 +214,7 @@ export const MultiselectProblem = ({
       setShowAnswers(false)
       clearFeedback()
       void setFieldValue('response', [], false)
+      resetCallback()
     } catch (err) {
       setFieldError('response', 'Error resetting question. Please try again.')
     }

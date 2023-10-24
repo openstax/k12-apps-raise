@@ -8,6 +8,7 @@ test('InputProblem renders with content, input and button', async () => {
       solvedCallback={() => { } }
       exhaustedCallback={() => { } }
       allowedRetryCallback={() => { } }
+      resetCallback={() => {}}
       content={'Content'}
       correctResponse={''}
       encourageResponse={''}
@@ -34,6 +35,7 @@ test('InputProblem renders without contentId', async () => {
       solvedCallback={() => { } }
       exhaustedCallback={() => { } }
       allowedRetryCallback={() => { } }
+      resetCallback={() => {}}
       content={'Content'}
       correctResponse={''}
       encourageResponse={''}
@@ -57,12 +59,14 @@ test('Text InputProblem button click with correct answer should evaluate to corr
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
           <InputProblem
           solvedCallback={solvedHandler}
           exhaustedCallback={exhaustedHandler}
           allowedRetryCallback={allowedRetryHandler}
+          resetCallback={resetHandler}
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={''}
@@ -88,6 +92,7 @@ test('Text InputProblem button click with correct answer should evaluate to corr
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('InputProblem button click with no input should show warning', async () => {
@@ -96,6 +101,7 @@ test('InputProblem button click with no input should show warning', async () => 
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'Content'}
           correctResponse={''}
           encourageResponse={''}
@@ -118,6 +124,7 @@ test('InputProblem textbox is expecting float but got text.', async () => {
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'Content'}
           correctResponse={''}
           encourageResponse={''}
@@ -142,6 +149,7 @@ test('InputProblem textbox is expecting Integer but input was text.', async () =
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'Content'}
           correctResponse={''}
           encourageResponse={''}
@@ -166,6 +174,7 @@ test('InputProblem string text was too long', async () => {
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'Content'}
           correctResponse={''}
           encourageResponse={''}
@@ -188,12 +197,14 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
           <InputProblem
           solvedCallback={solvedHandler}
           exhaustedCallback={exhaustedHandler}
           allowedRetryCallback={allowedRetryHandler}
+          resetCallback={resetHandler}
           content={'Content'}
           correctResponse={''}
           encourageResponse={'Try again!'}
@@ -216,18 +227,21 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('Retry limit, encourageResponse, and exausted callback test', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
           <InputProblem
           solvedCallback={solvedHandler}
           exhaustedCallback={exhaustedHandler}
           allowedRetryCallback={allowedRetryHandler}
+          resetCallback={resetHandler}
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={'Try again!'}
@@ -263,18 +277,21 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(1)
   expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('InputProblem renders answer specific content', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
           <InputProblem
           solvedCallback={solvedHandler}
           exhaustedCallback={exhaustedHandler}
           allowedRetryCallback={allowedRetryHandler}
+          resetCallback={resetHandler}
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={'Try again!'}
@@ -312,12 +329,14 @@ test('InputProblem renders answer specific content only on button click', async 
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
           <InputProblem
           solvedCallback={solvedHandler}
           exhaustedCallback={exhaustedHandler}
           allowedRetryCallback={allowedRetryHandler}
+          resetCallback={resetHandler}
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={'Try again!'}
@@ -352,6 +371,7 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'Content'}
           correctResponse={'Correct!'}
           encourageResponse={'Try again!'}

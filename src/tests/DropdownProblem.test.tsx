@@ -9,6 +9,7 @@ test('DropdownProblem renders with contentId', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={(() => {})}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -37,6 +38,7 @@ test('DropdownProblem renders without contentId', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -64,6 +66,7 @@ test('DropdownProblem shows message if user does not select an option', async ()
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={''}
@@ -85,6 +88,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <DropdownProblem
@@ -92,6 +96,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Great job!</p>'}
     encourageResponse={''}
@@ -111,6 +116,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   expect(solvedHandler).toBeCalledTimes(1)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(resetHandler).toBeCalledTimes(0)
   expect(screen.getByRole('combobox')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
 })
@@ -119,6 +125,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <DropdownProblem
@@ -126,6 +133,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -145,6 +153,7 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(resetHandler).toBeCalledTimes(0)
 })
 
 test('DropdownProblem clears encourage response when user changes answer', async () => {
@@ -154,6 +163,7 @@ test('DropdownProblem clears encourage response when user changes answer', async
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -180,6 +190,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
+  const resetHandler = jest.fn()
 
   render(
     <DropdownProblem
@@ -187,6 +198,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
     solvedCallback={solvedHandler}
     exhaustedCallback={exhaustedHandler}
     allowedRetryCallback={allowedRetryHandler}
+    resetCallback={resetHandler}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -210,6 +222,7 @@ test('DropdownProblem exhausts and disables itself after configured number of re
   expect(solvedHandler).toBeCalledTimes(0)
   expect(exhaustedHandler).toBeCalledTimes(0)
   expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(resetHandler).toBeCalledTimes(0)
 
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
@@ -233,6 +246,7 @@ test('DropdownProblem renders answer specific content', async () => {
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={(() => {})}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -271,6 +285,7 @@ test('DropdownProblem renders answer specific content only on button click', asy
     solvedCallback={() => {}}
     exhaustedCallback={() => {}}
     allowedRetryCallback={() => {}}
+    resetCallback={() => {}}
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
@@ -302,6 +317,7 @@ test('DropdownProblem calls the onProblemAttempt handler', async () => {
           solvedCallback={() => {}}
           exhaustedCallback={() => {}}
           allowedRetryCallback={() => {}}
+          resetCallback={() => {}}
           content={'<p>Problem text</p>'}
           correctResponse={''}
           encourageResponse={'<p>Try again!</p>'}

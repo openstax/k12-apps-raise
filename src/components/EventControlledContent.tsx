@@ -12,14 +12,22 @@ export const EventControlledContent = ({ waitForEvent, children }: EventControll
     if (waitForEvent === undefined) {
       return
     }
+    const waitForUnfireEvent = `${waitForEvent}-unfire`
+
     const handleEvent = (): void => {
       setShouldRender(true)
     }
 
+    const handleUnfireEvent = (): void => {
+      setShouldRender(false)
+    }
+
     document.addEventListener(waitForEvent, handleEvent)
+    document.addEventListener(waitForUnfireEvent, handleUnfireEvent)
 
     return () => {
       document.removeEventListener(waitForEvent, handleEvent)
+      document.removeEventListener(waitForUnfireEvent, handleUnfireEvent)
     }
   }, [waitForEvent])
 
