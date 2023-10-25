@@ -128,6 +128,7 @@ table.os-raise-standardtable {
 table.os-raise-doubleheadertable {
   table-layout: fixed;
   width: 100%;
+  border-collapse: collapse;
 
   caption {
     color: $raise-light-black;
