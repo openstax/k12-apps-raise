@@ -16,9 +16,10 @@ interface MathfieldProps {
   onInput: (event: React.ChangeEvent<MathfieldElement>) => void
   className: string
   disabled: boolean
+  value: string
 }
 
-export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX.Element => {
+export const Mathfield = ({ className, disabled, onInput, value }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
   useEffect(() => {
     const mathFieldCurrent = mathfieldRef.current
@@ -56,6 +57,15 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
       }
     }
   }, [disabled])
+
+  useEffect(() => {
+    const mathFieldCurrent = mathfieldRef.current
+    if ((mathFieldCurrent === null)) {
+      return
+    }
+
+    mathFieldCurrent.value = value
+  }, [value])
 
   return (
     <>
