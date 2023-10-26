@@ -58,15 +58,6 @@ export const Mathfield = ({ className, disabled, onInput, value }: MathfieldProp
     }
   }, [disabled])
 
-  useEffect(() => {
-    const mathFieldCurrent = mathfieldRef.current
-    if ((mathFieldCurrent === null)) {
-      return
-    }
-
-    mathFieldCurrent.value = value
-  }, [value])
-
   return (
     <>
       <math-field
@@ -74,6 +65,7 @@ export const Mathfield = ({ className, disabled, onInput, value }: MathfieldProp
         ref={mathfieldRef}
         onInput={onInput}
         tabIndex={disabled ? '-1' : '0'}
+        value={value}
       />
     </>
   )
