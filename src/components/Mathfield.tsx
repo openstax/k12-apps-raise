@@ -56,9 +56,16 @@ export const Mathfield = ({ className, disabled, onInput, value }: MathfieldProp
         pointerEventSpan.style.pointerEvents = 'auto'
       }
     }
+  }, [disabled])
+
+  useEffect(() => {
+    const mathFieldCurrent = mathfieldRef.current
+    if ((mathFieldCurrent === null)) {
+      return
+    }
 
     mathFieldCurrent.value = value
-  }, [disabled, value])
+  }, [value])
 
   return (
     <>
