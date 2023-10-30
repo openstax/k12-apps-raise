@@ -7,5 +7,9 @@ export const determineFeedback = (userResponse: string | string[], encourageResp
       response = val.response
     }
   })
-  return response === undefined ? encourageResponse : response
+  return response ?? encourageResponse
+}
+
+export const retriesRemaining = (retryLimit: number, retries: number): boolean => {
+  return (retryLimit === 0 || retries !== retryLimit)
 }

@@ -410,17 +410,17 @@ test('returns the correct className string', () => {
   const solutionArray = ['A', 'B']
   const showAnswers = true
   let val = 'B'
-  let values = { response: ['A', 'B'] }
+  let response = ['A', 'B']
   const expectedCorrectClassName =
     'os-default-answer-choice os-correct-answer-choice os-disabled os-selected-answer-choice os-form-check'
   const expectedIncorrectClassName =
     'os-default-answer-choice os-wrong-answer-choice os-disabled os-selected-answer-choice os-form-check'
 
-  const correctAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
+  const correctAnswerClassName = buildClassName(solutionArray, showAnswers, val, response)
 
   expect(correctAnswerClassName).toBe(expectedCorrectClassName)
   val = 'C'
-  values = { response: ['A', 'B', 'C'] }
-  const incorrectAnswerClassName = buildClassName(solutionArray, showAnswers, val, values)
+  response = ['A', 'B', 'C']
+  const incorrectAnswerClassName = buildClassName(solutionArray, showAnswers, val, response)
   expect(incorrectAnswerClassName).toBe(expectedIncorrectClassName)
 })

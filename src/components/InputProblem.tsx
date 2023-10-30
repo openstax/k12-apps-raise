@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import type { BaseProblemProps } from './ProblemSetBlock'
-import { determineFeedback } from '../lib/problems'
+import { determineFeedback, retriesRemaining } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
 import { mathifyElement } from '../lib/math'
 import * as Yup from 'yup'
@@ -45,6 +45,7 @@ export const InputProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const [userResponseCorrect, setUserResponseCorrect] = useState(false)
   const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
@@ -105,6 +106,16 @@ export const InputProblem = ({
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
 
+  const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
+    if (correct) {
+      setFeedback(correctResponse)
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
+      setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
+    } else {
+      setFeedback(attemptsExhaustedResponse)
+    }
+  }
+
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     let correct = false
     let finalAttempt = false
@@ -121,20 +132,20 @@ export const InputProblem = ({
 
     if (evaluateInput(values.response, solution)) {
       correct = true
-      setFeedback(correctResponse)
+      setUserResponseCorrect(true)
       solvedCallback()
       setInputDisabled(true)
-    } else if (retryLimit === 0 || retriesAllowed !== retryLimit) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(determineFeedback(values.response, encourageResponse, answerResponses, evaluateInput))
       allowedRetryCallback()
     } else {
       setRetriesAllowed(currRetries => currRetries + 1)
-      setFeedback(attemptsExhaustedResponse)
       exhaustedCallback()
       setInputDisabled(true)
       finalAttempt = true
     }
+
+    handleFeedback(values.response, correct, retriesAllowed)
 
     if (onProblemAttempt !== undefined) {
       onProblemAttempt(
@@ -163,12 +174,12 @@ export const InputProblem = ({
             <Form >
               <div className='os-flex os-align-items-center'>
 
-                {evaluateInput(values.response, solution) && inputDisabled &&
+                {userResponseCorrect && inputDisabled &&
                   <div>
                     <CorrectAnswerIcon className={'os-mr'} />
                   </div>
                 }
-                {!evaluateInput(values.response, solution) && inputDisabled &&
+                {!userResponseCorrect && inputDisabled &&
                   <div>
                     <WrongAnswerIcon className={'os-mr'} />
                   </div>
@@ -181,7 +192,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting, errors.response)} />
+                    className={buildClassName(userResponseCorrect, inputDisabled || isSubmitting, errors.response)} />
                     )
                   : (
                     <Field
@@ -189,7 +200,7 @@ export const InputProblem = ({
                     disabled={inputDisabled || isSubmitting}
                     autoComplete={'off'}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { clearFeedback(); void setFieldValue('response', e.target.value) }}
-                    className={buildClassName(evaluateInput(values.response, solution), inputDisabled || isSubmitting, errors.response)} />
+                    className={buildClassName(userResponseCorrect, inputDisabled || isSubmitting, errors.response)} />
                     )
               }
               </div>

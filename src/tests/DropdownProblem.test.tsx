@@ -343,16 +343,16 @@ test('DropdownProblem calls the onProblemAttempt handler', async () => {
 
 test('returns the correct className string', () => {
   const response = 'A'
-  let solution = 'A'
+  let correct = true
   const formDisabled = true
 
-  let className = buildClassName(response, solution, formDisabled)
+  let className = buildClassName(response, correct, formDisabled)
 
   expect(className).toEqual('os-form-select os-selected-answer-choice os-correct-answer-choice os-disabled')
 
-  solution = 'B'
+  correct = false
 
-  className = buildClassName(response, solution, formDisabled)
+  className = buildClassName(response, correct, formDisabled)
 
   expect(className).toEqual('os-form-select os-selected-answer-choice os-wrong-answer-choice os-disabled')
 })
