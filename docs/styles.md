@@ -37,6 +37,8 @@
   - [Motivational Message](#motivational-content-os-raise-motivation)
 * Text Styling
   - [Bold Text](#bold-text)
+* Media Styling
+  - [Responsive Image](#responsive-image)
 
 # Styling Content for RAISE
 
@@ -856,3 +858,23 @@ Any element that contains text.
 ```
 
 ---
+
+## Responsive Image
+
+Improve image resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image. As a general rule, the max width of the image will be 100% of the containing block's width minus 1rem.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/responsiveimage.png" width="500">
+</div>
+
+**Availability**
+
+Add as a class attribute to `<img>`.
+
+**Usage**
+
+```html
+<img src="https://openstax.org/dist/images/logo.svg" class="os-raise-img-fluid">
+```
