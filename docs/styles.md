@@ -861,7 +861,7 @@ Any element that contains text.
 
 ## Responsive Image
 
-Improve image resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image. As a general rule, the max width of the image will be 100% of the containing block's width minus 1rem.
+Improve image resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image. As a general rule, the max width of the image will be 100% of the containing block's width.
 
 **Example**
 
