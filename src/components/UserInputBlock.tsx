@@ -32,9 +32,9 @@ interface InputFormValues {
 }
 
 interface PersistorData {
+  schemaVersion: number // Add schemaVersion
   userResponse: string
   responseSubmitted: boolean
-  newField: string
 }
 
 enum PersistorGetStatus {
@@ -57,12 +57,12 @@ export function buildClassName(formDisabled: boolean, errorResponse: string | un
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted, persistor }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
   const [initialResponse, setInitialResponse] = useState('')
-  const [newField, setNewField] = useState('Initial value')
 
   const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
+  const CURRENT_SCHEMA_VERSION = 1
 
   const schema = Yup.object({
     response: Yup.string()
@@ -80,13 +80,16 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
 
+        const schemaVersion = parsedPersistedState.schemaVersion || 0 // Default to 0 for backward compatibility
+        if (schemaVersion !== CURRENT_SCHEMA_VERSION) {
+          // Handle schema migration or transformations for different versions if needed
+          // For now loging schema update
+          console.log(`Updated schema version: ${schemaVersion}`)
+        }
+
         const userResponse = parsedPersistedState.userResponse || '' // Provide an empty string if userResponse is missing
 
-        // Handle new fields by checking for them in the persisted state
-        const newField = parsedPersistedState.newField || 'Initial value' // Provide a default value for newField if it's missing
-
         setInitialResponse(userResponse)
-        setNewField(newField)
         setResponseSubmitted(parsedPersistedState.responseSubmitted)
         if (fireEvent !== undefined && parsedPersistedState.responseSubmitted === true) {
           const submitEvent = new CustomEvent(fireEvent)
@@ -113,10 +116,9 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         return
       }
 
-      const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false, newField: 'Initial value' }
+      const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: '', responseSubmitted: false, newField: 'Initial value' }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
       setResponseSubmitted(false)
-      setNewField('Initial value')
       void setFieldValue('response', '', false)
       if (fireEvent !== undefined) {
         const unfireEvent = `${fireEvent}-unfire`
@@ -130,7 +132,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
     const newField = Math.floor(Math.random() * 101)
-    setNewField(newField)
     if (values.response.trim() === '') {
       setFieldError('response', NON_EMPTY_VALUE_ERROR)
       return
@@ -138,7 +139,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
     try {
       if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { userResponse: values.response, responseSubmitted: true, newField }
+        const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: values.response, responseSubmitted: true, newField }
         await persistor.put(contentId, JSON.stringify(newPersistedData))
       }
     } catch (error) {
@@ -232,7 +233,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
                     Reset
                   </button>
                 }
-                <p>{newField}</p>
 
               </div>
             </Form>
