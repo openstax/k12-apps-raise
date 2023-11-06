@@ -862,7 +862,7 @@ Any element that contains text.
 
 ## Responsive Media
 
-Improve image and `<video>` resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image / `<video>`. As a general rule, the max width will be 100% of the containing block's width. The `<width>` and `<height>` attributes should not be applied to `<video>`.
+Improve image and `<video>` responsiveness by adding a maximum width and allowing the browser to calculate and select a height for the image / `<video>`. As a general rule, the max width will be 100% of the containing block's width. The `<width>` and `<height>` attributes should not be applied to `<video>`.
 
 **Example**
 
@@ -891,7 +891,7 @@ Add as a class attribute to `<img>` or `<video>`.
 
 ## Responsive iframe
 
-Improve `<iframe>` resposiveness by adding a parent container for `<iframe>` and a class for both the parent container and the `<iframe>`. The `<width>` and `<height>` attributes should not be applied to the `<iframe>` or its parent container.
+Improve `<iframe>` responsiveness by adding a parent container for `<iframe>` and a class for both the parent container and the `<iframe>`. The `<width>` and `<height>` attributes should not be applied to the `<iframe>` or its parent container.
 
 **Example**
 
