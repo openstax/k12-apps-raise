@@ -38,7 +38,8 @@
 * Text Styling
   - [Bold Text](#bold-text)
 * Media Styling
-  - [Responsive Image](#responsive-image)
+  - [Responsive Media](#responsive-media)
+  - [Responsive iframe](#responsive-iframe)
 
 # Styling Content for RAISE
 
@@ -859,9 +860,9 @@ Any element that contains text.
 
 ---
 
-## Responsive Image
+## Responsive Media
 
-Improve image resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image. As a general rule, the max width of the image will be 100% of the containing block's width.
+Improve image and `<video>` resposiveness by adding a maximum width and allowing the browser to calculate and select a height for the image / `<video>`. As a general rule, the max width will be 100% of the containing block's width. The `<width>` and `<height>` attributes should not be applied to `<video>`.
 
 **Example**
 
@@ -871,10 +872,41 @@ Improve image resposiveness by adding a maximum width and allowing the browser t
 
 **Availability**
 
-Add as a class attribute to `<img>`.
+Add as a class attribute to `<img>` or `<video>`.
 
 **Usage**
 
 ```html
 <img src="https://openstax.org/dist/images/logo.svg" class="os-raise-img-fluid">
+```
+
+```html
+<video controls="true" crossorigin="anonymous" class="os-raise-media-responsive">
+  <source src="https://k12.openstax.org/contents/raise/resources/3dd4ea7de318dc0911be9212995411f6c406a778">
+  <track default="true" kind="captions" label="On" src="https://k12.openstax.org/contents/raise/resources/086bdd4741914a59f9365c92f251f58e225f0211" srclang="en_us">https://k12.openstax.org/contents/raise/resources/3dd4ea7de318dc0911be9212995411f6c406a778
+</video>
+```
+
+---
+
+## Responsive iframe
+
+Improve `<iframe>` resposiveness by adding a parent container for `<iframe>` and a class for both the parent container and the `<iframe>`. The `<width>` and `<height>` attributes should not be applied to the `<iframe>` or its parent container.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/responsiveiframe.png" width="750">
+</div>
+
+**Availability**
+
+Add as a class attribute to `<iframe>` and its parent container.
+
+**Usage**
+
+```html
+<div class="os-raise-iframe-container">
+  <iframe class="os-raise-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen frameborder="0" src="https://www.youtube.com/embed/w6R8rywmgek" title="Linear equation word problems"></iframe>
+</div>
 ```
