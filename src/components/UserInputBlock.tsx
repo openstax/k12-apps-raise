@@ -32,7 +32,7 @@ interface InputFormValues {
 }
 
 interface PersistorData {
-  schemaVersion: number // Add schemaVersion
+  schemaVersion: number
   userResponse: string
   responseSubmitted: boolean
 }
@@ -57,7 +57,6 @@ export function buildClassName(formDisabled: boolean, errorResponse: string | un
 export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, buttonText, contentId, onInputSubmitted, persistor }: UserInputBlockProps): JSX.Element => {
   const [responseSubmitted, setResponseSubmitted] = useState(false)
   const [initialResponse, setInitialResponse] = useState('')
-
   const [persistorGetStatus, setPersistorGetStatus] = useState<number>(PersistorGetStatus.Uninitialized)
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
@@ -80,16 +79,13 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
 
-        const schemaVersion = parsedPersistedState.schemaVersion || 0 // Default to 0 for backward compatibility
+        const schemaVersion = parsedPersistedState.schemaVersion
         if (schemaVersion !== CURRENT_SCHEMA_VERSION) {
           // Handle schema migration or transformations for different versions if needed
           // For now loging schema update
           console.log(`Updated schema version: ${schemaVersion}`)
         }
-
-        const userResponse = parsedPersistedState.userResponse || '' // Provide an empty string if userResponse is missing
-
-        setInitialResponse(userResponse)
+        setInitialResponse(parsedPersistedState.userResponse)
         setResponseSubmitted(parsedPersistedState.responseSubmitted)
         if (fireEvent !== undefined && parsedPersistedState.responseSubmitted === true) {
           const submitEvent = new CustomEvent(fireEvent)
@@ -116,7 +112,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         return
       }
 
-      const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: '', responseSubmitted: false, newField: 'Initial value' }
+      const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: '', responseSubmitted: false }
       await persistor.put(contentId, JSON.stringify(newPersistedData))
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
@@ -131,7 +127,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   }
 
   const handleSubmit = async (values: InputFormValues, { setFieldError }: FormikHelpers<InputFormValues>): Promise<void> => {
-    const newField = Math.floor(Math.random() * 101)
     if (values.response.trim() === '') {
       setFieldError('response', NON_EMPTY_VALUE_ERROR)
       return
@@ -139,7 +134,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
     try {
       if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: values.response, responseSubmitted: true, newField }
+        const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: values.response, responseSubmitted: true }
         await persistor.put(contentId, JSON.stringify(newPersistedData))
       }
     } catch (error) {
@@ -233,7 +228,6 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
                     Reset
                   </button>
                 }
-
               </div>
             </Form>
           )}
