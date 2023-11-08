@@ -877,7 +877,7 @@ Add as a class attribute to `<img>` or `<video>`.
 **Usage**
 
 ```html
-<img src="https://openstax.org/dist/images/logo.svg" class="os-raise-img-fluid">
+<img src="https://openstax.org/dist/images/logo.svg" class="os-raise-media-responsive">
 ```
 
 ```html
