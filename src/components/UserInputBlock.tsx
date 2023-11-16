@@ -32,6 +32,7 @@ interface InputFormValues {
 }
 
 interface PersistorData {
+  schemaVersion: number
   userResponse: string
   responseSubmitted: boolean
 }
@@ -60,6 +61,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
   const contentLoadedContext = useContext(ContentLoadedContext)
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
+  const CURRENT_SCHEMA_VERSION = 1
 
   const schema = Yup.object({
     response: Yup.string()
@@ -76,6 +78,13 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       const persistedState = await persistor.get(contentId, '1')
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
+
+        const schemaVersion = parsedPersistedState.schemaVersion
+        if (schemaVersion !== CURRENT_SCHEMA_VERSION) {
+          // Handle schema migration or transformations for different versions if needed
+          // For now loging schema update
+          console.log(`Updated schema version: ${schemaVersion}`)
+        }
         setInitialResponse(parsedPersistedState.userResponse)
         setResponseSubmitted(parsedPersistedState.responseSubmitted)
         if (fireEvent !== undefined && parsedPersistedState.responseSubmitted === true) {
@@ -103,7 +112,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         return
       }
 
-      const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
+      const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: '', responseSubmitted: false }
       await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
@@ -125,7 +134,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
 
     try {
       if (contentId !== undefined && persistor !== undefined) {
-        const newPersistedData: PersistorData = { userResponse: values.response, responseSubmitted: true }
+        const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: values.response, responseSubmitted: true }
         await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
       }
     } catch (error) {
