@@ -20,19 +20,17 @@ export const getMoodlePersistor = (): Persistor | undefined => {
   const moodleApi = new MoodleApi(moodleWWWRoot, moodleSessKey)
   return {
     get: async (dataKey: string, prefetchKey?: string): Promise<string | null> => {
-      if (prefetchKey != null && cache[prefetchKey] !== undefined) {
+      if (prefetchKey !== undefined && cache[prefetchKey] !== undefined) {
         const data = await cache[prefetchKey]
         const foundItem = data.find((item) => item.dataKey === dataKey)
         return foundItem !== undefined ? foundItem.dataValue : null
       }
 
       let data: PersistorGetResponse = []
-      let fetchData: Promise<PersistorGetResponse> | PersistorGetResponse = cache[prefetchKey ?? '']
+      let fetchData: Promise<PersistorGetResponse> | PersistorGetResponse
 
-      if (prefetchKey != null) {
-        if (fetchData === undefined) {
-          fetchData = cache[prefetchKey] = moodleApi.getData(courseId, dataKey, prefetchKey)
-        }
+      if (prefetchKey !== undefined) {
+        fetchData = cache[prefetchKey] = moodleApi.getData(courseId, dataKey, prefetchKey)
       } else {
         fetchData = moodleApi.getData(courseId, dataKey, prefetchKey)
       }
@@ -44,6 +42,14 @@ export const getMoodlePersistor = (): Persistor | undefined => {
     },
     put: async (dataKey: string, dataValue: string, prefetchKey?: string): Promise<void> => {
       await moodleApi.putData(courseId, dataKey, dataValue, prefetchKey)
+      if (prefetchKey !== undefined && cache[prefetchKey] !== undefined) {
+        const currentData = await cache[prefetchKey]
+        const foundIndex = currentData.findIndex((item) => item.dataKey === dataKey)
+        if (foundIndex !== -1) {
+          currentData[foundIndex] = { dataKey, dataValue }
+          cache[prefetchKey] = Promise.resolve(currentData)
+        }
+      }
     }
   }
 }

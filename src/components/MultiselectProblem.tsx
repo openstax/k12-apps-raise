@@ -174,7 +174,7 @@ export const MultiselectProblem = ({
         return
       }
 
-      const persistedState = await persistor.get(contentId, '1')
+      const persistedState = await persistor.get(contentId)
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
         setInitialResponse(parsedPersistedState.userResponse)
@@ -208,7 +208,7 @@ export const MultiselectProblem = ({
       }
 
       const newPersistedData: PersistorData = { userResponse: [], formDisabled: false, retriesAllowed: 0, showAnswers: false }
-      await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
+      await persistor.put(contentId, JSON.stringify(newPersistedData))
       setFormDisabled(false)
       setRetriesAllowed(0)
       setShowAnswers(false)
@@ -229,7 +229,7 @@ export const MultiselectProblem = ({
       if (contentId === undefined || persistor === undefined) {
         return
       }
-      await persistor.put(contentId, JSON.stringify(persistorData), '1')
+      await persistor.put(contentId, JSON.stringify(persistorData))
     }
 
     if (evaluateInput(values.response, solutionArray)) {
