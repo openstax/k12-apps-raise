@@ -73,7 +73,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         return
       }
 
-      const persistedState = await persistor.get(contentId)
+      const persistedState = await persistor.get(contentId, '1')
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
         setInitialResponse(parsedPersistedState.userResponse)
@@ -104,7 +104,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       }
 
       const newPersistedData: PersistorData = { userResponse: '', responseSubmitted: false }
-      await persistor.put(contentId, JSON.stringify(newPersistedData))
+      await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
       if (fireEvent !== undefined) {
@@ -126,7 +126,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     try {
       if (contentId !== undefined && persistor !== undefined) {
         const newPersistedData: PersistorData = { userResponse: values.response, responseSubmitted: true }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
+        await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
       }
     } catch (error) {
       setFieldError('response', 'Error saving response. Please try again.')

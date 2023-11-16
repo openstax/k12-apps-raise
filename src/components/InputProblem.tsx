@@ -144,7 +144,7 @@ export const InputProblem = ({
         return
       }
 
-      const persistedState = await persistor.get(contentId)
+      const persistedState = await persistor.get(contentId, '1')
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
         setResponse(parsedPersistedState.userResponse)
@@ -177,7 +177,7 @@ export const InputProblem = ({
       }
 
       const newPersistedData: PersistorData = { userResponse: '', inputDisabled: false, retriesAllowed: 0 }
-      await persistor.put(contentId, JSON.stringify(newPersistedData))
+      await persistor.put(contentId, JSON.stringify(newPersistedData), '1')
       setInputDisabled(false)
       setRetriesAllowed(0)
       clearFeedback()
@@ -197,7 +197,7 @@ export const InputProblem = ({
       if (contentId === undefined || persistor === undefined) {
         return
       }
-      await persistor.put(contentId, JSON.stringify(persistorData))
+      await persistor.put(contentId, JSON.stringify(persistorData), '1')
     }
 
     if (values.response.trim() === '') {
