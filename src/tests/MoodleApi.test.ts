@@ -1,5 +1,5 @@
 import 'whatwg-fetch'
-import { MoodleApi } from '../moodleapi'
+import { MoodleApi, type PersistorGetResponse } from '../moodleapi'
 import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 
@@ -16,19 +16,20 @@ const server = setupServer(
         }
       }]))
     } else if (methodname === 'local_persist_get') {
-      const courseId = requestBody[0].args.courseid
-      const key = requestBody[0].args.key
+      const courseId = requestBody[0].args.courseId
+      const key = requestBody[0].args.dataKey
       if (courseId === 1 && key === 'testKey') {
         return await res(ctx.json([{
-          data: {
-            value: 'testValue'
-          }
+          data: [{
+            dataKey: 'testKey',
+            dataValue: 'testValue'
+          }]
         }]))
       }
     } else if (methodname === 'local_persist_put') {
-      const courseId = requestBody[0].args.courseid
-      const key = requestBody[0].args.key
-      const value = requestBody[0].args.value
+      const courseId = requestBody[0].args.courseId
+      const key = requestBody[0].args.dataKey
+      const value = requestBody[0].args.dataValue
       if (courseId === 1 && key === 'testKey' && value === 'testValue') {
         return await res(ctx.json([{
           data: {
@@ -52,11 +53,15 @@ test('Test getuser', async () => {
 })
 
 test('Test getData', async () => {
+  const expectedResponse: PersistorGetResponse = [{
+    dataKey: 'testKey',
+    dataValue: 'testValue'
+  }]
   const moodleApi = new MoodleApi('http://moodle', '12345')
   const courseId = 1
   const key = 'testKey'
   const response = await moodleApi.getData(courseId, key)
-  expect(response.value).toBe('testValue')
+  expect(response).toEqual(expectedResponse)
 })
 
 test('Test putData', async () => {

@@ -75,7 +75,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
         return
       }
 
-      const persistedState = await persistor.get(contentId)
+      const persistedState = await persistor.get(contentId, contentLoadedContext.contentId)
       if (persistedState !== null) {
         const parsedPersistedState = JSON.parse(persistedState)
 
@@ -113,7 +113,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
       }
 
       const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: '', responseSubmitted: false }
-      await persistor.put(contentId, JSON.stringify(newPersistedData))
+      await persistor.put(contentId, JSON.stringify(newPersistedData), contentLoadedContext.contentId)
       setResponseSubmitted(false)
       void setFieldValue('response', '', false)
       if (fireEvent !== undefined) {
@@ -135,7 +135,7 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
     try {
       if (contentId !== undefined && persistor !== undefined) {
         const newPersistedData: PersistorData = { schemaVersion: CURRENT_SCHEMA_VERSION, userResponse: values.response, responseSubmitted: true }
-        await persistor.put(contentId, JSON.stringify(newPersistedData))
+        await persistor.put(contentId, JSON.stringify(newPersistedData), contentLoadedContext.contentId)
       }
     } catch (error) {
       setFieldError('response', 'Error saving response. Please try again.')

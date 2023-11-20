@@ -1,12 +1,14 @@
-import { MoodleApi } from '../moodleapi'
+import { MoodleApi, type PersistorGetResponse } from '../moodleapi'
 import { ENV } from './env'
 import { getCurrentContext } from './utils'
 
 export interface Persistor {
-  get: (key: string) => Promise<string | null>
-  put: (key: string, value: string) => Promise<void>
+  get: (dataKey: string, prefetchKey?: string) => Promise<string | null>
+  put: (dataKey: string, dataValue: string, prefetchKey?: string) => Promise<void>
 }
 
+type CacheData = Record<string, Promise<PersistorGetResponse> | PersistorGetResponse>
+const cache: CacheData = {}
 export const getMoodlePersistor = (): Persistor | undefined => {
   const { courseId, host, moodleWWWRoot, moodleSessKey } = getCurrentContext()
 
@@ -17,12 +19,37 @@ export const getMoodlePersistor = (): Persistor | undefined => {
 
   const moodleApi = new MoodleApi(moodleWWWRoot, moodleSessKey)
   return {
-    get: async (key: string): Promise<string | null> => {
-      const data = await moodleApi.getData(courseId, key)
-      return data.value
+    get: async (dataKey: string, prefetchKey?: string): Promise<string | null> => {
+      if (prefetchKey !== undefined && cache[prefetchKey] !== undefined) {
+        const data = await cache[prefetchKey]
+        const foundItem = data.find((item) => item.dataKey === dataKey)
+        return foundItem !== undefined ? foundItem.dataValue : null
+      }
+
+      let data: PersistorGetResponse = []
+      let fetchData: Promise<PersistorGetResponse> | PersistorGetResponse
+
+      if (prefetchKey !== undefined) {
+        fetchData = cache[prefetchKey] = moodleApi.getData(courseId, dataKey, prefetchKey)
+      } else {
+        fetchData = moodleApi.getData(courseId, dataKey, prefetchKey)
+      }
+
+      data = await fetchData
+
+      const foundItem = data.find((item) => item.dataKey === dataKey)
+      return foundItem !== undefined ? foundItem.dataValue : null
     },
-    put: async (key: string, value: string): Promise<void> => {
-      await moodleApi.putData(courseId, key, value)
+    put: async (dataKey: string, dataValue: string, prefetchKey?: string): Promise<void> => {
+      await moodleApi.putData(courseId, dataKey, dataValue, prefetchKey)
+      if (prefetchKey !== undefined && cache[prefetchKey] !== undefined) {
+        const currentData = await cache[prefetchKey]
+        const foundIndex = currentData.findIndex((item) => item.dataKey === dataKey)
+        if (foundIndex !== -1) {
+          currentData[foundIndex] = { dataKey, dataValue }
+          cache[prefetchKey] = Promise.resolve(currentData)
+        }
+      }
     }
   }
 }

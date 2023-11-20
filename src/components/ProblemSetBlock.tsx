@@ -181,6 +181,21 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
   }
 
+  function persistorWithPrefetchKey(persistor: Persistor | undefined): Persistor | undefined {
+    if (persistor === undefined) {
+      return undefined
+    }
+    return {
+      get: async (dataKey: string, prefetchKey?: string) => {
+        return await persistor.get(dataKey, contentLoadedContext.contentId)
+      },
+      put: async (dataKey: string, dataValue: string, prefetchKey?: string) => {
+        await persistor.put(dataKey, dataValue, contentLoadedContext.contentId)
+      }
+    }
+  }
+  const prefetchPersistor = persistorWithPrefetchKey(persistor)
+
   problems.forEach((prob, indx) => {
     const sharedProps = {
       key: indx,
@@ -198,7 +213,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       attemptsExhaustedResponse: prob.attemptsExhaustedResponse,
       answerResponses: prob.answerResponses,
       onProblemAttempt: problemAttemptedCallbackFactory(prob.type),
-      persistor
+      persistor: prefetchPersistor
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
