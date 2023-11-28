@@ -37,6 +37,7 @@
   - [Motivational Message](#motivational-content-os-raise-motivation)
 * Text Styling
   - [Bold Text](#bold-text)
+  - [Italicize Text](#italicize-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
   - [Responsive iframe](#responsive-iframe)
@@ -856,6 +857,29 @@ Any element that contains text.
 
 ```html
 <p class="os-raise-text-bold">This text is bold.</p>
+```
+
+---
+
+## Italicize Text
+
+This class should be used to apply an italicized styling to text.
+If text is meant to convey "emphasis" (words that have a stressed emphasis compared to surrounding text) then wrap the applicable text in a ```<em>``` tag instead of applying this class.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/italicizedtext.png" width="300">
+</div>
+
+**Availability**
+
+Any element that contains text.
+
+**Usage**
+
+```html
+<p class="os-raise-text-italicize">This text is italicized.</p>
 ```
 
 ---
