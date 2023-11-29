@@ -4,6 +4,7 @@ $raise-motivation-box: #f0f6fb;
 $raise-table-color: #0b5b51;
 $raise-light-black: #424242;
 $raise-light-gray: #919191;
+$os-dark-green: #0A5B50;
 
 ol.os-raise-noindent {
   padding-left: 0;
@@ -277,6 +278,10 @@ table.os-raise-horizontaltable {
   font-weight: 700;
 }
 
+.os-raise-text-italicize {
+  font-style: italic;
+}
+
 .os-raise-media-responsive {
   max-width: 100%;
   height: auto;
@@ -295,4 +300,39 @@ table.os-raise-horizontaltable {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+// Extra Support Box Styles
+.os-raise-extrasupport {
+  border: 1px solid #757575;
+  border-radius: .5rem;
+}
+
+.os-raise-extrasupport .os-raise-extrasupport-header {
+  background-color: $raise-graybox;
+  border-radius: .5rem .5rem 0 0;
+  border-bottom: 1px solid $os-dark-green;
+  padding: .75rem;
+}
+
+.os-raise-extrasupport .os-raise-extrasupport-title {
+  color: $raise-light-black;
+  font-weight: 700;
+  margin-bottom: .25rem;
+}
+
+.os-raise-extrasupport .os-raise-extrasupport-name {
+  color: $os-dark-green;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+}
+
+.os-raise-extrasupport .os-raise-extrasupport-body {
+  padding: .75rem;
+}
+
+.os-raise-extrasupport a {
+  color: #0A3E5B;
+  text-decoration: underline;
 }

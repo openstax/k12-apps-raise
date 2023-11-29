@@ -35,8 +35,10 @@
 * Components
   - [Gray Box](#gray-box-os-raise-graybox)
   - [Motivational Message](#motivational-content-os-raise-motivation)
+  - [Extra Support Box](#extra-support-box)
 * Text Styling
   - [Bold Text](#bold-text)
+  - [Italicize Text](#italicize-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
   - [Responsive iframe](#responsive-iframe)
@@ -713,6 +715,76 @@ Div objects only
 
 ---
 
+## Extra Support Box
+
+Add a styled container and content for support for English Language Learners and students with disabilities.
+
+**Examples**
+
+Support for English Language Learners
+<div style="text-align: center;">
+    <img src="./static/extrasupportboxell.png" width="750">
+</div>
+
+Support for Students with Disabilities
+<div style="text-align: center;">
+    <img src="./static/extrasupportboxdisabilities.png" width="750">
+</div>
+
+**Availability**
+
+Extra support boxes should only be used in `<div>` elements.
+
+**Usage**
+
+Support for English Language Learners
+```html
+<div class="os-raise-extrasupport">
+  <div class="os-raise-extrasupport-header">
+    <p class="os-raise-extrasupport-title">Support for English Language Learners</p>
+    <p class="os-raise-extrasupport-name">MLR 6 Three Reads: Reading, Listening, Conversing</p>
+  </div>
+  <div class="os-raise-extrasupport-body">
+      <p>
+        Ask students to keep their books or devices closed and display only the image with the opening task statement, without revealing the questions that follow.
+        Use the first read to orient students to the situation by asking students to describe what the situation is about without using numbers (a teacher buys calculators and measuring tapes for her class).
+        Use the second read to identify quantities and relationships; ask students: “What can be counted or measured?”
+        Listen for, and amplify, the important quantities that vary in relation to each other in this situation: number of calculators purchased (for each order), number of measuring tapes purchased (for each order), and total cost of each order.
+        After the third read, reveal the questions that follow and invite students to brainstorm possible strategies to find the solution to the system.
+        This routine helps students interpret the language within a given situation needed to create an equation.
+      </p>
+      <p class="os-raise-text-italicize">Design Principle(s): Support sense-making</p>
+      <p class="os-raise-extrasupport-title">Learn more about this routine</p>
+      <p>
+        <a href="">View the instructional video</a>
+        and
+        <a href="">follow along with the materials</a>
+        to assist you with learning this routine.
+      </p>
+  </div>
+</div>
+```
+
+Support for Students with Disabilities
+```html
+<div class="os-raise-extrasupport">
+  <div class="os-raise-extrasupport-header">
+    <p class="os-raise-extrasupport-title">Support for Students with Disabilities</p>
+    <p class="os-raise-extrasupport-name">Representation: Internalize Comprehension</p>
+  </div>
+  <div class="os-raise-extrasupport-body">
+      <p>
+        Provide appropriate reading accommodations and supports to ensure student access to written directions, word problems, and other text-based content. 
+        While reading the situation aloud, explicitly link the word problem to the corresponding algebraic expression. 
+        Point to both the sentence and its corresponding equation while reading. Pause in between sentences and reread or repeat gestures if necessary for increased comprehension.
+      </p>
+      <p class="os-raise-text-italicize">Supports accessibility for: Language; Conceptual processing</p>
+  </div>
+</div>
+```
+
+---
+
 ## Side by side (os-raise-d-flex)
 
 Add to any tag surrounding side by side content.
@@ -856,6 +928,29 @@ Any element that contains text.
 
 ```html
 <p class="os-raise-text-bold">This text is bold.</p>
+```
+
+---
+
+## Italicize Text
+
+This class should be used to apply an italicized styling to text.
+If text is meant to convey "emphasis" (words that have a stressed emphasis compared to surrounding text) then wrap the applicable text in a ```<em>``` tag instead of applying this class.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/italicizedtext.png" width="300">
+</div>
+
+**Availability**
+
+Any element that contains text.
+
+**Usage**
+
+```html
+<p class="os-raise-text-italicize">This text is italicized.</p>
 ```
 
 ---
