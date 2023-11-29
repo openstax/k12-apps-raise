@@ -754,7 +754,7 @@ Support for English Language Learners
         This routine helps students interpret the language within a given situation needed to create an equation.
       </p>
       <p class="os-raise-text-italicize">Design Principle(s): Support sense-making</p>
-      <p class="os-raise-text-bold os-raise-extrasupport-title">Learn more about this routine</p>
+      <p class="os-raise-extrasupport-title">Learn more about this routine</p>
       <p>
         <a href="">View the instructional video</a>
         and
