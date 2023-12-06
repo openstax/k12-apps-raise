@@ -39,12 +39,10 @@ export const loadScriptTag = async (srcValue: string): Promise<void> => {
   await loadedPromise
 }
 
-export const getCurrentContext = (): { courseId: number | undefined, host: string | undefined } => {
-  const courseId = window.M?.cfg.courseId
-  const host = window.location.host
+export const getCurrentContext = (): { courseId: number | undefined, location: Location } => {
   return {
-    courseId,
-    host
+    courseId: window.M?.cfg.courseId,
+    location: window.location
   }
 }
 
@@ -65,8 +63,8 @@ function getVariantMapping(host: string | undefined, courseId: number | undefine
 export const getVariant = (variants: ContentVariant[]): ContentVariant | undefined => {
   const currentContext = getCurrentContext()
 
-  const courseVariant = getVariantMapping(currentContext.host, currentContext.courseId)
-  const defaultVariant = getVariantMapping(currentContext.host, undefined)
+  const courseVariant = getVariantMapping(currentContext.location.host, currentContext.courseId)
+  const defaultVariant = getVariantMapping(currentContext.location.host, undefined)
 
   // Try to find content for mapped variant and fall back to trying to find default variant
   const maybeMatch = variants.find(item => item.variant === courseVariant) ?? variants.find(item => item.variant === defaultVariant)
@@ -75,14 +73,30 @@ export const getVariant = (variants: ContentVariant[]): ContentVariant | undefin
 }
 
 export const getVersionId = (): string => {
-  const { courseId, host } = getCurrentContext()
+  const { courseId, location } = getCurrentContext()
   const defaultVersionId = contentVersions.defaultVersion
 
-  if (courseId === undefined || host === undefined) {
+  if (courseId === undefined) {
+    // The context indicates we are not running in a Moodle course. Check for prefix override.
+    const maybePrefixOverrides = (contentVersions as any).overrides[location.host]?.prefix
+
+    if (maybePrefixOverrides === undefined) {
+      return defaultVersionId
+    }
+
+    // We will use the first matching prefix if found
+    for (const prefix in maybePrefixOverrides) {
+      if (location.pathname.startsWith(prefix)) {
+        return maybePrefixOverrides[prefix]
+      }
+    }
+
+    // No matching prefix found
     return defaultVersionId
   }
 
-  const maybeOverride = (contentVersions as any).overrides[host]?.[courseId]
+  // The context indicates we are running in a Moodle course. Check for course override.
+  const maybeCourseOverride = (contentVersions as any).overrides[location.host]?.course?.[courseId]
 
-  return maybeOverride ?? defaultVersionId
+  return maybeCourseOverride ?? defaultVersionId
 }
