@@ -6,16 +6,47 @@ jest.mock('../../data/content-versions.json', () => ({
   defaultVersion: 'defaultVersion',
   overrides: {
     testhost: {
-      1: 'overrideVersion'
+      course: {
+        1: 'courseOverrideVersion'
+      }
+    },
+    testhost2: {
+      prefix: {
+        '/edition1/': 'prefixOverrideVersion'
+      }
     }
   }
 }))
 
-test('getVersionId returns default when no context', async () => {
+const originalLocation = { ...window.location }
+
+beforeEach(() => {
+  delete window.M
+  Object.defineProperty(window, 'location', {
+    value: {
+      host: originalLocation.host,
+      pathname: originalLocation.pathname
+    },
+    writable: true
+  })
+})
+
+afterEach(() => {
+  delete window.M
+  Object.defineProperty(window, 'location', {
+    value: {
+      host: originalLocation.host,
+      pathname: originalLocation.pathname
+    },
+    writable: true
+  })
+})
+
+test('getVersionId returns default when no course context', async () => {
   expect(getVersionId()).toBe('defaultVersion')
 })
 
-test('getVersionId returns default with context and no override', async () => {
+test('getVersionId returns default with course context and no override', async () => {
   window.M = {
     cfg: {
       wwwroot: 'http://moodle',
@@ -27,7 +58,7 @@ test('getVersionId returns default with context and no override', async () => {
   expect(getVersionId()).toBe('defaultVersion')
 })
 
-test('getVersionId returns override when configured', async () => {
+test('getVersionId returns override when course configured', async () => {
   window.M = {
     cfg: {
       wwwroot: 'http://moodle',
@@ -41,5 +72,25 @@ test('getVersionId returns override when configured', async () => {
       host: 'testhost'
     }
   })
-  expect(getVersionId()).toBe('overrideVersion')
+  expect(getVersionId()).toBe('courseOverrideVersion')
+})
+
+test('getVersionId returns override when prefix configured', async () => {
+  Object.defineProperty(window, 'location', {
+    value: {
+      host: 'testhost2',
+      pathname: '/edition1/unitslug/pageslug'
+    }
+  })
+  expect(getVersionId()).toBe('prefixOverrideVersion')
+})
+
+test('getVersionId returns default when prefix does not match', async () => {
+  Object.defineProperty(window, 'location', {
+    value: {
+      host: 'testhost2',
+      pathname: '/edition2/unitslug/pageslug'
+    }
+  })
+  expect(getVersionId()).toBe('defaultVersion')
 })
