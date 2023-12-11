@@ -33,7 +33,7 @@ label.os-label-container {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: .75rem 0.5rem .75rem 0.8rem;
+  padding: .75rem .5rem .75rem .8rem;
   cursor: pointer;
 }
 
@@ -59,7 +59,7 @@ div.os-correct-answer-choice .os-form-check-input[type="checkbox"] {
 }
 
 .os-form-check-input.os-form-check-input:focus {
-  box-shadow: 0 0 0 0.25rem #159db271;
+  box-shadow: 0 0 0 .25rem #159db271;
   border-color: $os-selected-focus-border-color;
 }
 
@@ -112,7 +112,7 @@ math-field.os-form-control.os-disabled {
 
 div.os-feedback-message {
   background-color: $os-light-gray;
-  padding: 0.5rem;
+  padding: .5rem;
   border-radius: .313rem;
 }
 
@@ -139,11 +139,11 @@ div.os-justify-content-end {
 
 // Icon Styles
 .os-ml {
-  margin-left: 0.7rem;
+  margin-left: .7rem;
 }
 
 .os-mr {
-  margin-right: 0.7rem;
+  margin-right: .7rem;
 }
 
 // Custom Checkbox, Dropdown, & Input Styles 
