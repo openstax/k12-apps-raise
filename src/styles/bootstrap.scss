@@ -154,7 +154,7 @@
     @extend .form-select;
 
     border: .125rem solid $os-default-answer-border-color;
-    border-radius: .313rem;
+    border-radius: .3125rem;
     box-shadow: 0 .125rem .125rem $os-default-box-shadow;
     padding: .75rem 2.25rem .75rem .75rem;
     cursor: pointer;
@@ -170,7 +170,7 @@
     @extend .form-control;
 
     border: .125rem solid $os-default-answer-border-color;
-    border-radius: .313rem;
+    border-radius: .3125rem;
     box-shadow: 0 .125rem .125rem $os-default-box-shadow;
   }
 

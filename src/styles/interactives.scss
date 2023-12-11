@@ -16,7 +16,7 @@ div.os-grid {
 
 .os-default-answer-choice {
   border: .125rem solid $os-default-answer-border-color;
-  border-radius: .313rem;
+  border-radius: .3125rem;
   box-shadow: 0 .125rem .125rem $os-default-box-shadow;
 }
 
@@ -113,7 +113,7 @@ math-field.os-form-control.os-disabled {
 div.os-feedback-message {
   background-color: $os-light-gray;
   padding: .5rem;
-  border-radius: .313rem;
+  border-radius: .3125rem;
 }
 
 div.os-feedback-message p {
