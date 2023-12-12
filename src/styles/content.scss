@@ -16,7 +16,7 @@ ol.os-raise-noindent {
 }
 
 div.os-raise-graybox {
-  border: .063rem solid $raise-graybox-border;
+  border: .0625rem solid $raise-graybox-border;
   padding: 1rem;
   background-color: $raise-graybox;
   border-radius: .3125rem;
@@ -40,7 +40,7 @@ div.os-raise-motivation {
 }
 
 %os-box-formatting {
-  border: .063rem solid $raise-motivation-box;
+  border: .0625rem solid $raise-motivation-box;
   padding: 1rem 1rem 0 5.625rem;
   font-weight: bold;
   margin-bottom: 1rem;
@@ -49,14 +49,14 @@ div.os-raise-motivation {
 
 table.os-raise-standardtable {
   th {
-    border: .063rem solid black;
+    border: .0625rem solid black;
     vertical-align: bottom;
     padding: .5rem 1rem;
   }
 
   td {
     vertical-align: top;
-    border: .063rem solid black;
+    border: .0625rem solid black;
     padding: .5rem 1rem;
   }
 }
@@ -98,8 +98,8 @@ table.os-raise-standardtable {
     font-size: 1rem;
     color: $raise-light-black;
     background-color: #fff;
-    border-left: .063rem solid $raise-table-color;
-    border-top: .063rem solid $raise-table-color;
+    border-left: .0625rem solid $raise-table-color;
+    border-top: .0625rem solid $raise-table-color;
   }
 }
 
@@ -140,7 +140,7 @@ table.os-raise-doubleheadertable {
 
   th,
   td {
-    border: .063rem solid $raise-light-gray;
+    border: .0625rem solid $raise-light-gray;
     text-align: center;
     padding: 1rem;
   }
@@ -304,14 +304,14 @@ table.os-raise-horizontaltable {
 
 // Extra Support Box Styles
 .os-raise-extrasupport {
-  border: .063rem solid #757575;
+  border: .0625rem solid #757575;
   border-radius: .5rem;
 }
 
 .os-raise-extrasupport .os-raise-extrasupport-header {
   background-color: $raise-graybox;
   border-radius: .5rem .5rem 0 0;
-  border-bottom: .063rem solid $os-dark-green;
+  border-bottom: .0625rem solid $os-dark-green;
   padding: .75rem;
 }
 
