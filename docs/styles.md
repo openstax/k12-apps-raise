@@ -26,16 +26,20 @@
 * Layout
   - Flex
     - Initialization of Flex Box
-      - [Required Flex Class](#side-by-side-os-raise-d-flex)
+      - [Required Flex Class](#side-by-side-os-raise-d-flex-nowrap)
     - Content Positioning
-      - [Center Side-by-Side Content Vertically](#side-by-side-os-raise-d-flex)
-      - [Center Side-by-Side Content Horizontally](#side-by-side-os-raise-d-flex)
-      - [Add Space Between Side-by-Side Content](#side-by-side-os-raise-d-flex)
-      - [Add Space Equally Around Side-by-Side Content](#side-by-side-os-raise-d-flex)
+      - [Center Side-by-Side Content Vertically](#side-by-side-os-raise-d-flex-nowrap)
+      - [Center Side-by-Side Content Horizontally](#side-by-side-os-raise-d-flex-nowrap)
+      - [Add Space Between Side-by-Side Content](#side-by-side-os-raise-d-flex-nowrap)
+      - [Add Space Equally Around Side-by-Side Content](#side-by-side-os-raise-d-flex-nowrap)
+    - Content Spacing
+      - [Add 16px of Space Between Content](#side-by-side-os-raise-d-flex-nowrap)
+      - [Add 32px of Space Between Content](#side-by-side-os-raise-d-flex-nowrap)
 * Components
   - [Gray Box](#gray-box-os-raise-graybox)
   - [Motivational Message](#motivational-content-os-raise-motivation)
   - [Extra Support Box](#extra-support-box)
+  - [Student Reflection Box](#student-reflection-box)
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -785,7 +789,34 @@ Support for Students with Disabilities
 
 ---
 
-## Side by side (os-raise-d-flex)
+## Student Reflection Box
+
+Add a styled container and content for student reflection.
+
+**Examples**
+
+<div style="text-align: center;">
+    <img src="./static/studentreflectionbox.png" width="750">
+</div>
+
+**Availability**
+
+Student reflection boxes should only be used in `<div>` elements.
+
+**Usage**
+
+```html
+<div class="os-raise-student-reflection">
+  <p class="os-raise-student-reflection-title">Why Should I Care?</p>
+  <img src="https://k12.openstax.org/contents/raise/resources/6fa8f58bb147e19048d9ae123f7ba85834cf748d"/>
+  <p>Matteo's brother can use algebra to budget his paycheck from his job at a pizza place. He uses some money for food, some for going out with his friends, and some, he saves for college.</p>
+  <p>If he uses variables to represent the different ways he uses his money, he can put those variables into an equation to make sure he has enough money to last until his next paycheck.</p>
+</div>
+```
+
+---
+
+## Side by side (os-raise-d-flex-nowrap)
 
 Add to any tag surrounding side by side content.
 
@@ -793,6 +824,10 @@ Add to any tag surrounding side by side content.
 
 <div style="text-align: center;">
     <img src="./static/sidebyside.png" width="600">
+</div>
+
+<div style="text-align: center;">
+    <img src="./static/osraisegap.png" width="600">
 </div>
 
 **Availability**
@@ -808,10 +843,28 @@ the side by side content.
 - `os-raise-justify-content-center` centers the grid horizontally.
 - `os-raise-justify-content-between` adds even spacing between content starting after the first element and ending before the last.
 - `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element.
+- `os-raise-gap-1` adds 1 rem (16px) of space between content.
+- `os-raise-gap-2` adds 2 rem (32px) of space between content. 
 
 ```html
-<h3>os-raise-d-flex</h3>
-<div class="os-raise-d-flex">
+<h3>os-raise-d-flex-nowrap</h3>
+<div class="os-raise-d-flex-nowrap">
+    <p>P1</p>
+    <h2>H2</h2>
+    <p>P2</p>
+    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+</div>
+
+<h3>os-raise-gap-1</h3>
+<div class="os-raise-d-flex-nowrap os-raise-gap-1">
+    <p>P1</p>
+    <h2>H2</h2>
+    <p>P2</p>
+    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+</div>
+
+<h3>os-raise-gap-2</h3>
+<div class="os-raise-d-flex-nowrap os-raise-gap-2">
     <p>P1</p>
     <h2>H2</h2>
     <p>P2</p>
@@ -819,7 +872,7 @@ the side by side content.
 </div>
 
 <h3>os-raise-align-items-center</h3>
-<div class="os-raise-d-flex os-raise-align-items-center">
+<div class="os-raise-d-flex-nowrap os-raise-align-items-center">
     <p>P1</p>
     <h2>H2</h2>
     <p>p2</p>
@@ -827,31 +880,29 @@ the side by side content.
 </div>
 
 <h3>os-raise-justify-content-center</h3>
-<div class="os-raise-d-flex os-raise-justify-content-center">
+<div class="os-raise-d-flex-nowrap os-raise-justify-content-center">
     <p>P1</p>
     <p>P2</p>
-
-
 </div>
 
 <h3>os-raise-justify-content-between</h3>
-<div class="os-raise-d-flex os-raise-justify-content-between">
+<div class="os-raise-d-flex-nowrap os-raise-justify-content-between">
     <p>P1</p>
     <p>P2</p>
     <p>P3</p>
     <h3>H3</h3>
-
 </div>
 
 <h3>os-raise-justify-content-evenly</h3>
-<div class="os-raise-d-flex os-raise-justify-content-evenly">
+<div class="os-raise-d-flex-nowrap os-raise-justify-content-evenly">
     <p>P1</p>
     <p>P2</p>
     <h3>h3</h3>
     <p>P2</p>
-
 </div>
 ```
+
+---
 
 ## Centered text (os-raise-text-center)
 
