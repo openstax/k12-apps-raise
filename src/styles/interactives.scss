@@ -15,9 +15,9 @@ div.os-grid {
 }
 
 .os-default-answer-choice {
-  border: 2px solid $os-default-answer-border-color;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px $os-default-box-shadow;
+  border: .125rem solid $os-default-answer-border-color;
+  border-radius: .3125rem;
+  box-shadow: 0 .125rem .125rem $os-default-box-shadow;
 }
 
 div.os-default-answer-choice:focus-within {
@@ -33,7 +33,7 @@ label.os-label-container {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: .75rem 0.5rem .75rem 0.8rem;
+  padding: .75rem .5rem .75rem .8rem;
   cursor: pointer;
 }
 
@@ -41,11 +41,11 @@ label.os-label-container {
 input.os-hide-input-button {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
-  height: 1px;
+  height: .0625rem;
   overflow: hidden;
   position: absolute;
   white-space: nowrap;
-  width: 1px;
+  width: .0625rem;
 }
 
 // Multi Select Styles
@@ -59,7 +59,7 @@ div.os-correct-answer-choice .os-form-check-input[type="checkbox"] {
 }
 
 .os-form-check-input.os-form-check-input:focus {
-  box-shadow: 0 0 0 0.25rem #159db271;
+  box-shadow: 0 0 0 .25rem #159db271;
   border-color: $os-selected-focus-border-color;
 }
 
@@ -75,7 +75,7 @@ select.os-form-select:hover {
 
 .os-form-select.os-form-select:focus {
   border-color: $os-selected-focus-border-color;
-  box-shadow: 0 2px 2px $os-default-box-shadow;
+  box-shadow: 0 .125rem .125rem $os-default-box-shadow;
 }
 
 .os-form-select.os-form-select:disabled {
@@ -85,7 +85,7 @@ select.os-form-select:hover {
 // Input Styles
 .os-form-control.os-form-control:focus {
   border-color: $os-selected-focus-border-color;
-  box-shadow: 0 2px 2px $os-default-box-shadow;
+  box-shadow: 0 .125rem .125rem $os-default-box-shadow;
 }
 
 .os-form-control.os-form-control:disabled {
@@ -112,8 +112,8 @@ math-field.os-form-control.os-disabled {
 
 div.os-feedback-message {
   background-color: $os-light-gray;
-  padding: 0.5rem;
-  border-radius: 5px;
+  padding: .5rem;
+  border-radius: .3125rem;
 }
 
 div.os-feedback-message p {
@@ -139,11 +139,11 @@ div.os-justify-content-end {
 
 // Icon Styles
 .os-ml {
-  margin-left: 0.7rem;
+  margin-left: .7rem;
 }
 
 .os-mr {
-  margin-right: 0.7rem;
+  margin-right: .7rem;
 }
 
 // Custom Checkbox, Dropdown, & Input Styles 

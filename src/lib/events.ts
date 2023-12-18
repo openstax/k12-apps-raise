@@ -91,7 +91,7 @@ class EventManager {
     this.impressionId = this.impressionId ?? uuidv4()
     const context = getCurrentContext()
     const eventsEndpointMapper = ENV.OS_RAISE_EVENTSAPI_URL_MAP as Record<string, string | undefined>
-    const eventsEndpoint = eventsEndpointMapper[window.location.host]
+    const eventsEndpoint = eventsEndpointMapper[context.location.host]
 
     if (context.courseId === undefined || eventsEndpoint === undefined || window.M === undefined) {
       this.instance = new EventManager()

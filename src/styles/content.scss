@@ -16,10 +16,10 @@ ol.os-raise-noindent {
 }
 
 div.os-raise-graybox {
-  border: 1px solid $raise-graybox-border;
-  padding: 16px;
+  border: .0625rem solid $raise-graybox-border;
+  padding: 1rem;
   background-color: $raise-graybox;
-  border-radius: 5px;
+  border-radius: .3125rem;
 }
 
 div.os-raise-motivation {
@@ -32,32 +32,32 @@ div.os-raise-motivation {
 
 %os-background {
   background: $raise-motivation-box;
-  border-radius: 8px;
+  border-radius: .5rem;
   background-image: url("https://k12.openstax.org/contents/raise/resources/c4c17785a634fd81884f3e2f43dc073ad2285ced");
   background-repeat: no-repeat;
-  background-position: -10px 50%;
-  background-size: 104px;
+  background-position: -.625rem 50%;
+  background-size: 6.5rem;
 }
 
 %os-box-formatting {
-  border: 1px solid $raise-motivation-box;
-  padding: 16px 16px 0 90px;
+  border: .0625rem solid $raise-motivation-box;
+  padding: 1rem 1rem 0 5.625rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  min-height: 80px;
+  min-height: 5rem;
 }
 
 table.os-raise-standardtable {
   th {
-    border: 1px solid black;
+    border: .0625rem solid black;
     vertical-align: bottom;
-    padding: 8px 16px;
+    padding: .5rem 1rem;
   }
 
   td {
     vertical-align: top;
-    border: 1px solid black;
-    padding: 8px 16px;
+    border: .0625rem solid black;
+    padding: .5rem 1rem;
   }
 }
 
@@ -66,10 +66,10 @@ table.os-raise-standardtable {
      to be applied to the entire table (border-collapse: collapse will ignore any border
      radius applied to the table)
   */
-  border: 2px solid $raise-table-color;
+  border: .125rem solid $raise-table-color;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: 5px;
+  border-radius: .3125rem;
 
   caption {
     color: $raise-light-black;
@@ -85,7 +85,7 @@ table.os-raise-standardtable {
   th,
   td {
     text-align: center;
-    padding: 16px;
+    padding: 1rem;
   }
 
   th {
@@ -98,8 +98,8 @@ table.os-raise-standardtable {
     font-size: 1rem;
     color: $raise-light-black;
     background-color: #fff;
-    border-left: 1px solid $raise-table-color;
-    border-top: 1px solid $raise-table-color;
+    border-left: .0625rem solid $raise-table-color;
+    border-top: .0625rem solid $raise-table-color;
   }
 }
 
@@ -140,9 +140,9 @@ table.os-raise-doubleheadertable {
 
   th,
   td {
-    border: 1px solid $raise-light-gray;
+    border: .0625rem solid $raise-light-gray;
     text-align: center;
-    padding: 16px;
+    padding: 1rem;
   }
 
   th {
@@ -196,7 +196,7 @@ table.os-raise-skinnytable {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 240px;
+  max-width: 15rem;
 
   td:first-child {
     border-left: none;
@@ -304,14 +304,14 @@ table.os-raise-horizontaltable {
 
 // Extra Support Box Styles
 .os-raise-extrasupport {
-  border: 1px solid #757575;
+  border: .0625rem solid #757575;
   border-radius: .5rem;
 }
 
 .os-raise-extrasupport .os-raise-extrasupport-header {
   background-color: $raise-graybox;
   border-radius: .5rem .5rem 0 0;
-  border-bottom: 1px solid $os-dark-green;
+  border-bottom: .0625rem solid $os-dark-green;
   padding: .75rem;
 }
 
