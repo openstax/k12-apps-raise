@@ -149,3 +149,42 @@ test('justify content evenly', async ({ page }) => {
     return window.getComputedStyle(el).getPropertyValue('justify-content')
   })).toBe('space-evenly')
 })
+
+test('Accordion test ', async ({ page }) => {
+  const htmlContent = `
+  <div class="os-raise-accordion">
+  <div class="os-raise-accordion-item">
+    <div class="os-raise-accordion-header">Header 1</div>
+    <div class="os-raise-accordion-content">Content 1</div>
+  </div>
+  <div class="os-raise-accordion-item">
+    <div class="os-raise-accordion-header">Header 2</div>
+    <div class="os-raise-accordion-content">Content 2</div>
+  </div>
+</div>
+`
+
+  await mockPageContentRequest(page, htmlContent)
+  await page.goto('/')
+
+  const accordionItems = await page.$$('.os-raise-accordion-item')
+
+  for (const accordionItem of accordionItems) {
+    const content = await accordionItem.$('.os-raise-accordion-content')
+    const header = await accordionItem.$('.os-raise-accordion-header')
+
+    if (header !== null && content !== null) {
+      await page.waitForTimeout(200) // awaiting height transition
+      expect(await content.evaluate((el) => {
+        return window.getComputedStyle(el).getPropertyValue('max-height')
+      })).toBe('0px')
+
+      await header.click()
+
+      await page.waitForTimeout(200) // awaiting height transition
+      expect(await content.evaluate((el) => {
+        return window.getComputedStyle(el).getPropertyValue('max-height')
+      })).not.toBe('0px')
+    }
+  }
+})

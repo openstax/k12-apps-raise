@@ -36,6 +36,7 @@
   - [Gray Box](#gray-box-os-raise-graybox)
   - [Motivational Message](#motivational-content-os-raise-motivation)
   - [Extra Support Box](#extra-support-box)
+  - [Accordion](#accordion-os-raise-accordion)
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -784,6 +785,46 @@ Support for Students with Disabilities
 ```
 
 ---
+## Accordion (os-raise-accordion)
+
+The Accordion component is designed to showcase content in an expandable and collapsible format, allowing users to view specific sections while keeping the rest hidden.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/accordion.png" width="600">
+</div>
+
+**Usage**
+
+The button with the classname `os-raise-accordion-header` is the accordion item header.
+The content div with the classname `os-raise-accordion-content` inside each accordion section can include various elements such as text, images, tables, etc. Modify the content as needed to suit your specific requirements. You cannot put interactive blocks inside of an accordion. You should not nest accordions. 
+
+```html
+<div class="os-raise-accordion">
+    <!-- Accordion Item 1-->
+    <div class="os-raise-accordion-item">
+        <button class="os-raise-accordion-header">Accordion Header Text 1</button>
+        <div class="os-raise-accordion-content">
+            <!-- Content goes here -->
+            <p>Content<p>
+        </div>
+    </div>
+    <!-- Accordion Item 2-->
+    <div class="os-raise-accordion-item">
+        <button class="os-raise-accordion-header">Accordion Header Text 2</button>
+        <div class="os-raise-accordion-content">
+            <!-- Content goes here -->
+            <p>Content<p>
+
+        </div>
+    </div>
+
+</div>
+
+```
+---
+
 
 ## Side by side (os-raise-d-flex)
 

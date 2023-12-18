@@ -336,3 +336,69 @@ table.os-raise-horizontaltable {
   color: #0A3E5B;
   text-decoration: underline;
 }
+
+.os-raise-accordion {
+  width: 100%;
+}
+
+.os-raise-accordion-item {
+  border-bottom: 1px solid #D9D9D9;
+}
+
+.os-raise-accordion-header {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  padding: 0.625rem;
+  border-bottom: 1px solid #D9D9D9;
+  color: $os-dark-green;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+}
+
+.os-raise-accordion-header:hover {
+  background-color: #F5F5F5;
+}
+
+.os-raise-accordion-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s ease;
+  background-color: #F5F5F5;
+  padding: 0 0.625rem;
+}
+
+.os-raise-accordion-item.active .os-raise-accordion-content {
+  transition: max-height 0.2s ease;
+  padding: 0 0.625rem 0.625rem;
+  background-color: #F5F5F5;
+  border-bottom: 1px solid #D9D9D9;
+}
+
+.os-raise-accordion-item.active .os-raise-accordion-header {
+  background-color: #F5F5F5;
+  border-bottom: none;
+}
+
+$arrow-svg: url("data:image/svg+xml,%3Csvg width='16' height='9' viewBox='0 0 16 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath id='Line' d='M15 1L8 8L1 1' stroke='%230A5B50' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+.os-raise-accordion-header::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.625rem;
+  width: 1rem;
+  height: 0.5625rem;
+  transform: translateY(-10%);
+  background-image: $arrow-svg;
+  transition: transform 0.2s ease;
+}
+
+.os-raise-accordion-item.active .os-raise-accordion-header::after {
+  transform: rotate(180deg);
+}
+
