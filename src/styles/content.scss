@@ -254,6 +254,18 @@ table.os-raise-horizontaltable {
   row-gap: 5rem;
 }
 
+.os-raise-d-flex-nowrap {
+  display: flex;
+}
+
+.os-raise-gap-1 {
+  gap: 1rem;
+}
+
+.os-raise-gap-2 {
+  gap: 2rem;
+}
+
 .os-raise-align-items-center {
   align-items: center;
 }
@@ -402,3 +414,17 @@ $arrow-svg: url("data:image/svg+xml,%3Csvg width='16' height='9' viewBox='0 0 16
   transform: rotate(180deg);
 }
 
+// Student Reflection Styles
+.os-raise-student-reflection {
+  border: .0625rem solid $raise-graybox;
+  border-top: solid $os-dark-green;
+  border-radius: .5rem;
+  background-color: $raise-graybox;
+  padding: .75rem;
+}
+
+.os-raise-student-reflection .os-raise-student-reflection-title {
+  color: $os-dark-green;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
