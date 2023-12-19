@@ -795,8 +795,14 @@ Add a styled container and content for student reflection.
 
 **Examples**
 
+Student Reflection Box
 <div style="text-align: center;">
     <img src="./static/studentreflectionbox.png" width="750">
+</div>
+
+Student Reflection Box Side-by-Side
+<div style="text-align: center;">
+    <img src="./static/studentreflectionboxbc.png" width="750">
 </div>
 
 **Availability**
@@ -805,12 +811,37 @@ Student reflection boxes should only be used in `<div>` elements.
 
 **Usage**
 
+Student Reflection Box
 ```html
 <div class="os-raise-student-reflection">
   <p class="os-raise-student-reflection-title">Why Should I Care?</p>
   <img src="https://k12.openstax.org/contents/raise/resources/6fa8f58bb147e19048d9ae123f7ba85834cf748d"/>
   <p>Matteo's brother can use algebra to budget his paycheck from his job at a pizza place. He uses some money for food, some for going out with his friends, and some, he saves for college.</p>
   <p>If he uses variables to represent the different ways he uses his money, he can put those variables into an equation to make sure he has enough money to last until his next paycheck.</p>
+</div>
+```
+
+Student Reflection Box Side-by-Side
+```html
+<div class="os-raise-student-reflection">
+  <p class="os-raise-student-reflection-title">Building Character: Social Intelligence</p>
+  <div class="os-raise-d-flex-nowrap os-raise-gap-1">
+    <img src="https://k12.openstax.org/contents/raise/resources/6fa8f58bb147e19048d9ae123f7ba85834cf748d"
+      width="200px"
+    />
+    <div>
+      <p class="os-raise-mb-0">Social intelligence is the ability to connect with other people. Think about your current sense of social intelligence. Are the following statements are true for you?</p>
+      <ul>
+        <li>
+          I have a lot of relationships that are mutually beneficial, enjoyable, and supportive.
+        </li>
+        <li>
+          Most of the time, I can tell how other people feel and have a good idea about how to respond appropriately.
+        </li>
+      </ul>
+      <p>Don’t worry if none of these statements are true for you. Developing this trait takes time. Your first step starts today!</p>
+     </div>
+  </div>
 </div>
 ```
 
