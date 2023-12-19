@@ -26,16 +26,20 @@
 * Layout
   - Flex
     - Initialization of Flex Box
-      - [Required Flex Class](#side-by-side-os-raise-d-flex)
+      - [Initializing Flexbox](#initializing-flexbox-os-raise-d-flex-nowrap--os-raise-d-flex)
     - Content Positioning
-      - [Center Side-by-Side Content Vertically](#side-by-side-os-raise-d-flex)
-      - [Center Side-by-Side Content Horizontally](#side-by-side-os-raise-d-flex)
-      - [Add Space Between Side-by-Side Content](#side-by-side-os-raise-d-flex)
-      - [Add Space Equally Around Side-by-Side Content](#side-by-side-os-raise-d-flex)
+      - [Center Side-by-Side Content Vertically](#center-side-by-side-content-vertically)
+      - [Center Side-by-Side Content Horizontally](#center-side-by-side-content-horizontally)
+      - [Add Space Between Side-by-Side Content](#add-space-between-side-by-side)
+      - [Add Space Equally Around Side-by-Side Content](#add-space-equally-around-side-by-side-content)
+    - Content Spacing
+      - [Add 16px of Space Between Content](#add-16px-of-space-between-content)
+      - [Add 32px of Space Between Content](#add-32px-of-space-between-content)
 * Components
   - [Gray Box](#gray-box-os-raise-graybox)
   - [Motivational Message](#motivational-content-os-raise-motivation)
   - [Extra Support Box](#extra-support-box)
+  - [Student Reflection Box](#student-reflection-box)
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -572,30 +576,6 @@ Add as a class attribute to a table html tag.
 
 ---
 
-## Gray Box (os-raise-graybox)
-
-Add a Gray box around your element
-
-**Example**
-
-<div style="text-align: center;">
-    <img src="./static/graybox.png" width="450">
-</div>
-
-**Availability**
-Grayboxes should be used in div elements only
-
-**Usage**
-
-```html
-<div class="os-raise-graybox">
-    <p> Image Title</p>
-    <img src="www.link.com"></img>
-</div>
-```
-
----
-
 ## No margin-bottom (os-raise-mb-0)
 
 Remove bottom margin from your element
@@ -687,6 +667,30 @@ Ordered list objects
   <li>Not Indented item 1</li>
   <li>Not Indented item 2</li>
 </ol>
+```
+
+---
+
+## Gray Box (os-raise-graybox)
+
+Add a Gray box around your element
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/graybox.png" width="450">
+</div>
+
+**Availability**
+Grayboxes should be used in div elements only
+
+**Usage**
+
+```html
+<div class="os-raise-graybox">
+    <p> Image Title</p>
+    <img src="www.link.com"></img>
+</div>
 ```
 
 ---
@@ -785,14 +789,82 @@ Support for Students with Disabilities
 
 ---
 
-## Side by side (os-raise-d-flex)
+## Student Reflection Box
 
-Add to any tag surrounding side by side content.
+Add a styled container and content for student reflection.
+
+**Examples**
+
+Student Reflection Box
+<div style="text-align: center;">
+    <img src="./static/studentreflectionbox.png" width="750">
+</div>
+
+Student Reflection Box Side-by-Side
+<div style="text-align: center;">
+    <img src="./static/studentreflectionboxbc.png" width="750">
+</div>
+
+**Availability**
+
+Student reflection boxes should only be used in `<div>` elements.
+
+**Usage**
+
+Student Reflection Box
+```html
+<div class="os-raise-student-reflection">
+  <p class="os-raise-student-reflection-title">Why Should I Care?</p>
+  <img src="https://k12.openstax.org/contents/raise/resources/6fa8f58bb147e19048d9ae123f7ba85834cf748d"/>
+  <p>Matteo's brother can use algebra to budget his paycheck from his job at a pizza place. He uses some money for food, some for going out with his friends, and some, he saves for college.</p>
+  <p>If he uses variables to represent the different ways he uses his money, he can put those variables into an equation to make sure he has enough money to last until his next paycheck.</p>
+</div>
+```
+
+Student Reflection Box Side-by-Side
+```html
+<div class="os-raise-student-reflection">
+  <p class="os-raise-student-reflection-title">Building Character: Social Intelligence</p>
+  <div class="os-raise-d-flex-nowrap os-raise-gap-1">
+    <img src="https://k12.openstax.org/contents/raise/resources/6fa8f58bb147e19048d9ae123f7ba85834cf748d"
+      width="200px"
+    />
+    <div>
+      <p class="os-raise-mb-0">Social intelligence is the ability to connect with other people. Think about your current sense of social intelligence. Are the following statements are true for you?</p>
+      <ul>
+        <li>
+          I have a lot of relationships that are mutually beneficial, enjoyable, and supportive.
+        </li>
+        <li>
+          Most of the time, I can tell how other people feel and have a good idea about how to respond appropriately.
+        </li>
+      </ul>
+      <p>Don’t worry if none of these statements are true for you. Developing this trait takes time. Your first step starts today!</p>
+     </div>
+  </div>
+</div>
+```
+
+---
+
+# Flex
+
+## Initializing Flexbox (os-raise-d-flex-nowrap / os-raise-d-flex)
+
+Add to any tag to make content positioning side-by-side.
 
 **Example**
 
+No wrapping
+
 <div style="text-align: center;">
-    <img src="./static/sidebyside.png" width="600">
+    <img src="./static/osraisedflexnowrap.png" width="600">
+</div>
+
+Wrapping
+
+<div style="text-align: center;">
+    <img src="./static/osraisedflex.png" width="600">
 </div>
 
 **Availability**
@@ -801,57 +873,202 @@ Any element
 
 **Usage**
 
-You can append the additional styles to class attribute to add more styling to
-the side by side content.
+Use os-raise-d-flex-nowrap when you do not want your content to wrap to the next line
+once there is not enough space in the parent container. If you do want wrapping to the next line
+when there is not enough space in the parent container, then use os-raise-d-flex.
 
-- `os-raise-align-items-center` centers the side by side content vertically.
-- `os-raise-justify-content-center` centers the grid horizontally.
-- `os-raise-justify-content-between` adds even spacing between content starting after the first element and ending before the last.
-- `os-raise-justify-content-evenly` adds even spacing between content including before the first and after the last element.
 
+This is an example for os-raise-d-flex-nowrap
 ```html
-<h3>os-raise-d-flex</h3>
-<div class="os-raise-d-flex">
-    <p>P1</p>
-    <h2>H2</h2>
-    <p>P2</p>
-    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
-</div>
-
-<h3>os-raise-align-items-center</h3>
-<div class="os-raise-d-flex os-raise-align-items-center">
-    <p>P1</p>
-    <h2>H2</h2>
-    <p>p2</p>
-    <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
-</div>
-
-<h3>os-raise-justify-content-center</h3>
-<div class="os-raise-d-flex os-raise-justify-content-center">
-    <p>P1</p>
-    <p>P2</p>
-
-
-</div>
-
-<h3>os-raise-justify-content-between</h3>
-<div class="os-raise-d-flex os-raise-justify-content-between">
-    <p>P1</p>
-    <p>P2</p>
-    <p>P3</p>
-    <h3>H3</h3>
-
-</div>
-
-<h3>os-raise-justify-content-evenly</h3>
-<div class="os-raise-d-flex os-raise-justify-content-evenly">
-    <p>P1</p>
-    <p>P2</p>
-    <h3>h3</h3>
-    <p>P2</p>
-
+<div class="os-raise-d-flexnowrap">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h2>Heading 2</h2>
+  <p>Paragraph 3</p>
+  <h3>Heading 3</h3>
+  <p>Paragraph 4</p>
+  <h4>Heading 4</h4>
+  <p>Paragraph 5</p>
 </div>
 ```
+
+This is an example for os-raise-d-flex
+```html
+<div class="os-raise-d-flex">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h1>Heading 2</h1>
+  <p>Paragraph 3</p>
+  <h1>Heading 3</h1>
+  <p>Paragraph 4</p>
+  <h1>Heading 4</h1>
+</div>
+```
+
+## Center Side-by-Side Content Vertically
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to vertically center side-by-side content.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/alignitemscenter.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Vertically center all direct children.
+
+```html
+<div class="os-raise-d-flex os-raise-align-items-center">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h2>Heading 2</h2>
+  <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+</div>
+```
+
+## Center Side-by-Side Content Horizontally
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to horizontally center side-by-side content.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/justifycontentcenter.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Horizontally center all direct children.
+
+```html
+<div class="os-raise-d-flex os-raise-justify-content-center">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h2>Heading 2</h2>
+</div>
+```
+
+## Add Space Between Side-by-Side
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to add space between side-by-side content.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/justifycontentbetween.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Adds even spacing between content starting after the first element and ending before the last.
+
+```html
+<div class="os-raise-d-flex os-raise-justify-content-between">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h2>Heading 2</h2>
+</div>
+```
+
+## Add Space Equally Around Side-by-Side Content
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to add space between side-by-side content.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/justifycontentevenly.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Adds even spacing between content including before the first and after the last element.
+
+```html
+<div class="os-raise-d-flex os-raise-justify-content-evenly">
+  <p>Paragraph 1</p>
+  <h1>Heading 1</h1>
+  <p>Paragraph 2</p>
+  <h2>Heading 2</h2>
+</div>
+```
+
+## Add 16px of Space Between Content
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to add 16px of space between child elements and their siblings.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/osraisegap1.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Adds 1 rem (16px) of space between content.
+
+```html
+<div class="os-raise-d-flex os-raise-gap-1">
+  <p>Paragraph 1</p>
+  <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+  <p>Paragraph 2</p>
+</div>
+```
+
+## Add 32px of Space Between Content
+
+Add to any tag that already has one of os-raise-d-flex-nowrap or os-raise-d-flex as a class in order to add 32px of space between child elements and their siblings.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/osraisegap2.png" width="600">
+</div>
+
+**Availability**
+
+Any element that already contains one of the following classes: os-raise-d-flex-nowrap or os-raise-d-flex.
+
+**Usage**
+
+Adds 1 rem (32px) of space between content.
+
+```html
+<div class="os-raise-d-flex os-raise-gap-2">
+  <p>Paragraph 1</p>
+  <img src="https://s3.amazonaws.com/im-ims-export/WTtRTaNwjScSGve5Eb3qfx5E" alt="A man dropping a ball.&nbsp;" width="100">
+  <p>Paragraph 2</p>
+</div>
+```
+
+---
 
 ## Centered text (os-raise-text-center)
 
