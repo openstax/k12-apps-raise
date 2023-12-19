@@ -13,7 +13,7 @@ export const ContentBlock = ({ content, waitForEvent }: ContentBlockProps): JSX.
     if (node != null) {
       mathifyElement(node)
       tooltipify(node).catch((error) => { console.error(error) })
-      stylify(node).catch((error) => { console.error(error) })
+      stylify(node)
     }
   }, [])
 

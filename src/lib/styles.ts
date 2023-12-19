@@ -1,4 +1,4 @@
-export const stylify = async (element: HTMLElement): Promise<void> => {
+export const stylify = (element: HTMLElement): void => {
   const accordionItems = element.querySelectorAll('.os-raise-accordion-item')
 
   const setMaxHeight = (item: Element, content: HTMLElement): void => {
