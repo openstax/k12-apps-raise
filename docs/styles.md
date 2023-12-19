@@ -576,30 +576,6 @@ Add as a class attribute to a table html tag.
 
 ---
 
-## Gray Box (os-raise-graybox)
-
-Add a Gray box around your element
-
-**Example**
-
-<div style="text-align: center;">
-    <img src="./static/graybox.png" width="450">
-</div>
-
-**Availability**
-Grayboxes should be used in div elements only
-
-**Usage**
-
-```html
-<div class="os-raise-graybox">
-    <p> Image Title</p>
-    <img src="www.link.com"></img>
-</div>
-```
-
----
-
 ## No margin-bottom (os-raise-mb-0)
 
 Remove bottom margin from your element
@@ -691,6 +667,30 @@ Ordered list objects
   <li>Not Indented item 1</li>
   <li>Not Indented item 2</li>
 </ol>
+```
+
+---
+
+## Gray Box (os-raise-graybox)
+
+Add a Gray box around your element
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/graybox.png" width="450">
+</div>
+
+**Availability**
+Grayboxes should be used in div elements only
+
+**Usage**
+
+```html
+<div class="os-raise-graybox">
+    <p> Image Title</p>
+    <img src="www.link.com"></img>
+</div>
 ```
 
 ---
