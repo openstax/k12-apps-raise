@@ -802,7 +802,7 @@ The Accordion component is designed to showcase content in an expandable and col
 **Usage**
 
 The button with the classname `os-raise-accordion-header` is the accordion item header.
-The content div with the classname `os-raise-accordion-content` inside each accordion section can include various elements such as text, images, tables, etc. Modify the content as needed to suit your specific requirements. You cannot put interactive blocks inside of an accordion. You should not nest accordions. 
+The content div with the classname `os-raise-accordion-content` inside each accordion section can include various elements such as text, images, tables, etc. Modify the content as needed to suit your specific requirements. You cannot put interactive blocks inside of an accordion. You should not nest accordions. The header for the accordion item should be kept short.
 
 ```html
 <div class="os-raise-accordion">

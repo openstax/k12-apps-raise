@@ -351,14 +351,16 @@ table.os-raise-horizontaltable {
 
 .os-raise-accordion {
   width: 100%;
+  padding-bottom: 20px;
 }
 
 .os-raise-accordion-item {
-  border-bottom: 1px solid #D9D9D9;
+  border-bottom: 1px solid #757575;
 }
 
 .os-raise-accordion-header {
   display: flex;
+  text-align: left;
   align-items: center;
   background-color: white;
   padding: 0.625rem;
@@ -386,7 +388,7 @@ table.os-raise-horizontaltable {
 
 .os-raise-accordion-item.active .os-raise-accordion-content {
   transition: max-height 0.2s ease;
-  padding: 0 0.625rem 0.625rem;
+  padding: 0 0.625rem 1.25rem;
   background-color: #F5F5F5;
   border-bottom: 1px solid #D9D9D9;
 }
@@ -401,7 +403,7 @@ $arrow-svg: url("data:image/svg+xml,%3Csvg width='16' height='9' viewBox='0 0 16
 .os-raise-accordion-header::after {
   content: "";
   position: absolute;
-  top: 50%;
+  top: 45%;
   right: 0.625rem;
   width: 1rem;
   height: 0.5625rem;
