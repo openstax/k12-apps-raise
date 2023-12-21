@@ -8,6 +8,7 @@ import {
 import { renderContentElements } from './lib/content'
 import { tooltipify } from './lib/tooltip'
 import './styles/main.scss'
+import { stylify } from './lib/styles'
 
 const processPage = (): void => {
   // Load any content that needs to be fetched and inserted into the page
@@ -17,6 +18,7 @@ const processPage = (): void => {
   if (contentElements === 0) {
     // Render blocks for Moodle storage
     tooltipify(document.body).catch((error) => { console.error(error) })
+    stylify(document.body)
     renderContentOnlyBlocks(document.body)
     renderCTABlocks(document.body)
     renderUserInputBlocks(document.body)
