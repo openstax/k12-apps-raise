@@ -20,20 +20,38 @@ interface MathfieldProps {
 
 export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
+  const mathKeyboardRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const mathFieldCurrent = mathfieldRef.current
-    if ((mathFieldCurrent === null)) {
+    const maybeMathKeyboard = mathKeyboardRef.current
+
+    if ((mathFieldCurrent === null) || (maybeMathKeyboard === null)) {
       return
     }
+
     mathFieldCurrent.mathVirtualKeyboardPolicy = 'manual'
     mathFieldCurrent.minFontScale = 0.7
     mathFieldCurrent.addEventListener('focusin', (ev) => {
+      window.mathVirtualKeyboard.container = maybeMathKeyboard
+      const r = mathFieldCurrent.getBoundingClientRect()
+      maybeMathKeyboard.style.display = 'block'
+      const w = maybeMathKeyboard.offsetWidth
+      maybeMathKeyboard.style.top = `${r.bottom + 16}px`
+      maybeMathKeyboard.style.left = `${r.left + r.width / 2 - w / 2}px`
+      maybeMathKeyboard.style.height = '300px'
+      maybeMathKeyboard.style.width = '100%'
       window.mathVirtualKeyboard.show()
     })
 
-    mathFieldCurrent.addEventListener('focusout', (ev) => {
-      window.mathVirtualKeyboard.hide()
-    })
+    const handleFocusOut = (ev: FocusEvent): void => {
+      if (ev.relatedTarget === null) {
+        maybeMathKeyboard.style.display = 'none'
+        window.mathVirtualKeyboard.hide()
+      }
+    }
+
+    mathFieldCurrent.addEventListener('focusout', handleFocusOut)
   }, [])
 
   useEffect(() => {
@@ -65,6 +83,7 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
         onInput={onInput}
         tabIndex={disabled ? '-1' : '0'}
       />
+      <div ref={mathKeyboardRef}></div>
     </>
   )
 }

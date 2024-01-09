@@ -187,12 +187,14 @@ export const InputProblem = ({
               {
                 comparator.toLowerCase() === 'math'
                   ? (
+                    <div className='os-mathfield-container'>
                   <Field
                     name="response"
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
                     className={buildClassName(userResponseCorrect, inputDisabled || isSubmitting, errors.response)} />
+                    </div>
                     )
                   : (
                     <Field

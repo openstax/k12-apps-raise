@@ -428,3 +428,8 @@ $arrow-svg: url("data:image/svg+xml,%3Csvg width='16' height='9' viewBox='0 0 16
   font-weight: 700;
   font-size: 1.25rem;
 }
+
+.os-mathfield-container {
+  flex-direction: column;
+  width: 100%;
+}
