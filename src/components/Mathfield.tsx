@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Ref, useEffect, useRef } from 'react'
 import { MathfieldElement } from 'mathlive'
 
 MathfieldElement.fontsDirectory = 'https://unpkg.com/mathlive/dist/fonts/'
@@ -16,9 +16,10 @@ interface MathfieldProps {
   onInput: (event: React.ChangeEvent<MathfieldElement>) => void
   className: string
   disabled: boolean
+  buttonRef: React.RefObject<HTMLButtonElement>
 }
 
-export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX.Element => {
+export const Mathfield = ({ className, disabled, onInput, buttonRef }: MathfieldProps): JSX.Element => {
   const mathfieldRef = useRef<MathfieldElement>(null)
   const mathKeyboardRef = useRef<HTMLDivElement>(null)
 
@@ -39,13 +40,14 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
       const w = maybeMathKeyboard.offsetWidth
       maybeMathKeyboard.style.top = `${r.bottom + 16}px`
       maybeMathKeyboard.style.left = `${r.left + r.width / 2 - w / 2}px`
-      maybeMathKeyboard.style.height = '300px'
+      maybeMathKeyboard.style.height = '310px'
       maybeMathKeyboard.style.width = '100%'
       window.mathVirtualKeyboard.show()
     })
 
     const handleFocusOut = (ev: FocusEvent): void => {
-      if (ev.relatedTarget === null) {
+      console.log(ev)
+      if ((ev.relatedTarget !== buttonRef.current) && (ev.isTrusted)) {
         maybeMathKeyboard.style.display = 'none'
         window.mathVirtualKeyboard.hide()
       }
@@ -56,9 +58,26 @@ export const Mathfield = ({ className, disabled, onInput }: MathfieldProps): JSX
 
   useEffect(() => {
     const mathFieldCurrent = mathfieldRef.current
-    if ((mathFieldCurrent === null)) {
+    const maybeMathKeyboard = mathKeyboardRef.current
+
+    if ((mathFieldCurrent === null) || (maybeMathKeyboard === null)) {
       return
     }
+    // if (disabled) {
+    //   maybeMathKeyboard.style.display = 'none'
+    //   window.mathVirtualKeyboard.hide()
+    // }
+    // if (!disabled) {
+    //   window.mathVirtualKeyboard.container = maybeMathKeyboard
+    //   const r = mathFieldCurrent.getBoundingClientRect()
+    //   maybeMathKeyboard.style.display = 'block'
+    //   const w = maybeMathKeyboard.offsetWidth
+    //   maybeMathKeyboard.style.top = `${r.bottom + 16}px`
+    //   maybeMathKeyboard.style.left = `${r.left + r.width / 2 - w / 2}px`
+    //   maybeMathKeyboard.style.height = '310px'
+    //   maybeMathKeyboard.style.width = '100%'
+    //   window.mathVirtualKeyboard.show()
+    // }
 
     if (disabled && mathFieldCurrent.shadowRoot !== null) {
       const pointerEventSpan = mathFieldCurrent.shadowRoot.querySelector('span')

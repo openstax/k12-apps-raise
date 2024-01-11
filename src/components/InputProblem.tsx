@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import type { BaseProblemProps } from './ProblemSetBlock'
 import { determineFeedback, retriesRemaining } from '../lib/problems'
 import { Formik, Form, Field, ErrorMessage, type FormikHelpers } from 'formik'
@@ -49,7 +49,7 @@ export const InputProblem = ({
   const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
-
+  const buttonRef = useRef<HTMLButtonElement>(null)
   const schema = (): Yup.Schema<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
       return Yup.object({
@@ -192,6 +192,7 @@ export const InputProblem = ({
                     name="response"
                     disabled={inputDisabled || isSubmitting}
                     as={Mathfield}
+                    buttonRef={buttonRef}
                     onInput={(e: React.ChangeEvent<MathfieldElement>): void => { clearFeedback(); void setFieldValue('response', e.target.value) }}
                     className={buildClassName(userResponseCorrect, inputDisabled || isSubmitting, errors.response)} />
                     </div>
@@ -208,7 +209,8 @@ export const InputProblem = ({
               </div>
               <ErrorMessage className="text-danger my-3" component="div" name="response" />
               <div className="os-text-center mt-4">
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button></div>
+                {/* pass button as ref into field */}
+              <button ref={buttonRef} type="submit" onBlur={ev => { console.log('Eat event!'); ev.stopPropagation() } } disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button></div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
               <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
