@@ -3,9 +3,12 @@ import { PlaywrightTestConfig } from '@playwright/test'
 const config: PlaywrightTestConfig = {
   testDir: 'specs',
   timeout: 10000,
-  globalSetup: './specs/setup.ts',
+  webServer: {
+    command: 'npx vite --port 3001',
+    port: 3001,
+    reuseExistingServer: false,
+  },
   use: {
-    baseURL: 'http://localhost:3001/',
     screenshot: 'on',
     trace: 'retain-on-failure'
   }
