@@ -58,5 +58,5 @@ test('ContentBlock calls mathifyElement when rendered', async () => {
     <ContentBlock content={'<p>String</p>'} />
   )
 
-  expect(mathifyElement).toBeCalled()
+  expect(mathifyElement).toHaveBeenCalled()
 })

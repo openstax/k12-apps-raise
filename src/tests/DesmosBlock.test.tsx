@@ -28,13 +28,13 @@ test('Desmos block calls script and graphing calculator functions', async () => 
       <DesmosBlock width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "y_1", "values": [3, 5]}]]' disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
-  expect(loadDesmos).toBeCalled()
+  expect(loadDesmos).toHaveBeenCalled()
 
-  await waitFor(() => { expect(graphingCalculator).toBeCalled() })
-  expect(setExpression).toBeCalled()
-  expect(setMathBounds).toBeCalled()
-  expect(setDefaultState).toBeCalled()
-  expect(getState).toBeCalled()
+  await waitFor(() => { expect(graphingCalculator).toHaveBeenCalled() })
+  expect(setExpression).toHaveBeenCalled()
+  expect(setMathBounds).toHaveBeenCalled()
+  expect(setDefaultState).toHaveBeenCalled()
+  expect(getState).toHaveBeenCalled()
 })
 
 test('DesmosBlock does not render if waitForEvent does not fire', async () => {
@@ -58,13 +58,13 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
       <DesmosBlock waitForEvent='event' width={'500'} height={'500'} equations={'["x=5", "(1,2)"]'} tables='[[{"variable": "x_1", "values": [1, 2]}, {"variable": "y_1", "values": [3, 5]}]]' disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
-  expect(loadDesmos).toBeCalled()
+  expect(loadDesmos).toHaveBeenCalled()
 
-  await waitFor(() => { expect(graphingCalculator).not.toBeCalled() })
-  expect(setExpression).not.toBeCalled()
-  expect(setMathBounds).not.toBeCalled()
-  expect(setDefaultState).not.toBeCalled()
-  expect(getState).not.toBeCalled()
+  await waitFor(() => { expect(graphingCalculator).not.toHaveBeenCalled() })
+  expect(setExpression).not.toHaveBeenCalled()
+  expect(setMathBounds).not.toHaveBeenCalled()
+  expect(setDefaultState).not.toHaveBeenCalled()
+  expect(getState).not.toHaveBeenCalled()
 })
 
 test('DesmosBlock calculator does render if waitForEvent does fire', async () => {
@@ -89,13 +89,13 @@ test('DesmosBlock calculator does render if waitForEvent does fire', async () =>
       disableExpressions={false} scaleTop={'10'} scaleBottom={'-10'} scaleLeft={'-10'} scaleRight={'10'} />
   )
 
-  expect(loadDesmos).toBeCalled()
+  expect(loadDesmos).toHaveBeenCalled()
 
   fireEvent(document, new CustomEvent('event'))
 
-  await waitFor(() => { expect(graphingCalculator).toBeCalled() })
-  expect(setExpression).toBeCalled()
-  expect(setMathBounds).toBeCalled()
-  expect(setDefaultState).toBeCalled()
-  expect(getState).toBeCalled()
+  await waitFor(() => { expect(graphingCalculator).toHaveBeenCalled() })
+  expect(setExpression).toHaveBeenCalled()
+  expect(setMathBounds).toHaveBeenCalled()
+  expect(setDefaultState).toHaveBeenCalled()
+  expect(getState).toHaveBeenCalled()
 })
