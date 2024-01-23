@@ -1,6 +1,5 @@
-import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest, type MockedRequest, matchRequestUrl } from 'msw'
+import { http, HttpResponse, matchRequestUrl } from 'msw'
 import {
   queueContentLoadFailedV1Event,
   queueContentLoadedV1Event,
@@ -10,41 +9,40 @@ import {
 import { validate } from 'uuid'
 
 const server = setupServer(
-  rest.post('http://localhost:8888/v1/events', async (req, res, ctx) => {
-    return await res(ctx.json({
+  http.post('http://localhost:8888/v1/events', () => {
+    return HttpResponse.json({
       detail: 'Success!'
-    }))
+    })
   }),
-  rest.post('http://moodle/lib/ajax/service.php', async (req, res, ctx) => {
-    return await res(ctx.json([{
+  http.post('http://moodle/lib/ajax/service.php', () => {
+    return HttpResponse.json([{
       data: {
         uuid: 'uuid',
         jwt: 'jwt'
       }
-
-    }]))
+    }])
   })
 )
 
-async function waitForRequest(method: string, url: string): Promise<MockedRequest> {
-  let requestId = ''
-  return await new Promise<MockedRequest>((resolve, reject) => {
-    server.events.on('request:start', (req) => {
-      const matchesMethod = req.method.toLowerCase() === method.toLowerCase()
-      const matchesUrl = matchRequestUrl(req.url, url).matches
+async function waitForRequest(method: string, url: string): Promise<Request> {
+  let targetRequestId = ''
+  return await new Promise<Request>((resolve, reject) => {
+    server.events.on('request:start', ({ request, requestId }) => {
+      const matchesMethod = request.method.toLowerCase() === method.toLowerCase()
+      const matchesUrl = matchRequestUrl(new URL(request.url), url).matches
       if (matchesMethod && matchesUrl) {
-        requestId = req.id
+        targetRequestId = requestId
       }
     })
-    server.events.on('request:match', (req) => {
-      if (req.id === requestId) {
-        resolve(req)
+    server.events.on('request:match', ({ request, requestId }) => {
+      if (requestId === targetRequestId) {
+        resolve(request)
       }
     })
-    server.events.on('request:unhandled', (req) => {
-      if (req.id === requestId) {
+    server.events.on('request:unhandled', ({ request, requestId }) => {
+      if (requestId === targetRequestId) {
         reject(
-          new Error(`The ${req.method} ${req.url.href} request was unhandled.`)
+          new Error(`The ${request.method} ${(new URL(request.url)).href} request was unhandled.`)
         )
       }
     })

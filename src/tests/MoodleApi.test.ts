@@ -1,18 +1,17 @@
-import 'whatwg-fetch'
 import { MoodleApi } from '../moodleapi'
 import { setupServer } from 'msw/node'
-import { rest } from 'msw'
+import { http, HttpResponse } from 'msw'
 
 const server = setupServer(
-  rest.post('http://moodle/lib/ajax/service.php', async (req, res, ctx) => {
-    return await res(ctx.json([{
+  http.post('http://moodle/lib/ajax/service.php', () => {
+    return HttpResponse.json([{
       data: {
         uuid: 'uuid',
         jwt: 'jwt'
       }
-
-    }]))
-  }))
+    }])
+  })
+)
 
 beforeAll(() => { server.listen() })
 afterEach(() => { server.resetHandlers() })
