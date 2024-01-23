@@ -205,7 +205,7 @@ test('ProblemSetBlock from parseUserInputBlock renders on namespaced event', asy
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   expect(screen.queryByText('Mock input problem')).toBeNull()
@@ -246,7 +246,7 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced success event', 
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   const successHandler = jest.fn()
@@ -297,7 +297,7 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportu
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   const successHandler = jest.fn()
@@ -435,7 +435,7 @@ test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
 
   render(
     <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
-      {generatedProblemSetBlock as JSX.Element}
+      {generatedProblemSetBlock ?? <></>}
     </ContentLoadedContext.Provider>
   )
 
@@ -487,7 +487,7 @@ test('ProblemSetBlock does not call the onProblemAttempt handler on default cont
   Date.now = jest.fn(() => 12345)
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   await act(async () => {

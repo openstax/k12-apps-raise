@@ -258,7 +258,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
   }
 
   const buildAnswerSpecificOverridesObject = (responses: HTMLElement[]): AnswerSpecificResponse[] => {
-    return responses.map(elem => ({ answer: elem.dataset.answer as string, response: elem.innerHTML }))
+    return responses.map(elem => ({ answer: elem.dataset.answer ?? '', response: elem.innerHTML }))
   }
 
   psetProblemElems.forEach(prob => {

@@ -92,7 +92,7 @@ test('Test queueContentLoadedV1Event', async () => {
   expect(jsonData[0].content_id).toBe('1234')
   expect(jsonData[0].eventname).toBe('content_loaded_v1')
   expect(jsonData[0].variant).toBe('main')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -104,7 +104,7 @@ test('Test queueContentLoadFailedV1Event', async () => {
   expect(jsonData[0].content_id).toBe('1234')
   expect(jsonData[0].eventname).toBe('content_load_failed_v1')
   expect(jsonData[0].error).toBe('error')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -135,7 +135,7 @@ test('Test queueIbPsetProblemAttemptedV1Event', async () => {
   expect(jsonData[0].pset_content_id).toBe('abcd1')
   expect(jsonData[0].pset_problem_content_id).toBe('efgh2')
   expect(jsonData[0].eventname).toBe('ib_pset_problem_attempted_v1')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -156,7 +156,7 @@ test('Test queueIbInputSubmittedV1Event', async () => {
   expect(jsonData[0].response).toBe('this is the response')
   expect(jsonData[0].input_content_id).toBe('input-content-id')
   expect(jsonData[0].eventname).toBe('ib_input_submitted_v1')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 

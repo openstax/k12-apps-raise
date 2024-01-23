@@ -45,7 +45,7 @@ test('ContentBlock from parseContentOnlyBlock renders on namespaced event', asyn
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   expect(screen.queryByText('Test content')).toBeNull()
