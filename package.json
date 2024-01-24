@@ -16,7 +16,7 @@
     "build:authoring": "tsc && vite build -m authoring"
   },
   "dependencies": {
-    "@khanacademy/kas": "github:openstax/raise-kas#4bdde2d21310661f7dc8452389a9c0104bc0de27",
+    "@khanacademy/kas": "github:openstax/raise-kas#6481127dacbd9fda7d34a6e79f27d0e4cb4798d5",
     "bootstrap": "^5.3.2",
     "formik": "^2.4.5",
     "mathlive": "^0.95.5",
