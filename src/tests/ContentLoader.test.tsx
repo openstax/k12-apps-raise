@@ -1,26 +1,27 @@
-import 'whatwg-fetch'
-import { rest } from 'msw'
+import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, screen, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { ContentLoader } from '../components/ContentLoader'
 
 const server = setupServer(
-  rest.get('http://contentapi/contents/version/test-content.json', async (req, res, ctx) => {
-    return await res(ctx.json({
+  http.get('http://contentapi/contents/version/test-content.json', () => {
+    return HttpResponse.json({
       content: [{ variant: 'main', html: '<p>Test content</p>' }]
-    }))
+    })
   }),
-  rest.get('http://contentapi/contents/version/test-content-404.json', async (req, res, ctx) => {
-    return await res(ctx.status(404))
+  http.get('http://contentapi/contents/version/test-content-404.json', () => {
+    return new HttpResponse(null, {
+      status: 404
+    })
   }),
-  rest.get('http://contentapi/contents/version/test-content-failure.json', (req, res, ctx) => {
+  http.get('http://contentapi/contents/version/test-content-failure.json', () => {
     throw new Error('This is a fake network error')
   }),
-  rest.get('http://contentapi/contents/version/test-nomain-content.json', async (req, res, ctx) => {
-    return await res(ctx.json({
+  http.get('http://contentapi/contents/version/test-nomain-content.json', () => {
+    return HttpResponse.json({
       content: [{ variant: 'nomain', html: '<p>Test content</p>' }]
-    }))
+    })
   })
 )
 

@@ -1,12 +1,19 @@
 import type { AnswerSpecificResponse } from '../components/ProblemSetBlock'
 
-export const determineFeedback = (userResponse: string | string[], encourageResponse: string, answerResponses: AnswerSpecificResponse[], comparator: ((input: string, answer: string) => boolean) | ((input: string[], answer: string) => boolean)): string => {
-  let response
+export const determineFeedback: <T extends string | string[]>(
+  userResponse: T,
+  encourageResponse: string,
+  answerResponses: AnswerSpecificResponse[],
+  comparator: (input: T, answer: string) => boolean
+) => string = (userResponse, encourageResponse, answerResponses, comparator) => {
+  let response: string | undefined
+
   answerResponses.forEach(val => {
-    if (comparator(userResponse as any, val.answer)) {
+    if (comparator(userResponse, val.answer)) {
       response = val.response
     }
   })
+
   return response ?? encourageResponse
 }
 

@@ -1,6 +1,5 @@
-import 'whatwg-fetch'
 import { setupServer } from 'msw/node'
-import { rest, type MockedRequest, matchRequestUrl } from 'msw'
+import { http, HttpResponse, matchRequestUrl } from 'msw'
 import {
   queueContentLoadFailedV1Event,
   queueContentLoadedV1Event,
@@ -10,41 +9,40 @@ import {
 import { validate } from 'uuid'
 
 const server = setupServer(
-  rest.post('http://localhost:8888/v1/events', async (req, res, ctx) => {
-    return await res(ctx.json({
+  http.post('http://localhost:8888/v1/events', () => {
+    return HttpResponse.json({
       detail: 'Success!'
-    }))
+    })
   }),
-  rest.post('http://moodle/lib/ajax/service.php', async (req, res, ctx) => {
-    return await res(ctx.json([{
+  http.post('http://moodle/lib/ajax/service.php', () => {
+    return HttpResponse.json([{
       data: {
         uuid: 'uuid',
         jwt: 'jwt'
       }
-
-    }]))
+    }])
   })
 )
 
-async function waitForRequest(method: string, url: string): Promise<MockedRequest> {
-  let requestId = ''
-  return await new Promise<MockedRequest>((resolve, reject) => {
-    server.events.on('request:start', (req) => {
-      const matchesMethod = req.method.toLowerCase() === method.toLowerCase()
-      const matchesUrl = matchRequestUrl(req.url, url).matches
+async function waitForRequest(method: string, url: string): Promise<Request> {
+  let targetRequestId = ''
+  return await new Promise<Request>((resolve, reject) => {
+    server.events.on('request:start', ({ request, requestId }) => {
+      const matchesMethod = request.method.toLowerCase() === method.toLowerCase()
+      const matchesUrl = matchRequestUrl(new URL(request.url), url).matches
       if (matchesMethod && matchesUrl) {
-        requestId = req.id
+        targetRequestId = requestId
       }
     })
-    server.events.on('request:match', (req) => {
-      if (req.id === requestId) {
-        resolve(req)
+    server.events.on('request:match', ({ request, requestId }) => {
+      if (requestId === targetRequestId) {
+        resolve(request)
       }
     })
-    server.events.on('request:unhandled', (req) => {
-      if (req.id === requestId) {
+    server.events.on('request:unhandled', ({ request, requestId }) => {
+      if (requestId === targetRequestId) {
         reject(
-          new Error(`The ${req.method} ${req.url.href} request was unhandled.`)
+          new Error(`The ${request.method} ${(new URL(request.url)).href} request was unhandled.`)
         )
       }
     })
@@ -92,7 +90,7 @@ test('Test queueContentLoadedV1Event', async () => {
   expect(jsonData[0].content_id).toBe('1234')
   expect(jsonData[0].eventname).toBe('content_loaded_v1')
   expect(jsonData[0].variant).toBe('main')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -104,7 +102,7 @@ test('Test queueContentLoadFailedV1Event', async () => {
   expect(jsonData[0].content_id).toBe('1234')
   expect(jsonData[0].eventname).toBe('content_load_failed_v1')
   expect(jsonData[0].error).toBe('error')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -135,7 +133,7 @@ test('Test queueIbPsetProblemAttemptedV1Event', async () => {
   expect(jsonData[0].pset_content_id).toBe('abcd1')
   expect(jsonData[0].pset_problem_content_id).toBe('efgh2')
   expect(jsonData[0].eventname).toBe('ib_pset_problem_attempted_v1')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 
@@ -156,7 +154,7 @@ test('Test queueIbInputSubmittedV1Event', async () => {
   expect(jsonData[0].response).toBe('this is the response')
   expect(jsonData[0].input_content_id).toBe('input-content-id')
   expect(jsonData[0].eventname).toBe('ib_input_submitted_v1')
-  expect(validate(jsonData[0].impression_id)).toBe(true)
+  expect(validate(jsonData[0].impression_id as string)).toBe(true)
   expect(jsonData[0].course_id).toBe(1)
 })
 

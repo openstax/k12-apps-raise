@@ -85,9 +85,9 @@ test('Text InputProblem button click with correct answer should evaluate to corr
   expect(screen.getByRole('button')).toBeDisabled()
   await screen.findByText('Attempts left: 2/2')
 
-  expect(solvedHandler).toBeCalledTimes(1)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(solvedHandler).toHaveBeenCalledTimes(1)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
 })
 
 test('InputProblem button click with no input should show warning', async () => {
@@ -213,9 +213,9 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
   })
   await screen.findByText('Attempts left: 1/2')
   await screen.findByText('Try again!')
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(1)
 })
 
 test('Retry limit, encourageResponse, and exausted callback test', async () => {
@@ -260,9 +260,9 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
   expect(screen.getByRole('textbox')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
 
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(1)
-  expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(3)
 })
 
 test('InputProblem renders answer specific content', async () => {
@@ -369,7 +369,7 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '3' } })
     screen.getByRole('button').click()
   })
-  expect(problemAttemptedHandler).toBeCalledTimes(1)
+  expect(problemAttemptedHandler).toHaveBeenCalledTimes(1)
   expect(problemAttemptedHandler).toHaveBeenCalledWith(
     '3',
     false,
@@ -382,7 +382,7 @@ test('InputProblem calls the onProblemAttempt handler', async () => {
     fireEvent.change(screen.getByRole('textbox'), { target: { value: '4' } })
     screen.getByRole('button').click()
   })
-  expect(problemAttemptedHandler).toBeCalledTimes(2)
+  expect(problemAttemptedHandler).toHaveBeenCalledTimes(2)
   expect(problemAttemptedHandler).toHaveBeenLastCalledWith(
     '4',
     false,

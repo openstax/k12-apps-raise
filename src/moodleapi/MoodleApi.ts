@@ -24,7 +24,7 @@ export class MoodleApi {
     const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
     const responseJSON = await response.json()
     if (responseJSON.error !== undefined) {
-      throw new Error(responseJSON.error)
+      throw new Error(responseJSON.error as string)
     }
 
     return {

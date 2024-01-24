@@ -11,6 +11,10 @@ export default {
   moduleNameMapper: {
     '^mathlive$': '<rootDir>/node_modules/mathlive'
   },
-  setupFiles: ['<rootDir>/jest.setup.ts'],
+  setupFiles: [
+    '<rootDir>/jest.setup.ts',
+    '<rootDir>/jest.polyfills.js'
+  ],
+  resolver: '<rootDir>/jest.resolver.js',
   verbose: true
 }

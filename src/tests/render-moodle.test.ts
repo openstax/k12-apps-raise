@@ -30,7 +30,7 @@ test('renderContentOnlyBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderContentOnlyBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
+  expect(createRoot).toHaveBeenCalledWith(divElem)
 })
 
 test('renderCTABlocks parses and creates expected block', async () => {
@@ -40,7 +40,7 @@ test('renderCTABlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderCTABlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
+  expect(createRoot).toHaveBeenCalledWith(divElem)
 })
 
 test('renderDesmosBlocks parses and creates expected block', async () => {
@@ -50,7 +50,7 @@ test('renderDesmosBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderDesmosBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
+  expect(createRoot).toHaveBeenCalledWith(divElem)
 })
 
 test('renderUserInputBlocks parses and creates expected block', async () => {
@@ -64,7 +64,7 @@ test('renderUserInputBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderUserInputBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
+  expect(createRoot).toHaveBeenCalledWith(divElem)
 })
 
 test('renderProblemSetBlocks parses and creates expected block', async () => {
@@ -88,5 +88,5 @@ test('renderProblemSetBlocks parses and creates expected block', async () => {
   document.body.appendChild(divElem)
 
   renderProblemSetBlocks(document.body)
-  expect(createRoot).toBeCalledWith(divElem)
+  expect(createRoot).toHaveBeenCalledWith(divElem)
 })
