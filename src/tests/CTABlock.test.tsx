@@ -77,7 +77,7 @@ test('CTABlock from parseCTABlock renders on namespaced event', async () => {
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   expect(screen.queryByText('String')).toBeNull()
@@ -94,7 +94,7 @@ test('CTABlock from parse CTABlock fires namespaced event on click', async () =>
   const generatedContentBlock = parseCTABlock(divElem.children[0] as HTMLElement)
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
   const eventHandler = jest.fn()
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-eventnameX`, eventHandler)
@@ -106,5 +106,5 @@ test('CTABlock calls mathifyElement when rendered', async () => {
   render(
     <CTABlock content={'<p>String</p>'} prompt={'<p>Prompt</p>'} buttonText={'<p>Click</p>'} fireEvent={'eventX'}/>
   )
-  expect(mathifyElement).toBeCalled()
+  expect(mathifyElement).toHaveBeenCalled()
 })

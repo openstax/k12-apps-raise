@@ -119,7 +119,7 @@ export const MultiselectProblem = ({
 
   const handleFeedback = (userResponse: string[], correct: boolean, userAttempts: number): void => {
     const comparator = (input: string[], answer: string): boolean => {
-      return evaluateInput(input, JSON.parse(answer))
+      return evaluateInput(input, JSON.parse(answer) as string[])
     }
 
     if (correct) {

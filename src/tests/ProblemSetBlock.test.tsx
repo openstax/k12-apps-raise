@@ -205,7 +205,7 @@ test('ProblemSetBlock from parseUserInputBlock renders on namespaced event', asy
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   expect(screen.queryByText('Mock input problem')).toBeNull()
@@ -246,7 +246,7 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced success event', 
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   const successHandler = jest.fn()
@@ -260,8 +260,8 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced success event', 
     screen.getByText('Solve Dropdown').click()
   })
 
-  expect(successHandler).toBeCalledTimes(1)
-  expect(learningOppHandler).toBeCalledTimes(0)
+  expect(successHandler).toHaveBeenCalledTimes(1)
+  expect(learningOppHandler).toHaveBeenCalledTimes(0)
 })
 
 test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportunity event', async () => {
@@ -297,7 +297,7 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportu
   expect(generatedProblemSetBlock).not.toBeNull()
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   const successHandler = jest.fn()
@@ -311,8 +311,8 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportu
     screen.getByText('Exhaust Dropdown').click()
   })
 
-  expect(successHandler).toBeCalledTimes(0)
-  expect(learningOppHandler).toBeCalledTimes(1)
+  expect(successHandler).toHaveBeenCalledTimes(0)
+  expect(learningOppHandler).toHaveBeenCalledTimes(1)
 })
 
 test('parseProblemSetBlock applies answer specific overrides and defaults', async () => {
@@ -435,7 +435,7 @@ test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
 
   render(
     <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
-      {generatedProblemSetBlock as JSX.Element}
+      {generatedProblemSetBlock ?? <></>}
     </ContentLoadedContext.Provider>
   )
 
@@ -443,7 +443,7 @@ test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
     screen.getByText('Attempt Input').click()
   })
 
-  expect(queueIbPsetProblemAttemptedV1Event).toBeCalled()
+  expect(queueIbPsetProblemAttemptedV1Event).toHaveBeenCalled()
   expect(queueIbPsetProblemAttemptedV1Event).toHaveBeenCalledWith(
     12345,
     'contentLoadedId',
@@ -487,12 +487,12 @@ test('ProblemSetBlock does not call the onProblemAttempt handler on default cont
   Date.now = jest.fn(() => 12345)
 
   render(
-    generatedProblemSetBlock as JSX.Element
+    generatedProblemSetBlock ?? <></>
   )
 
   await act(async () => {
     screen.getByText('Attempt Input').click()
   })
 
-  expect(queueIbPsetProblemAttemptedV1Event).not.toBeCalled()
+  expect(queueIbPsetProblemAttemptedV1Event).not.toHaveBeenCalled()
 })

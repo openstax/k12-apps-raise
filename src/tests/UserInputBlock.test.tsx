@@ -157,7 +157,7 @@ test('UserInputBlock from parseUserInputBlock renders on namespaced event', asyn
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   expect(screen.queryByText('Content text')).toBeNull()
@@ -180,7 +180,7 @@ test('UserInputBlock from parseUserInputBlock fires namespaced event on valid su
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   const eventHandler = jest.fn()
@@ -212,7 +212,7 @@ test('UserInputBlock calls onInputSumbitted callback', async () => {
 
   render(
     <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
-      {generatedContentBlock as JSX.Element}
+      {generatedContentBlock ?? <></>}
     </ContentLoadedContext.Provider>
   )
 
@@ -248,7 +248,7 @@ test('UserInputBlock does not call onInputSumbitted on default context', async (
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })

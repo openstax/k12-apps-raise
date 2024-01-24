@@ -45,7 +45,7 @@ test('ContentBlock from parseContentOnlyBlock renders on namespaced event', asyn
   expect(generatedContentBlock).not.toBeNull()
 
   render(
-    generatedContentBlock as JSX.Element
+    generatedContentBlock ?? <></>
   )
 
   expect(screen.queryByText('Test content')).toBeNull()
@@ -58,5 +58,5 @@ test('ContentBlock calls mathifyElement when rendered', async () => {
     <ContentBlock content={'<p>String</p>'} />
   )
 
-  expect(mathifyElement).toBeCalled()
+  expect(mathifyElement).toHaveBeenCalled()
 })

@@ -103,9 +103,9 @@ test('Multiselect shows correct response, invokes callback, and disables self on
     screen.getByRole('button').click()
   })
   await screen.findByText('Great job!')
-  expect(solvedHandler).toBeCalledTimes(1)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(0)
+  expect(solvedHandler).toHaveBeenCalledTimes(1)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
   expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
@@ -141,17 +141,17 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
     screen.getByRole('button').click()
   })
   await screen.findByText('Try again!')
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(1)
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 1'))
     screen.getByRole('button').click()
   })
   await screen.findByText('Great job!')
-  expect(solvedHandler).toBeCalledTimes(1)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(solvedHandler).toHaveBeenCalledTimes(1)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(1)
   expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
@@ -185,9 +185,9 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     screen.getByRole('button').click()
   })
   await screen.findByText('Try again!')
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(1)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(1)
 })
 
 test('MultiselectProblem clears encourage response when user changes answer', async () => {
@@ -250,9 +250,9 @@ test('MultiselectProblem exhausts and disables itself after configured number of
   })
   await screen.findByText('Attempts left: 1/4')
   await screen.findByText('Try again!')
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(0)
-  expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(3)
 
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 2'))
@@ -261,9 +261,9 @@ test('MultiselectProblem exhausts and disables itself after configured number of
   await screen.findByText('Attempts left: 0/4')
 
   expect(screen.queryByText('Try again!')).toBeNull()
-  expect(solvedHandler).toBeCalledTimes(0)
-  expect(exhaustedHandler).toBeCalledTimes(1)
-  expect(allowedRetryHandler).toBeCalledTimes(3)
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(3)
   expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
   expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
@@ -383,7 +383,7 @@ test('multiselect calls the onProblemAttempt handler', async () => {
     fireEvent.click(screen.getByLabelText('Option 1'))
     screen.getByRole('button').click()
   })
-  expect(problemAttemptedHandler).toBeCalledTimes(1)
+  expect(problemAttemptedHandler).toHaveBeenCalledTimes(1)
   expect(problemAttemptedHandler).toHaveBeenCalledWith(
     ['Option 1'],
     false,
@@ -396,7 +396,7 @@ test('multiselect calls the onProblemAttempt handler', async () => {
     fireEvent.click(screen.getByLabelText('Option 2'))
     screen.getByRole('button').click()
   })
-  expect(problemAttemptedHandler).toBeCalledTimes(2)
+  expect(problemAttemptedHandler).toHaveBeenCalledTimes(2)
   expect(problemAttemptedHandler).toHaveBeenLastCalledWith(
     ['Option 1', 'Option 2'],
     false,

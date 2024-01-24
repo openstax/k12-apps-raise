@@ -181,25 +181,25 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
     }
     if (prob.type === PROBLEM_TYPE_INPUT) {
       children.push(<InputProblem
-        comparator={prob.comparator as string}
+        comparator={prob.comparator ?? ''}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_DROPDOWN) {
       children.push(<DropdownProblem
-        solutionOptions={prob.solutionOptions as string}
+        solutionOptions={prob.solutionOptions ?? ''}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_MULTISELECT) {
       children.push(<MultiselectProblem
-        solutionOptions={prob.solutionOptions as string}
+        solutionOptions={prob.solutionOptions ?? ''}
         {...sharedProps}
       />)
     }
     if (prob.type === PROBLEM_TYPE_MULTIPLECHOICE) {
       children.push(<MultipleChoiceProblem
-        solutionOptions={prob.solutionOptions as string}
+        solutionOptions={prob.solutionOptions ?? ''}
         {...sharedProps}
       />)
     }
