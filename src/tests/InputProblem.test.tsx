@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH, buildClassName } from '../components/InputProblem'
+import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH, buildClassName, detectAndTransform, evaluateMathComparator } from '../components/InputProblem'
 import '@testing-library/jest-dom'
 
 test('InputProblem renders with content, input and button', async () => {
@@ -408,4 +408,33 @@ test('Test buildClassName', async () => {
   // If a validation error occurs
   const validationError = buildClassName(false, false, 'error')
   expect(validationError).toBe('os-form-control os-wrong-answer-choice')
+})
+
+test('Test detectAndTransform', async () => {
+  // If a fraction and sqrt transformation is needed
+  const input = 'x=\\frac12 + \\sqrt3'
+  const expectedOutput = 'x=\\frac{1}{2} + \\sqrt{3}'
+  let result = detectAndTransform(input)
+  expect(result).toEqual(expectedOutput)
+
+  // No transformation is needed
+  const correctInput = 'x = \\frac{12}{2} + \\sqrt{9} + 4x'
+  result = detectAndTransform(input)
+  expect(correctInput).toEqual(correctInput)
+})
+
+test('Test evaluteMathComparator', async () => {
+  // Fraction test
+  expect(evaluateMathComparator('\\frac12', '\\frac{1}{2}')).toBe(true)
+
+  // sqrt and nth root test
+  expect(evaluateMathComparator('x=\\sqrt4', 'x=\\sqrt[2]{4}')).toBe(true)
+  expect(evaluateMathComparator('x=\\sqrt4', 'x=\\sqrt[3]{4}')).toBe(false)
+
+  // form test
+  expect(evaluateMathComparator('y=\\frac12x-3', 'y+3=\\frac12x')).toBe(false)
+
+  // test \lt \gt
+  expect(evaluateMathComparator('x<\\frac{1}{3}', 'x\\lt\\frac{1}{3}')).toBe(true)
+  expect(evaluateMathComparator('x>\\frac13', 'x\\gt\\frac{1}{3}')).toBe(true)
 })
