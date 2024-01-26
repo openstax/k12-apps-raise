@@ -9,7 +9,6 @@ import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 import { Mathfield } from './Mathfield'
 import { type MathfieldElement } from 'mathlive'
 import { parse, compare } from '@khanacademy/kas'
-import { ComputeEngine } from '@cortex-js/compute-engine'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
 interface InputProblemProps extends BaseProblemProps {
@@ -36,6 +35,30 @@ export function buildClassName(correct: boolean, formDisabled: boolean, errorRes
     className += ' os-wrong-answer-choice'
   }
   return className
+}
+
+export const detectAndTransform = (input: string): string => {
+  // Handle fractions with single digit numerators and denominators
+  const fractionRegex: RegExp = /\\frac(\d)(\d)/g
+  input = input.replace(fractionRegex, '\\frac{$1}{$2}')
+
+  // Handle square roots with single digits
+  const sqrtRegex: RegExp = /\\sqrt(\d)/g
+  input = input.replace(sqrtRegex, '\\sqrt{$1}')
+
+  return input
+}
+
+export const evaluateMathComparator = (input: string, answer: string): boolean => {
+  const parsedInput = parse(detectAndTransform(input))
+  const parsedAnswer = parse(detectAndTransform(answer))
+
+  if (!parsedInput.parsed || !parsedAnswer.parsed) {
+    console.error('KAS failed to parse solution or input')
+    return false
+  }
+
+  return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
 }
 
 export const InputProblem = ({
@@ -82,26 +105,7 @@ export const InputProblem = ({
       return parseFloat(trimmedInput) === parseFloat(trimmedAnswer)
     }
     if (comparator.toLowerCase() === 'math') {
-      const ce = new ComputeEngine()
-
-      let parsedInput = parse(ce.serialize(ce.parse(trimmedInput)))
-      let parsedAnswer = parse(ce.serialize(ce.parse(trimmedAnswer)))
-
-      // Sometimes compute engine produces an output that the KAS parse method does not understand
-      // If that is the case we can try to parse again with the raw trimmed input and answer
-      // An example of an expression that requires this is x>5
-      if (!parsedInput.parsed) {
-        parsedInput = parse(trimmedInput)
-      }
-      if (!parsedAnswer.parsed) {
-        parsedAnswer = parse(trimmedAnswer)
-      }
-
-      if (!parsedInput.parsed || !parsedAnswer.parsed) {
-        return false
-      }
-
-      return compare(parsedInput.expr, parsedAnswer.expr, { simplify: false, form: true }).equal
+      return evaluateMathComparator(trimmedInput, trimmedAnswer)
     }
     return trimmedInput.toLowerCase() === trimmedAnswer.toLowerCase()
   }
