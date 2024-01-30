@@ -41,6 +41,7 @@
   - [Extra Support Box](#extra-support-box)
   - [Accordion](#accordion-os-raise-accordion)
   - [Student Reflection Box](#student-reflection-box)
+  - [Family Support Materials Links](#family-support-materials-links)
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -883,6 +884,30 @@ Student Reflection Box Side-by-Side
       <p>Don’t worry if none of these statements are true for you. Developing this trait takes time. Your first step starts today!</p>
      </div>
   </div>
+</div>
+```
+
+---
+
+## Family Support Materials Links
+
+Add a styled container and sentence for family support materials links.
+
+**Examples**
+
+<div style="text-align: center;">
+    <img src="./static/familysupportmaterialslinks.png" width="750">
+</div>
+
+**Availability**
+
+Family support materials links should only be used in `<div>` elements. There should only ever be a single `<p>`, with an `<a>` to hyperlink the relevant text inside of the `<div>`.
+
+**Usage**
+
+```html
+<div class="os-raise-familysupport">
+    <p>Access the PDF version of this page to share with parents or guardians: <a href="">Unit 1 Family Support Materials.</a></p>
 </div>
 ```
 
