@@ -901,13 +901,13 @@ Add a styled container and sentence for family support materials links.
 
 **Availability**
 
-Family support materials links should only be used in `<div>` elements.
+Family support materials links should only be used in `<div>` elements. There should only ever be a single `<p>`, with an `<a>` to hyperlink the relevant text inside of the `<div>`.
 
 **Usage**
 
 ```html
 <div class="os-raise-familysupport">
-    <p class="os-raise-familysupport-text">Access the PDF version of this page to share with parents or guardians: <a href="">Unit 1 Family Support Materials.</a></p>
+    <p>Access the PDF version of this page to share with parents or guardians: <a href="">Unit 1 Family Support Materials.</a></p>
 </div>
 ```
 
