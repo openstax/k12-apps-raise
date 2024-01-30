@@ -308,7 +308,7 @@ test('attempts-exhausted response overrides answer-specific response', async ({ 
 test('Math field component rendered', async ({ page }) => {
   const htmlContent = `
   <div class="os-raise-ib-pset" data-schema-version="1.0" data-retry-limit="3">
-    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution='3\\sqrt2+\\frac42' data-problem-comparator='math'>
+    <div class="os-raise-ib-pset-problem" data-problem-type="input" data-solution='3\\sqrt2+2' data-problem-comparator='math'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">MultipleChoice problem content: \\( x^2 \\)</p>
       </div>
