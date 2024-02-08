@@ -114,6 +114,11 @@
         "253": "993d53d9",
         "254": "993d53d9"
       }
+    },
+    "demo.raiselearning.org": {
+      "course": {
+        "2": "latest"
+      }
     }
   }
 }
