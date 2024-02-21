@@ -797,7 +797,10 @@ The Accordion component is designed to showcase content in an expandable and col
 **Example**
 
 <div style="text-align: center;">
-    <img src="./static/accordion.png" width="600">
+    <img src="./static/accordion_1.png" width="600">
+</div>
+<div style="text-align: center;">
+    <img src="./static/accordion_2.png" width="600">
 </div>
 
 **Usage**
