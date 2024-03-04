@@ -115,7 +115,43 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   expect(screen.getByRole('button')).toBeDisabled()
 })
 
-test('DropdownProblem shows encourage response and invokes callback on check with no match and retries remaining', async () => {
+test('DropdownProblem shows attempts exhausted response, invokes callback, and disables self on check with no match', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <DropdownProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={''}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={'The correct answer is Option 1'}
+    answerResponses={[]}
+    />
+  )
+
+  await screen.findByText('Attempts left: 1/1')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('The correct answer is Option 1')
+  await screen.findByText('Attempts left: 0/1')
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
+  expect(screen.getByRole('combobox')).toBeDisabled()
+  expect(screen.getByRole('button')).toBeDisabled()
+})
+
+test('DropdownProblem shows encourage response and invokes callback on check with no match and one retry remaining', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
@@ -129,18 +165,19 @@ test('DropdownProblem shows encourage response and invokes callback on check wit
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
-  await screen.findByText('Attempts left: Unlimited')
+  await screen.findByText('Attempts left: 2/2')
   await act(async () => {
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Option 1' } })
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/2')
   await screen.findByText('Try again!')
   expect(solvedHandler).toHaveBeenCalledTimes(0)
   expect(exhaustedHandler).toHaveBeenCalledTimes(0)
@@ -157,7 +194,7 @@ test('DropdownProblem clears encourage response when user changes answer', async
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
@@ -274,7 +311,7 @@ test('DropdownProblem renders answer specific content only on button click', asy
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={2}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}

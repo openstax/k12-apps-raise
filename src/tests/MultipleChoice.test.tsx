@@ -98,7 +98,7 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
     answerResponses={[]}
     />
   )
-  await screen.findByText('Attempts left: Unlimited')
+  await screen.findByText('Attempts left: 1/1')
 
   await act(async () => {
     screen.getByText('Option 2').click()
@@ -108,11 +108,47 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
   expect(solvedHandler).toHaveBeenCalledTimes(1)
   expect(exhaustedHandler).toHaveBeenCalledTimes(0)
   expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
+  expect(screen.getByLabelText('Option 2')).toBeDisabled()
+  expect(screen.getByRole('button')).toBeDisabled()
+})
+
+test('DropdownProblem shows attempts exhuasted response, invokes callback, and disables self on check with no match', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <MultipleChoiceProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={''}
+    retryLimit={0}
+    solution={'Option 2'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={'The correct answer is Option 2'}
+    answerResponses={[]}
+    />
+  )
+  await screen.findByText('Attempts left: 1/1')
+
+  await act(async () => {
+    screen.getByText('Option 1').click()
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('The correct answer is Option 2')
+  await screen.findByText('Attempts left: 0/1')
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
   expect(screen.getByLabelText('Option 1')).toBeDisabled()
   expect(screen.getByRole('button')).toBeDisabled()
 })
 
-test('MultipleChoiceProblem shows encourage response and invokes callback on check with no match and retries remaining', async () => {
+test('MultipleChoiceProblem shows encourage response and invokes callback on check with no match and one retry remaining', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
@@ -126,7 +162,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
@@ -138,6 +174,7 @@ test('MultipleChoiceProblem shows encourage response and invokes callback on che
     screen.getByText('Option 1').click()
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/2')
   await screen.findByText('Try again!')
   expect(solvedHandler).toHaveBeenCalledTimes(0)
   expect(exhaustedHandler).toHaveBeenCalledTimes(0)
@@ -154,7 +191,7 @@ test('MultipleChoiceProblem clears encourage response when user changes answer',
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={2}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
@@ -234,7 +271,7 @@ test('MultipleChoiceProblem renders answer specific responses', async () => {
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={2}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
@@ -267,7 +304,7 @@ test('MultipleChoiceProblem renders answer specific responses only on button cli
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={2}
     solution={'Option 2'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}

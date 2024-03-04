@@ -24,7 +24,7 @@ test('InputProblem renders with content, input and button', async () => {
   screen.getByText('Content')
   screen.getByRole('textbox')
   expect(document.querySelector('input')).not.toBeNull()
-  await screen.findByText('Attempts left: Unlimited')
+  await screen.findByText('Attempts left: 1/1')
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
 
@@ -48,7 +48,7 @@ test('InputProblem renders without contentId', async () => {
 
   screen.getByText('Content')
   screen.getByRole('textbox')
-  await screen.findByText('Attempts left: Unlimited')
+  await screen.findByText('Attempts left: 1/1')
   expect(document.querySelector('input')).not.toBeNull()
   expect(screen.getByRole('button').textContent).toBe('Submit')
 })
@@ -87,6 +87,43 @@ test('Text InputProblem button click with correct answer should evaluate to corr
 
   expect(solvedHandler).toHaveBeenCalledTimes(1)
   expect(exhaustedHandler).toHaveBeenCalledTimes(0)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
+})
+
+test('Text InputProblem button click with incorrect answer should evaluate to incorrect and show attempts exhausted response', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+          <InputProblem
+          solvedCallback={solvedHandler}
+          exhaustedCallback={exhaustedHandler}
+          allowedRetryCallback={allowedRetryHandler}
+          content={'Content'}
+          correctResponse={''}
+          encourageResponse={''}
+          retryLimit={0}
+          solution={' Apple '}
+          buttonText={'Submit'}
+          comparator={'text'}
+          attemptsExhaustedResponse={'The correct answer is Apple'}
+          answerResponses={[]}
+          />
+  )
+
+  await screen.findByText('Attempts left: 1/1')
+  await act(async () => {
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Orange ' } })
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('The correct answer is Apple')
+  expect(screen.getByRole('textbox')).toBeDisabled()
+  expect(screen.getByRole('button')).toBeDisabled()
+  await screen.findByText('Attempts left: 0/1')
+
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
   expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
 })
 
