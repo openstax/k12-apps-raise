@@ -100,7 +100,7 @@ test('math is rendered in Multiselect question', async ({ page }) => {
 
 test('math is rendered in Multiselect answer', async ({ page }) => {
   const htmlContent = `
-  <div class="os-raise-ib-pset" data-schema-version="1.0">
+  <div class="os-raise-ib-pset" data-retry-limit="1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["\\\\(x^2\\\\)"]' data-solution-options='["\\\\(x^2\\\\)", "blue", "green"]'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">Multiselect problem content: \\( x^2 \\)</p>
@@ -128,7 +128,7 @@ test('math is rendered in Multiselect answer', async ({ page }) => {
 
 test('math is rendered in DropdownProblem question', async ({ page }) => {
   const htmlContent = `
-  <div class="os-raise-ib-pset" data-schema-version="1.0">
+  <div class="os-raise-ib-pset" data-retry-limit="1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">Dropdown problem content: \\( x^2 \\)</p>
@@ -155,7 +155,7 @@ test('math is rendered in DropdownProblem question', async ({ page }) => {
 
 test('math is rendered in MultipleChoiceProblem question', async ({ page }) => {
   const htmlContent = `
-  <div class="os-raise-ib-pset" data-schema-version="1.0">
+  <div class="os-raise-ib-pset" data-retry-limit="1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution="red" data-solution-options='["red", "blue", "green"]'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">Dropdown problem content: \\( x^2 \\)</p>
@@ -216,7 +216,7 @@ test('math is rendered in user input answer', async ({ page }) => {
 
 test('math is rendered in MultipleChoice answer', async ({ page }) => {
   const htmlContent = `
-  <div class="os-raise-ib-pset" data-schema-version="1.0">
+  <div class="os-raise-ib-pset" data-retry-limit="1" data-schema-version="1.0">
     <div class="os-raise-ib-pset-problem" data-problem-type="multiplechoice" data-solution='\\(x^2\\)' data-solution-options='["\\\\(x^2\\\\)", "blue", "green"]'>
       <div class="os-raise-ib-pset-problem-content">
         <p id="problem">MultipleChoice problem content: \\( x^2 \\)</p>
