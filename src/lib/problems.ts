@@ -18,5 +18,5 @@ export const determineFeedback: <T extends string | string[]>(
 }
 
 export const retriesRemaining = (retryLimit: number, retries: number): boolean => {
-  return (retryLimit === 0 || retries !== retryLimit)
+  return retries !== retryLimit
 }
