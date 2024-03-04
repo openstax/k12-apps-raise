@@ -265,7 +265,7 @@ Individual problems can also display HTML for when users exhaust the amount of a
 
 ##### Attributes for the problem set:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
-* `data-retry-limit` is optional and defaults to `0` (one attempt). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
+* `data-retry-limit` is optional and defaults to `0` (one attempt with no retries). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
 * `data-button-text` is optional but allows the content developer to customize the text in the button associated with each question that allows users to check their answers. The default value is `Check`.
 * The `data-fire-success-event` and `data-fire-learning-opportunity-event` attributes are optional
   * `data-fire-success-event` - This event is fired by the block if the student is deemed to have completed the problem set without difficulty according to some built-in function.
