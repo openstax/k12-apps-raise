@@ -112,6 +112,45 @@ test('Multiselect shows correct response, invokes callback, and disables self on
   expect(screen.getByRole('button')).toBeDisabled()
 })
 
+test('Multiselect shows attempts exhausted response, invokes callback, and disables self on check with no match', async () => {
+  const solvedHandler = jest.fn()
+  const exhaustedHandler = jest.fn()
+  const allowedRetryHandler = jest.fn()
+
+  render(
+    <MultiselectProblem
+    solutionOptions={'["Option 1", "Option 2", "Option 3"]'}
+    solvedCallback={solvedHandler}
+    exhaustedCallback={exhaustedHandler}
+    allowedRetryCallback={allowedRetryHandler}
+    content={'<p>Problem text</p>'}
+    correctResponse={''}
+    encourageResponse={''}
+    retryLimit={0}
+    solution={'["Option 2", "Option 3"]'}
+    buttonText={'Check'}
+    attemptsExhaustedResponse={'The correct answer is Option 2 and Option 3'}
+    answerResponses={[]}
+    />
+  )
+
+  await screen.findByText('Attempts left: 1/1')
+  await act(async () => {
+    fireEvent.click(screen.getByLabelText('Option 1'))
+    fireEvent.click(screen.getByLabelText('Option 3'))
+    screen.getByRole('button').click()
+  })
+  await screen.findByText('The correct answer is Option 2 and Option 3')
+  await screen.findByText('Attempts left: 0/1')
+  expect(solvedHandler).toHaveBeenCalledTimes(0)
+  expect(exhaustedHandler).toHaveBeenCalledTimes(1)
+  expect(allowedRetryHandler).toHaveBeenCalledTimes(0)
+  expect(screen.getByDisplayValue('Option 1')).toHaveAttribute('disabled')
+  expect(screen.getByDisplayValue('Option 2')).toHaveAttribute('disabled')
+  expect(screen.getByDisplayValue('Option 3')).toHaveAttribute('disabled')
+  expect(screen.getByRole('button')).toBeDisabled()
+})
+
 test('Multiselect shows incorrect response, then check is unclicked, and correct response is triggered', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
@@ -126,7 +165,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
     content={'<p>Problem text</p>'}
     correctResponse={'<p>Great job!</p>'}
     encourageResponse={'<p>Try again!'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'["Option 2", "Option 3"]'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
@@ -158,7 +197,7 @@ test('Multiselect shows incorrect response, then check is unclicked, and correct
   expect(screen.getByRole('button')).toBeDisabled()
 })
 
-test('MultiselectProblem shows encourage response and invokes callback on check with no match and retries remaining', async () => {
+test('MultiselectProblem shows encourage response and invokes callback on check with no match and one retry remaining', async () => {
   const solvedHandler = jest.fn()
   const exhaustedHandler = jest.fn()
   const allowedRetryHandler = jest.fn()
@@ -172,18 +211,19 @@ test('MultiselectProblem shows encourage response and invokes callback on check 
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'["Option "]'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
     answerResponses={[]}
     />
   )
-  await screen.findByText('Attempts left: Unlimited')
+  await screen.findByText('Attempts left: 2/2')
   await act(async () => {
     fireEvent.click(screen.getByLabelText('Option 2'))
     screen.getByRole('button').click()
   })
+  await screen.findByText('Attempts left: 1/2')
   await screen.findByText('Try again!')
   expect(solvedHandler).toHaveBeenCalledTimes(0)
   expect(exhaustedHandler).toHaveBeenCalledTimes(0)
@@ -200,7 +240,7 @@ test('MultiselectProblem clears encourage response when user changes answer', as
     content={'<p>Problem text</p>'}
     correctResponse={''}
     encourageResponse={'<p>Try again!</p>'}
-    retryLimit={0}
+    retryLimit={1}
     solution={'["Option 2"]'}
     buttonText={'Check'}
     attemptsExhaustedResponse={''}
