@@ -910,7 +910,7 @@ Family support materials links should only be used in `<div>` elements. There sh
 
 ```html
 <div class="os-raise-familysupport">
-    <p>Access the PDF version of this page to share with parents or guardians: <a href="">Unit 1 Family Support Materials.</a></p>
+    <p><a href="">Access the PDF version</a> of this page to share with parents or guardians.</p>
 </div>
 ```
 
