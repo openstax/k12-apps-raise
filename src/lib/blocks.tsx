@@ -266,6 +266,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
     const problemType = htmlElem.dataset.problemType
     const contentId = htmlElem.dataset.contentId
     const solution = htmlElem.dataset.solution
+    const maybeProblemRetryLimit = htmlElem.dataset.retryLimit
     const problemComparator = htmlElem.dataset.problemComparator
     const solutionOptions = htmlElem.dataset.solutionOptions
     const maybeCorrectResponseOverride = htmlElem.querySelector(`.${PSET_CORRECT_RESPONSE_CLASS}`)
@@ -294,6 +295,7 @@ export const parseProblemSetBlock = (element: HTMLElement): JSX.Element | null =
       solutionOptions,
       buttonText: maybeButtonText ?? 'Check',
       retryLimit: maybeRetryLimit === undefined ? 0 : parseInt(maybeRetryLimit),
+      problemRetryLimit: maybeProblemRetryLimit === undefined ? undefined : parseInt(maybeProblemRetryLimit),
       correctResponse: (maybeCorrectResponseOverride === null) ? psetCorrectResponseElem.innerHTML : maybeCorrectResponseOverride.innerHTML,
       encourageResponse: (maybeEncourageResponseOverride === null) ? psetEncourageResponseElem.innerHTML : maybeEncourageResponseOverride.innerHTML,
       answerResponses: buildAnswerSpecificOverridesObject(maybeAnswerSpecificResponses),
