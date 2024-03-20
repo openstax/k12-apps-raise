@@ -31,13 +31,15 @@ export function buildClassName(response: string, correct: boolean, formDisabled:
 
 export const DropdownProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, content, contentId, buttonText, solutionOptions,
-  encourageResponse, correctResponse, solution, retryLimit, answerResponses, attemptsExhaustedResponse,
+  encourageResponse, correctResponse, solution, retryLimit, problemRetryLimit, answerResponses, attemptsExhaustedResponse,
   onProblemAttempt
 }: DropdownProblemProps): JSX.Element => {
   const [feedback, setFeedback] = useState('')
   const [formDisabled, setFormDisabled] = useState(false)
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [userResponseCorrect, setUserResponseCorrect] = useState(false)
+
+  const maxRetries = problemRetryLimit ?? retryLimit
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -70,7 +72,7 @@ export const DropdownProblem = ({
   const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
-    } else if (retriesRemaining(retryLimit, userAttempts)) {
+    } else if (retriesRemaining(maxRetries, userAttempts)) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
@@ -87,7 +89,7 @@ export const DropdownProblem = ({
       setUserResponseCorrect(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
+    } else if (retriesRemaining(maxRetries, retriesAllowed)) {
       setRetriesAllowed(currRetries => currRetries + 1)
       allowedRetryCallback()
     } else {
@@ -153,7 +155,7 @@ export const DropdownProblem = ({
               </button>
             </div>
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null }
-            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
+            <AttemptsCounter retryLimit={maxRetries} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>

@@ -51,6 +51,7 @@ export const MultiselectProblem = ({
   encourageResponse,
   solution,
   retryLimit,
+  problemRetryLimit,
   answerResponses,
   attemptsExhaustedResponse,
   onProblemAttempt
@@ -61,6 +62,8 @@ export const MultiselectProblem = ({
   const solutionArray: string[] = JSON.parse(solution)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
   const [showAnswers, setShowAnswers] = useState(false)
+
+  const maxRetries = problemRetryLimit ?? retryLimit
 
   const schema = Yup.object({
     response: Yup.array().min(1, 'Please select an answer')
@@ -124,7 +127,7 @@ export const MultiselectProblem = ({
 
     if (correct) {
       setFeedback(correctResponse)
-    } else if (retriesRemaining(retryLimit, userAttempts)) {
+    } else if (retriesRemaining(maxRetries, userAttempts)) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, comparator))
     } else {
       setFeedback(attemptsExhaustedResponse)
@@ -152,7 +155,7 @@ export const MultiselectProblem = ({
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
+    } else if (retriesRemaining(maxRetries, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
       allowedRetryCallback()
     } else {
@@ -199,7 +202,7 @@ export const MultiselectProblem = ({
             </div>
 
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
-            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
+            <AttemptsCounter retryLimit={maxRetries} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>
