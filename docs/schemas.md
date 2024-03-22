@@ -263,6 +263,33 @@ Individual problems can also display HTML for when users exhaust the amount of a
 </div>
 ```
 
+The schema outlined above provides content developers the ability to define `data-retry-limit` for all problems within a problem set block. The schema also allows developers to define `data-retry-limit` for each individual problem, which will override the `data-retry-limit` set at the problem set block level. In the example shown below, the first problem will have a `data-retry-limit` of `4` (overriding the problem set block level `data-retry-limit` of `3`), but the second problem will inherit the `data-retry-limit` value of `3`.
+
+```html
+<div class="os-raise-ib-pset" data-fire-success-event="eventnameX" data-fire-learning-opportunity-event="eventnameY" data-wait-for-event="eventnameZ" data-retry-limit="3" data-button-text="Check" data-schema-version="1.0">
+  <div class="os-raise-ib-pset-problem" data-retry-limit="4" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+      <p>Input problem content</p>
+    </div>
+  </div>
+  <div class="os-raise-ib-pset-problem" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+    <div class="os-raise-ib-pset-problem-content">
+      <!-- INSERT ANY VALID HTML HERE -->
+      <p>Dropdown problem content</p>
+    </div>
+  </div>
+  <div class="os-raise-ib-pset-correct-response">
+    <!-- INSERT ANY VALID HTML HERE -->
+    <p>Correct Answer!</p>
+  </div>
+  <div class="os-raise-ib-pset-encourage-response">
+    <!-- INSERT ANY VALID HTML HERE -->
+    <p>Encouragement!</p>
+  </div>
+</div>
+```
+
 ##### Attributes for the problem set:
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * `data-retry-limit` is optional and defaults to `0` (one attempt with no retries). If specified it should be a positive value indicating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
@@ -273,6 +300,7 @@ Individual problems can also display HTML for when users exhaust the amount of a
 
 ##### Attributes for all problem types:
 * `data-problem-type`: Valid values include `input`, `dropdown`, `multiselect`, `multiplechoice`
+* `data-retry-limit` is optional and does not default to `0`, but rather it will be `undefined`. If specified it: (1) will override the `data-retry-limit` set at the problem set level and (2) should be a positive value indiciating the number of retry attempts allowed. Note that each button "click" counts as an attempt, so a retry limit of 1 means they can submit up to two times.
 * `data-solution` is required. It is used by each problem type as follows:
   * `input` question: The solution string is compared to the user input based upon the prescribed comparator (see options below)
   * `dropdown` question: The solution string should match one of the options in the array passed as `data-solution-options` (see details below)
