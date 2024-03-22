@@ -50,7 +50,6 @@ export const MultipleChoiceProblem = ({
   encourageResponse,
   solution,
   retryLimit,
-  problemRetryLimit,
   attemptsExhaustedResponse,
   onProblemAttempt
 }: MultipleChoiceProps): JSX.Element => {
@@ -59,8 +58,6 @@ export const MultipleChoiceProblem = ({
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [showAnswers, setShowAnswers] = useState(false)
   const parsedOptionValues: string[] = JSON.parse(solutionOptions)
-
-  const maxRetries = problemRetryLimit ?? retryLimit
 
   const schema = Yup.object({
     response: Yup.string().trim().required('Please select an answer')
@@ -121,7 +118,7 @@ export const MultipleChoiceProblem = ({
   const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
-    } else if (retriesRemaining(maxRetries, userAttempts)) {
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
@@ -140,7 +137,7 @@ export const MultipleChoiceProblem = ({
       setShowAnswers(true)
       solvedCallback()
       setFormDisabled(true)
-    } else if (retriesRemaining(maxRetries, retriesAllowed)) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed((currRetries) => currRetries + 1)
       allowedRetryCallback()
     } else {
@@ -199,7 +196,7 @@ export const MultipleChoiceProblem = ({
               />
                 )
               : null}
-              <AttemptsCounter retryLimit={maxRetries} retriesAllowed={retriesAllowed}/>
+              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
           </Form>
         )}
       </Formik>

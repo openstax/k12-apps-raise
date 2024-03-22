@@ -63,7 +63,7 @@ export const evaluateMathComparator = (input: string, answer: string): boolean =
 
 export const InputProblem = ({
   solvedCallback, exhaustedCallback, allowedRetryCallback, attemptsExhaustedResponse,
-  solution, retryLimit, problemRetryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt
+  solution, retryLimit, content, contentId, comparator, encourageResponse, buttonText, correctResponse, answerResponses, onProblemAttempt
 }: InputProblemProps): JSX.Element => {
   const [retriesAllowed, setRetriesAllowed] = useState(0)
   const [inputDisabled, setInputDisabled] = useState(false)
@@ -72,8 +72,6 @@ export const InputProblem = ({
   const NUMERIC_INPUT_ERROR = 'Enter numeric values only'
   const EXCEEDED_MAX_INPUT_ERROR = 'Input is too long'
   const NON_EMPTY_VALUE_ERROR = 'Please provide valid input'
-
-  const maxRetries = problemRetryLimit ?? retryLimit
 
   const schema = (): Yup.Schema<InputSchema> => {
     if (comparator.toLowerCase() === 'integer') {
@@ -115,7 +113,7 @@ export const InputProblem = ({
   const handleFeedback = (userResponse: string, correct: boolean, userAttempts: number): void => {
     if (correct) {
       setFeedback(correctResponse)
-    } else if (retriesRemaining(maxRetries, userAttempts)) {
+    } else if (retriesRemaining(retryLimit, userAttempts)) {
       setFeedback(determineFeedback(userResponse, encourageResponse, answerResponses, evaluateInput))
     } else {
       setFeedback(attemptsExhaustedResponse)
@@ -141,7 +139,7 @@ export const InputProblem = ({
       setUserResponseCorrect(true)
       solvedCallback()
       setInputDisabled(true)
-    } else if (retriesRemaining(maxRetries, retriesAllowed)) {
+    } else if (retriesRemaining(retryLimit, retriesAllowed)) {
       setRetriesAllowed(currRetries => currRetries + 1)
       allowedRetryCallback()
     } else {
@@ -214,7 +212,7 @@ export const InputProblem = ({
               <div className="os-text-center mt-4">
               <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button></div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
-              <AttemptsCounter retryLimit={maxRetries} retriesAllowed={retriesAllowed}/>
+              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
           )}
         </Formik>

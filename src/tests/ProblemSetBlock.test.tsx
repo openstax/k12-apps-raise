@@ -518,6 +518,11 @@ test('Problem level retry limits populate', async () => {
         <p>Multiselect problem content</p>
       </div>
     </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
     <div class="os-raise-ib-pset-correct-response">
       <p>Generic correct response</p>
     </div>
@@ -535,4 +540,6 @@ test('Problem level retry limits populate', async () => {
   expect(generatedProblemSetBlock?.props.problems[0].problemRetryLimit).toBe(2)
   expect(generatedProblemSetBlock?.props.problems[1].problemRetryLimit).toBe(3)
   expect(generatedProblemSetBlock?.props.problems[2].problemRetryLimit).toBe(4)
+  expect(generatedProblemSetBlock?.props.problems[3].problemRetryLimit).toBe(undefined)
+  expect(generatedProblemSetBlock?.props.problems[3].retryLimit).toBe(1)
 })
