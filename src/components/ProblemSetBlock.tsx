@@ -15,6 +15,7 @@ export interface ProblemData {
   correctResponse: string
   encourageResponse: string
   retryLimit: number
+  problemRetryLimit?: number
   buttonText: string
   attemptsExhaustedResponse: string
   contentId?: string
@@ -170,7 +171,7 @@ export const ProblemSetBlock = ({ waitForEvent, fireSuccessEvent, fireLearningOp
       allowedRetryCallback: allowedRetryCallbackFactory(indx),
       contentId: prob.contentId,
       solution: prob.solution,
-      retryLimit: prob.retryLimit,
+      retryLimit: prob.problemRetryLimit ?? prob.retryLimit,
       content: prob.content,
       correctResponse: prob.correctResponse,
       encourageResponse: prob.encourageResponse,

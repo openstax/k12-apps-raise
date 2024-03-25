@@ -496,3 +496,50 @@ test('ProblemSetBlock does not call the onProblemAttempt handler on default cont
 
   expect(queueIbPsetProblemAttemptedV1Event).not.toHaveBeenCalled()
 })
+
+test('Problem level retry limits populate', async () => {
+  const psetContent = `
+  <div class="os-raise-ib-pset" data-retry-limit="1" data-schema-version="1.0">
+    <div class="os-raise-ib-pset-problem" data-retry-limit="2" data-problem-type="input" data-solution="42" data-problem-comparator="integer">
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Input problem content</p>
+      </div>
+      <div class='os-raise-ib-pset-attempts-exhausted-response'>
+        <p>The answer is 42 </p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-retry-limit="3" data-problem-type="dropdown" data-solution="red" data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Dropdown problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-retry-limit="4" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-problem" data-problem-type="multiselect" data-solution='["red", "blue"]' data-solution-options='["red", "blue", "green"]'>
+      <div class="os-raise-ib-pset-problem-content">
+        <p>Multiselect problem content</p>
+      </div>
+    </div>
+    <div class="os-raise-ib-pset-correct-response">
+      <p>Generic correct response</p>
+    </div>
+    <div class="os-raise-ib-pset-encourage-response">
+      <p>Generic encouragement response</p>
+    </div>
+  </div>
+  `
+
+  const divElem = document.createElement('div')
+  divElem.innerHTML = psetContent
+  const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
+
+  expect(generatedProblemSetBlock).not.toBeNull()
+  expect(generatedProblemSetBlock?.props.problems[0].problemRetryLimit).toBe(2)
+  expect(generatedProblemSetBlock?.props.problems[1].problemRetryLimit).toBe(3)
+  expect(generatedProblemSetBlock?.props.problems[2].problemRetryLimit).toBe(4)
+  expect(generatedProblemSetBlock?.props.problems[3].problemRetryLimit).toBe(undefined)
+  expect(generatedProblemSetBlock?.props.problems[3].retryLimit).toBe(1)
+})

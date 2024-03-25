@@ -160,7 +160,6 @@ export const MultipleChoiceProblem = ({
       )
     }
   }
-
   return (
     <div className="os-raise-bootstrap" ref={contentRefCallback}>
       <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
