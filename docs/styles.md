@@ -73,7 +73,7 @@ Add as a class attribute to a table html tag.
 
 ```html
 <table class="os-raise-textheavytable">
-  <caption> Texas Essential Knowledge and Skills (TEKS)
+  <caption> Texas Essential Knowledge and Skills (TEKS) </caption>
   <thead>
     <tr>
       <th scope="col">TEKS</th>
