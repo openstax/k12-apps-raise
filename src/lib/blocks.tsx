@@ -14,6 +14,7 @@ import {
 import { UserInputBlock } from '../components/UserInputBlock'
 import { SearchBlock } from '../components/SearchBlock'
 import { queueIbPsetProblemAttemptedV1Event, queueIbInputSubmittedV1Event } from './events'
+import { getVersionId } from './utils'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
@@ -372,6 +373,10 @@ export const parseSearchBlock = (element: HTMLElement): JSX.Element | null => {
   if (!element.classList.contains(OS_RAISE_SEARCH_CLASS)) {
     return null
   }
+  const maybeFilter = element.dataset.filter ?? ''
 
-  return <SearchBlock />
+  return <SearchBlock
+    versionId={getVersionId()}
+    filter={maybeFilter}
+  />
 }
