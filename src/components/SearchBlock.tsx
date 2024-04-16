@@ -1,7 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { ENV } from '../lib/env'
 import React, { useState } from 'react'
-// May need to bring in uuid or some other library to generate keys
 // Determine the neccessity of ErrorMessage component from formik
 
 interface SearchBlockProps {
@@ -21,9 +20,9 @@ interface HitSource {
 }
 
 interface HitHighlight {
-  lesson_page: string[]
+  lesson_page?: string[]
   visible_content: string[]
-  activity_name?: string[]
+  activity_name: string[]
 }
 
 interface HitIdSourceHighlight {
@@ -47,7 +46,6 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
   const fetchContent = async (): Promise<void> => {
     // Confirm the final url to be fetched
     const response = await fetch(`${ENV.OS_RAISE_SEARCHAPI_URL_PREFIX}?q=${query}&version_id=${versionId}&filter=${filter}`)
-    console.log('here is response:', response)
 
     if (!response.ok) {
       throw new Error('Failed to get search results')
@@ -139,20 +137,21 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
               <li className='os-search-results-list-item' key={hit._id}>
                 <div>
                   <h3>Location</h3>
-                  <p>{hit._source.teacher_only && `This is ${filter} content`}</p>
                   <p>{hit._source.section}</p>
                   <p>{hit._source.activity_name}</p>
                   <p>{hit._source.lesson_page !== '' && hit._source.lesson_page}</p>
                 </div>
                 <div>
+                  {/* The keys for each item below are generated using the item's index in the array */}
                   <h3>Results</h3>
+                  <p>{hit._source.teacher_only && `This is ${filter} content`}</p>
                   {hit.highlight.visible_content.map((content: string) => (
                     <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
                   ))}
-                  {hit.highlight.lesson_page.map((page: string) => (
+                  {hit.highlight.lesson_page?.map((page: string) => (
                     <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
                   ))}
-                  {hit.highlight.activity_name?.map((activity: string) => (
+                  {hit.highlight.activity_name.map((activity: string) => (
                     <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
                   ))}
                 </div>
