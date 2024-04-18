@@ -918,29 +918,28 @@ Family support materials links should only be used in `<div>` elements. There sh
 
 ## User Message Link and Lightbulb
 
-The link message box has a link icon and styled `p` and `a` tags. 
-The lightbulb message box has a lightbulb icon and styled `p` tags.
+Add a user message box with a link or lightbulb icon.
 
 **Examples**
 
 <div style="text-align: center;">
-    <img src="./static/familysupportmaterialslinks.png" width="750">
+    <img src="./static/usermessage.png" width="750">
 </div>
 
 **Availability**
 
-User message should only be used in `<div>` elements. The link user message should only 
-have a `<p>` tag and an `<a>` tag. The lightbulb user message should only have a `<p>` tag.
+User message should only be used in `<div>` elements. The user message should only 
+have a `<p>` tag and `<a>` tags.
 
 **Usage**
-
+```html
 <div class="os-raise-usermessage-link">
     <p>Use this link to access the activity: <a href="">Desmos Activity: RAISE 3.5.1 Using Bivariate Data in Context</a></p>
 </div>
 <div class="os-raise-usermessage-lightbulb">
-    <p>If you're having trouble seeing the x-intercept, try resizing the graphing window by pressing the '-' button in the upper right hand corner</p>
+    <p>Use this link to access the activity: <a href="">Desmos Activity: RAISE 3.5.1 Using Bivariate Data in Context</a></p>
 </div>
-
+```
 
 ---
 
