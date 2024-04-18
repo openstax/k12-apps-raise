@@ -42,6 +42,8 @@
   - [Accordion](#accordion-os-raise-accordion)
   - [Student Reflection Box](#student-reflection-box)
   - [Family Support Materials Links](#family-support-materials-links)
+  - [User Message Link and Lightbulb](#user-message-link-and-lightbulb)
+
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -913,6 +915,32 @@ Family support materials links should only be used in `<div>` elements. There sh
     <p><a href="">Access the PDF version</a> of this page to share with parents or guardians.</p>
 </div>
 ```
+
+## User Message Link and Lightbulb
+
+The link message box has a link icon and styled `p` and `a` tags. 
+The lightbulb message box has a lightbulb icon and styled `p` tags.
+
+**Examples**
+
+<div style="text-align: center;">
+    <img src="./static/familysupportmaterialslinks.png" width="750">
+</div>
+
+**Availability**
+
+User message should only be used in `<div>` elements. The link user message should only 
+have a `<p>` tag and an `<a>` tag. The lightbulb user message should only have a `<p>` tag.
+
+**Usage**
+
+<div class="os-raise-usermessage-link">
+    <p>Use this link to access the activity: <a href="">Desmos Activity: RAISE 3.5.1 Using Bivariate Data in Context</a></p>
+</div>
+<div class="os-raise-usermessage-lightbulb">
+    <p>If you're having trouble seeing the x-intercept, try resizing the graphing window by pressing the '-' button in the upper right hand corner</p>
+</div>
+
 
 ---
 
