@@ -2,32 +2,18 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { SearchBlock } from '../components/SearchBlock'
 
 const mockStudentAndTeacherQueryResults = {
-  took: 55,
-  timed_out: false,
-  _shards: {
-    total: 1,
-    successful: 1,
-    skipped: 0,
-    failed: 0
-  },
   hits: {
     total: {
-      value: 37,
-      relation: 'eq'
+      value: 37
     },
-    max_score: 12.129974,
     hits: [
       {
-        _index: 'test-index2',
         _id: '1a9844da-0262-49c0-9194-1496f9cfc4ed',
-        _score: 12.129974,
         _source: {
-          content_id: '1a9844da-0262-49c0-9194-1496f9cfc4ed',
           section: 'Unit 4: Functions',
           activity_name: 'Lesson 4.16: Different Types of Sequences',
           lesson_page: '4.16.3: A Sequence Is a Type of Function',
-          lesson_page_type: 'content',
-          teacher_only: false
+          teacher_only: true
         },
         highlight: {
           lesson_page: [
@@ -43,15 +29,11 @@ const mockStudentAndTeacherQueryResults = {
         }
       },
       {
-        _index: 'test-index2',
         _id: 'f27ad080-9923-48c5-9355-54e4934a95d8',
-        _score: 11.537502,
         _source: {
-          content_id: 'f27ad080-9923-48c5-9355-54e4934a95d8',
           section: 'Unit 4: Functions',
           activity_name: 'Lesson 4.14: Sequences',
           lesson_page: '4.14.2: What Is a Sequence?',
-          lesson_page_type: 'content',
           teacher_only: false
         },
         highlight: {
@@ -72,32 +54,49 @@ const mockStudentAndTeacherQueryResults = {
 }
 
 const mockTeacherFilterQueryResults = {
-  took: 55,
-  timed_out: false,
-  _shards: {
-    total: 1,
-    successful: 1,
-    skipped: 0,
-    failed: 0
-  },
   hits: {
     total: {
-      value: 37,
-      relation: 'eq'
+      value: 37
     },
-    max_score: 12.129974,
     hits: [
       {
-        _index: 'test-index1',
         _id: '1a9844da-0262-49c0-9194-1496f9cfc4ed',
-        _score: 12.129974,
         _source: {
-          content_id: '1a9844da-0262-49c0-9194-1496f9cfc4ed',
           section: 'Unit 4: Functions',
           activity_name: 'Lesson 4.16: Different Types of Sequences',
           lesson_page: '4.16.3: A Sequence Is a Type of Function',
-          lesson_page_type: 'content',
           teacher_only: true
+        },
+        highlight: {
+          lesson_page: [
+            '4.16.3: A Sequence <strong>Is</strong> a Type of Function'
+          ],
+          visible_content: [
+            'Activity \n<strong>Jada</strong> and Mai are trying to decide what type of sequence this could be:\n\n\n\n\nterm number\nvalue',
+            '2\n      \n\n\n\n      2\n      \n\n        6\n      \n\n\n\n        5\n      \n\n        18\n      \n\n\n\n<strong>Jada</strong>',
+            'says: \u201cI think this sequence <strong>is</strong> geometric because in the value column, each row <strong>is</strong> 3 times the previous',
+            'Do you agree with <strong>Jada</strong> or Mai? Be prepared to show your reasoning using a graph.',
+            '<strong>Jada</strong> noticed that each value <strong>is</strong> multiplied by 3 to get to the next row, but the table skips terms.'
+          ]
+        }
+      }
+    ]
+  }
+}
+
+const mockStudentFilterQueryResults = {
+  hits: {
+    total: {
+      value: 37
+    },
+    hits: [
+      {
+        _id: '1a9844da-0262-49c0-9194-1496f9cfc4ed',
+        _source: {
+          section: 'Unit 4: Functions',
+          activity_name: 'Lesson 4.16: Different Types of Sequences',
+          lesson_page: '4.16.3: A Sequence Is a Type of Function',
+          teacher_only: false
         },
         highlight: {
           lesson_page: [
@@ -121,22 +120,22 @@ jest.mock('../lib/env.ts', () => ({
     OS_RAISE_SEARCHAPI_URL_PREFIX: 'http://searchapi'
   }
 }))
-// Will need to update the url
+
 describe('search', () => {
-  it('fetches and displays student and teacher search results from API', async () => {
+  it('fetches and displays unfiltered results from API', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
     })
 
     render(
-      <SearchBlock versionId={'12345'} filter={''} />
+      <SearchBlock versionId={'12345'} filter={undefined} />
     )
 
     const queryInput = screen.getByRole('textbox')
     await act(async () => {
       fireEvent.change(queryInput, { target: { value: 'math' } })
-      fireEvent.click(screen.getByText('Button'))
+      fireEvent.click(screen.getByText('Search'))
     })
 
     await screen.findAllByText('Unit 4: Functions')
@@ -148,7 +147,9 @@ describe('search', () => {
     expect(await screen.findByText('Lesson 4.14: Sequences'))
     expect(await screen.findByText('table skips terms', { exact: false }))
     expect(await screen.findByText('smallest', { exact: false }))
-    expect(global.fetch).toHaveBeenCalledWith(`http://searchapi?q=math&version_id=12345&filter=${''}`)
+    expect(await screen.findByText('Teacher Content'))
+    expect(await screen.findByText('Content'))
+    expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=12345')
   })
 
   it('fetches and displays teacher filter search results from API', async () => {
@@ -164,7 +165,7 @@ describe('search', () => {
     const queryInput = screen.getByRole('textbox')
     await act(async () => {
       fireEvent.change(queryInput, { target: { value: 'math' } })
-      fireEvent.click(screen.getByText('Button'))
+      fireEvent.click(screen.getByText('Search'))
     })
 
     await screen.findByText('Unit 4: Functions')
@@ -172,7 +173,34 @@ describe('search', () => {
     expect(firstHitLessonPage.length === 1)
     expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
     expect(await screen.findByText('table skips terms', { exact: false }))
-    expect(await screen.findByText('This is teacher content'))
-    expect(global.fetch).toHaveBeenCalledWith('http://searchapi?q=math&version_id=67890&filter=teacher')
+    expect(await screen.findByText('Teacher Content'))
+    expect(screen.queryByText('Content')).toBeNull()
+    expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=67890&filter=teacher')
+  })
+
+  it('fetches and displays student filter search results from API', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => await Promise.resolve(mockStudentFilterQueryResults)
+    })
+
+    render(
+      <SearchBlock versionId={'13579'} filter={'student'} />
+    )
+
+    const queryInput = screen.getByRole('textbox')
+    await act(async () => {
+      fireEvent.change(queryInput, { target: { value: 'math' } })
+      fireEvent.click(screen.getByText('Search'))
+    })
+
+    await screen.findByText('Unit 4: Functions')
+    const firstHitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
+    expect(firstHitLessonPage.length === 1)
+    expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
+    expect(await screen.findByText('table skips terms', { exact: false }))
+    expect(await screen.findByText('Content'))
+    expect(screen.queryByText('Teacher Content')).toBeNull()
+    expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=13579&filter=student')
   })
 })
