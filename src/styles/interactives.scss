@@ -173,3 +173,44 @@ math-field::part(menu-toggle) {
 .os-textarea-disabled.os-textarea-disabled {
   box-shadow: none;
 }
+
+// Search Styles
+.os-search-form {
+  display: flex; 
+  flex-direction: column; 
+  background-color: #00504721;
+  border: 1px solid #00504721; 
+  border-radius: 5px; 
+  padding: 1rem
+}
+
+.os-search-results-container {
+  margin-top: 1rem;
+}
+
+.os-search-results-list {
+  list-style: none;
+  padding: 0;
+}
+
+.os-search-results-list-item {
+  background-color: #00504721; 
+  border-radius: .5rem; 
+  margin-bottom: .5rem; 
+  padding: .5rem;
+}
+
+.os-search-results-highlights {
+  border-bottom: .1rem solid #d9d9d9;
+  padding-bottom: .5rem;
+}
+
+.os-search-error-message {
+  color: $os-wrong-answer-border-color;
+  text-align: center;
+}
+
+.os-search-no-results-message {
+  color: $os-selected-focus-border-color;
+  text-align: center;
+}
