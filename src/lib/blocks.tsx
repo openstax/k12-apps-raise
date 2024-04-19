@@ -373,7 +373,7 @@ export const parseSearchBlock = (element: HTMLElement): JSX.Element | null => {
   if (!element.classList.contains(OS_RAISE_SEARCH_CLASS)) {
     return null
   }
-  const maybeFilter = element.dataset.filter ?? undefined
+  const maybeFilter = element.dataset.filter
 
   return <SearchBlock
     versionId={getVersionId()}
