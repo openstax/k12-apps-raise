@@ -42,6 +42,8 @@
   - [Accordion](#accordion-os-raise-accordion)
   - [Student Reflection Box](#student-reflection-box)
   - [Family Support Materials Links](#family-support-materials-links)
+  - [User Message Link and Lightbulb](#user-message-link-and-lightbulb)
+
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
@@ -911,6 +913,31 @@ Family support materials links should only be used in `<div>` elements. There sh
 ```html
 <div class="os-raise-familysupport">
     <p><a href="">Access the PDF version</a> of this page to share with parents or guardians.</p>
+</div>
+```
+
+## User Message Link and Lightbulb
+
+Add a user message box with a link or lightbulb icon.
+
+**Examples**
+
+<div style="text-align: center;">
+    <img src="./static/usermessage.png" width="750">
+</div>
+
+**Availability**
+
+User message should only be used in `<div>` elements. The user message should only 
+have a `<p>` tag and `<a>` tags.
+
+**Usage**
+```html
+<div class="os-raise-usermessage-link">
+    <p>Use this link to access the activity: <a href="">Desmos Activity: RAISE 3.5.1 Using Bivariate Data in Context</a></p>
+</div>
+<div class="os-raise-usermessage-lightbulb">
+    <p>Use this link to access the activity: <a href="">Desmos Activity: RAISE 3.5.1 Using Bivariate Data in Context</a></p>
 </div>
 ```
 
