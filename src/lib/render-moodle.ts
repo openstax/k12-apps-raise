@@ -5,11 +5,13 @@ import {
   OS_RAISE_IB_INPUT_CLASS,
   OS_RAISE_IB_PSET_CLASS,
   OS_RAISE_IB_DESMOS_CLASS,
+  OS_RAISE_SEARCH_CLASS,
   parseContentOnlyBlock,
   parseCTABlock,
   parseUserInputBlock,
   parseProblemSetBlock,
-  parseDesmosBlock
+  parseDesmosBlock,
+  parseSearchBlock
 } from './blocks'
 
 const replaceElementWithBlock = (element: HTMLElement, component: JSX.Element): void => {
@@ -102,4 +104,8 @@ export const renderProblemSetBlocks = (element: HTMLElement): void => {
 }
 export const renderDesmosBlocks = (element: HTMLElement): void => {
   renderContentBlocksByClass(element, OS_RAISE_IB_DESMOS_CLASS, parseDesmosBlock)
+}
+
+export const renderSearchBlocks = (element: HTMLElement): void => {
+  renderContentBlocksByClass(element, OS_RAISE_SEARCH_CLASS, parseSearchBlock)
 }
