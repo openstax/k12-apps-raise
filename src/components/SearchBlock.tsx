@@ -50,21 +50,31 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
         : await fetch(`${ENV.OS_RAISE_SEARCHAPI_URL_PREFIX}/v1/search?q=${query}&version=${versionId}`)
 
       if (!response.ok) {
-        setErrorMessage('Failed to get search results, please try again.')
         throw new Error('Failed to get search results')
       }
 
       const data: SearchResults = await response.json()
       setSearchResults(data)
     } catch (error) {
+      setErrorMessage('Failed to get search results, please try again.')
       console.error('Error fetching search results:', error)
     }
+  }
+
+  const handleSubmit = async (): Promise<void> => {
+    if (query.trim() === '') {
+      setErrorMessage('Input cannot be empty')
+      return
+    }
+    setSearchResults(undefined)
+    setErrorMessage('')
+    await fetchContent()
   }
   return (
     <div>
       <Formik
         initialValues={{ response: '' }}
-        onSubmit={fetchContent}
+        onSubmit={handleSubmit}
       >
         {({ setFieldValue, isSubmitting }) => (
           <Form className='os-search-form'>
@@ -76,10 +86,20 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                 setErrorMessage('')
                 void setFieldValue('response', e.target.value)
               }}
+              disabled={isSubmitting}
             />
-            <div className='os-text-center mt-4'>
-              <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-primary os-search-button">Search</button>
-            </div>
+            {isSubmitting
+              ? <div className="os-raise-bootstrap">
+                  <div className="text-center">
+                    <div className="spinner-border mt-3 text-success" role="status">
+                      <span className="visually-hidden">Searching...</span>
+                    </div>
+                  </div>
+                </div>
+              : <div className='os-raise-bootstrap os-text-center mt-4'>
+                  <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-success">Search</button>
+                </div>
+            }
             {errorMessage !== '' && <p className='os-search-error-message'>{errorMessage}</p>}
           </Form>
         )}
@@ -117,7 +137,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       }
       {searchResults !== undefined && searchResults.hits.total.value === 0 &&
         <div>
-          <p className='os-search-error-message'>Your query did not produce any results. Please try again.</p>
+          <p className='os-search-no-results-message'>Your query did not produce any results. Please try again.</p>
         </div>
       }
     </div>
