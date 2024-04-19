@@ -184,11 +184,6 @@ math-field::part(menu-toggle) {
   padding: 1rem
 }
 
-.os-search-button {
-  padding: 4px 16px;
-  margin-bottom: 1rem
-}
-
 .os-search-results-container {
   margin-top: 1rem;
 }
@@ -212,5 +207,10 @@ math-field::part(menu-toggle) {
 
 .os-search-error-message {
   color: $os-wrong-answer-border-color;
+  text-align: center;
+}
+
+.os-search-no-results-message {
+  color: $os-selected-focus-border-color;
   text-align: center;
 }
