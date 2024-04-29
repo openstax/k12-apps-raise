@@ -1,6 +1,7 @@
 import { Formik, Form, Field } from 'formik'
 import { ENV } from '../lib/env'
-import { useState } from 'react'
+import { mathifyElement } from '../lib/math'
+import { useState, useCallback } from 'react'
 
 interface SearchBlockProps {
   versionId: string
@@ -60,6 +61,12 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       console.error('Error fetching search results:', error)
     }
   }
+
+  const contentRefCallback = useCallback((node: HTMLParagraphElement | null): void => {
+    if (node != null) {
+      mathifyElement(node)
+    }
+  }, [])
 
   const handleSubmit = async (): Promise<void> => {
     if (query.trim() === '') {
@@ -121,13 +128,13 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                   {/* The keys for each item below are generated using the item's index in the array */}
                   <h3>{hit._source.teacher_only ? 'Teacher Content' : 'Content'}</h3>
                   {hit.highlight.visible_content?.map((content: string) => (
-                    <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
+                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
                   ))}
                   {hit.highlight.lesson_page?.map((page: string) => (
-                    <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
+                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
                   ))}
                   {hit.highlight.activity_name?.map((activity: string) => (
-                    <p className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
+                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
                   ))}
                 </div>
               </li>
