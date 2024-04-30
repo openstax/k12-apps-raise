@@ -50,7 +50,7 @@
 * Media Styling
   - [Responsive Media](#responsive-media)
   - [Responsive iframe](#responsive-iframe)
-
+  - [Video Container](#video-container)
 # Styling Content for RAISE
 
 In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below.
@@ -1316,5 +1316,39 @@ Add as a class attribute to `<iframe>` and its parent container.
 ```html
 <div class="os-raise-iframe-container">
   <iframe class="os-raise-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen frameborder="0" src="https://www.youtube.com/embed/w6R8rywmgek" title="Linear equation word problems"></iframe>
+</div>
+```
+
+---
+
+## Video Container
+
+Give `<iframe>` and `<video>` tags responsiveness and an aspect ratio of 16:9. The video container will be 80% of the parent containers width. Geogebra iframes can use this style. 
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/videocontainer.png" width="750">
+</div>
+
+**Availability**
+
+Add as a class attribute to the parent `div` of `<iframe>` and `<video>`. 
+
+**Usage**
+
+```html
+    <div class="os-raise-video-container">
+        <iframe src="https://www.youtube.com/embed/nZiRu4PpXDo?si=OEfKjtDOzQiG_BR2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+    </div>
+```
+
+To center the video horizontally, wrap the `os-raise-video-container` div with a div containing the `os-raise-d-flex-nowrap` and `os-raise-justify-content-center` classes.
+
+```html
+<div class="os-raise-d-flex-nowrap os-raise-justify-content-center">
+    <div class="os-raise-video-container">
+        <iframe src="https://www.youtube.com/embed/nZiRu4PpXDo?si=OEfKjtDOzQiG_BR2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+    </div>
 </div>
 ```
