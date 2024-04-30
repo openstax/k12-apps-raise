@@ -205,4 +205,38 @@ describe('search', () => {
     expect(await screen.findByText('table skips terms', { exact: false }))
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=13579&filter=student')
   })
+
+  it('filter results to show teacher content only', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
+    })
+
+    render(
+      <SearchBlock versionId={'12345'} filter={undefined} />
+    )
+
+    const queryInput = screen.getByRole('textbox')
+    await act(async () => {
+      fireEvent.change(queryInput, { target: { value: 'math' } })
+      fireEvent.click(screen.getByText('Search'))
+    })
+
+    await screen.findByText('Teacher Content Only')
+    const slider = screen.getByRole('checkbox')
+    act(() => {
+      fireEvent.click(slider)
+    })
+    await screen.findByText('Unit 4: Functions')
+    act(() => {
+      fireEvent.click(screen.getByText('Unit 4: Functions'))
+    })
+    const hitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
+    expect(hitLessonPage.length === 2)
+    expect(await screen.findByText('Lesson 4.16: Different Types of Sequences; 4.16.3: A Sequence Is a Type of Function'))
+    expect(await screen.findByText('table skips terms', { exact: false }))
+    expect(screen.queryAllByText('4.14.2', { exact: false })).toHaveLength(0)
+    expect(screen.queryByText('smallest')).toBeNull()
+    expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=12345')
+  })
 })
