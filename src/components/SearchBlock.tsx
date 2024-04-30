@@ -40,6 +40,8 @@ interface SearchResults {
   hits: Hits
 }
 
+type UnitHits = Record<string, Hit[]>
+
 export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Element => {
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SearchResults | undefined>(undefined)
@@ -47,6 +49,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
   const [teacherContentOnly, setTeacherContentOnly] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [totalHitsDisplayed, setTotalHitsDisplayed] = useState(0)
+  const [groupedHits, setGroupedHits] = useState<UnitHits | undefined>(undefined)
   const fetchContent = async (): Promise<void> => {
     try {
       const response = filter !== undefined
@@ -59,6 +62,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
 
       const data: SearchResults = await response.json()
       setSearchResults(data)
+      groupHitsByUnit(data)
     } catch (error) {
       setErrorMessage('Failed to get search results, please try again.')
       console.error('Error fetching search results:', error)
@@ -79,6 +83,24 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       }
     })
     setTotalHitsDisplayed(totalTeacherOnlyHits)
+  }
+
+  const groupHitsByUnit = (searchResults: SearchResults): void => {
+    if (searchResults === undefined) {
+      return
+    }
+    const unitHits: UnitHits = {}
+
+    searchResults.hits.hits.forEach((hit) => {
+      const unitName = hit._source.section
+      if (unitName in unitHits) {
+        unitHits[unitName].push(hit)
+      } else {
+        unitHits[unitName] = [hit]
+      }
+    })
+
+    setGroupedHits(unitHits)
   }
 
   const handleSubmit = async (): Promise<void> => {
@@ -127,71 +149,125 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
         )}
       </Formik>
       {searchResults !== undefined && searchResults.hits.total.value !== 0 &&
-        <>
+      <>
         <div className='os-search-results-count-container'>
           <h3>Search Results</h3>
           <div>
-            <p className='os-search-magnifying-glass'>Displaying {teacherContentOnly ? totalHitsDisplayed : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span></p>
-            <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-teacher-content-toggle-container'>
-              <p className='os-raise-mb-0'>Teacher Content Only</p>
-              <div className='os-raise-bootstrap'>
-                <div className="form-check form-switch">
-                  <input className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" onChange={() => { setTeacherContentOnly(!teacherContentOnly); calculateTotalTeacherOnlyHits(searchResults) }} />
+            {/* Maybe add margin-top to the teacher content only container and take off the margin-bottom from the <p> so the spacing is better when a filter is provided */}
+            <p className='os-search-magnifying-glass'>
+              Displaying {teacherContentOnly ? totalHitsDisplayed : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span>
+            </p>
+            {filter === undefined &&
+              <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-teacher-content-toggle-container'>
+                <p className='os-raise-mb-0'>Teacher Content Only</p>
+                <div className='os-raise-bootstrap'>
+                  <div className="form-check form-switch">
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckDefault"
+                      onChange={() => {
+                        setTeacherContentOnly(!teacherContentOnly)
+                        calculateTotalTeacherOnlyHits(searchResults)
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
         </div>
-        <div className='os-search-results-container'>
+        {groupedHits !== undefined &&
+          <div className='os-search-results-container'>
           {teacherContentOnly
-            ? <ul className='os-search-results-list'>
-                {searchResults.hits.hits.map((hit) => (hit._source.teacher_only &&
-                  <li className='os-search-results-list-item' id={hit._id}>
-                    <div>
-                      <h3>Location</h3>
-                      <p>{hit._source.section}</p>
-                      <p>{hit._source.activity_name}</p>
-                      <p>{hit._source.lesson_page}</p>
-                    </div>
-                    <div>
-                      <h3>{'Teacher Content'}</h3>
-                      {hit._source.teacher_only && hit.highlight.visible_content?.map((content: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
-                      ))}
-                      {hit._source.teacher_only && hit.highlight.lesson_page?.map((page: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
-                      ))}
-                      {hit._source.teacher_only && hit.highlight.activity_name?.map((activity: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
-                      ))}
-                    </div>
-                  </li>))}
-              </ul>
-            : <ul className='os-search-results-list'>
-                {searchResults.hits.hits.map((hit) => (
-                  <li className='os-search-results-list-item' id={hit._id}>
-                    <div>
-                      <h3>Location</h3>
-                      <p>{hit._source.section}</p>
-                      <p>{hit._source.activity_name}</p>
-                      <p>{hit._source.lesson_page}</p>
-                    </div>
-                    <div>
-                      <h3>{hit._source.teacher_only ? 'Teacher Content' : 'Content'}</h3>
-                      {hit.highlight.visible_content?.map((content: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
-                      ))}
-                      {hit.highlight.lesson_page?.map((page: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
-                      ))}
-                      {hit.highlight.activity_name?.map((activity: string) => (
-                        <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
-                      ))}
-                    </div>
-                  </li>))}
-              </ul>
+            ? <div className='os-raise-bootstrap'>
+                <div className="accordion" id="teacherContentAccordion">
+                  {Object.keys(groupedHits).sort().map((unitName) => {
+                    return (
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
+                          <button
+                            className="accordion-button collapsed"
+                            type="button" data-bs-toggle="collapse"
+                            data-bs-target={`#${unitName.slice(0, 6).replace(/\s/g, '')}`}
+                            aria-expanded="false"
+                            aria-controls={`${unitName.slice(0, 6).replace(/\s/g, '')}`}
+                          >
+                            {unitName}
+                          </button>
+                        </h2>
+                        <div id={`${unitName.slice(0, 6).replace(/\s/g, '')}`} className="accordion-collapse collapse" data-bs-parent="#teacherContentAccordion">
+                          <div className="accordion-body">
+                            {groupedHits[unitName].map((hit: Hit) => {
+                              return (
+                                <>
+                                  {/* <p>{hit._source.teacher_only ? 'Teacher Content' : 'Content'}</p> */}
+                                  {hit._source.teacher_only && hit._source.lesson_page === '' && <p className='os-raise-text-bold'>{hit._source.activity_name}</p>}
+                                  {hit._source.teacher_only && hit._source.lesson_page !== '' && <p className='os-raise-text-bold'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
+                                  {hit._source.teacher_only && hit.highlight.visible_content?.map((content: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
+                                  ))}
+                                  {hit._source.teacher_only && hit.highlight.lesson_page?.map((page: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
+                                  ))}
+                                  {hit._source.teacher_only && hit.highlight.activity_name?.map((activity: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
+                                  ))}
+                                </>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            : <div className='os-raise-bootstrap'>
+                <div className="accordion" id="teacherStudentContentAccordion">
+                  {Object.keys(groupedHits).sort().map((unitName) => {
+                    return (
+                      <div className="accordion-item">
+                        <h2 className="accordion-header">
+                          <button
+                            className="accordion-button collapsed"
+                            type="button" data-bs-toggle="collapse"
+                            data-bs-target={`#${unitName.slice(0, 6).replace(/\s/g, '')}`}
+                            aria-expanded="false"
+                            aria-controls={`${unitName.slice(0, 6).replace(/\s/g, '')}`}
+                          >
+                            {unitName}
+                          </button>
+                        </h2>
+                        <div id={`${unitName.slice(0, 6).replace(/\s/g, '')}`} className="accordion-collapse collapse" data-bs-parent="#teacherStudentContentAccordion">
+                          <div className="accordion-body">
+                            {groupedHits[unitName].map((hit: Hit) => {
+                              return (
+                                <>
+                                  {hit._source.lesson_page === '' && <p className='os-raise-text-bold'>{hit._source.activity_name}</p>}
+                                  {hit._source.lesson_page !== '' && <p className='os-raise-text-bold'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
+                                  {hit.highlight.visible_content?.map((content: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
+                                  ))}
+                                  {hit.highlight.lesson_page?.map((page: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: page }}></p>
+                                  ))}
+                                  {hit.highlight.activity_name?.map((activity: string) => (
+                                    <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
+                                  ))}
+                                </>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
           }
         </div>
+        }
       </>
       }
       {searchResults !== undefined && searchResults.hits.total.value === 0 &&
