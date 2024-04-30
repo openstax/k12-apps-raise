@@ -148,6 +148,12 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                 {searchResults.hits.hits.map((hit) => (hit._source.teacher_only &&
                   <li className='os-search-results-list-item' id={hit._id}>
                     <div>
+                      <h3>Location</h3>
+                      <p>{hit._source.section}</p>
+                      <p>{hit._source.activity_name}</p>
+                      <p>{hit._source.lesson_page}</p>
+                    </div>
+                    <div>
                       <h3>{'Teacher Content'}</h3>
                       {hit._source.teacher_only && hit.highlight.visible_content?.map((content: string) => (
                         <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
@@ -164,6 +170,12 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
             : <ul className='os-search-results-list'>
                 {searchResults.hits.hits.map((hit) => (
                   <li className='os-search-results-list-item' id={hit._id}>
+                    <div>
+                      <h3>Location</h3>
+                      <p>{hit._source.section}</p>
+                      <p>{hit._source.activity_name}</p>
+                      <p>{hit._source.lesson_page}</p>
+                    </div>
                     <div>
                       <h3>{hit._source.teacher_only ? 'Teacher Content' : 'Content'}</h3>
                       {hit.highlight.visible_content?.map((content: string) => (
