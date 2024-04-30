@@ -25,6 +25,9 @@ const mockStudentAndTeacherQueryResults = {
             'says: \u201cI think this sequence <strong>is</strong> geometric because in the value column, each row <strong>is</strong> 3 times the previous',
             'Do you agree with <strong>Jada</strong> or Mai? Be prepared to show your reasoning using a graph.',
             '<strong>Jada</strong> noticed that each value <strong>is</strong> multiplied by 3 to get to the next row, but the table skips terms.'
+          ],
+          activity_name: [
+            'Activity content'
           ]
         }
       },
@@ -234,6 +237,7 @@ describe('search', () => {
     const hitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
     expect(hitLessonPage.length === 2)
     expect(await screen.findByText('Lesson 4.16: Different Types of Sequences; 4.16.3: A Sequence Is a Type of Function'))
+    expect(await screen.findByText('Activity content'))
     expect(await screen.findByText('table skips terms', { exact: false }))
     expect(screen.queryAllByText('4.14.2', { exact: false })).toHaveLength(0)
     expect(screen.queryByText('smallest')).toBeNull()
