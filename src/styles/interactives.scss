@@ -194,7 +194,6 @@ math-field::part(menu-toggle) {
 }
 
 .os-search-results-container {
-  @extend %os-search-container-border; 
   margin-top: 1rem;
 }
 
@@ -223,6 +222,7 @@ math-field::part(menu-toggle) {
 }
 
 .os-search-results-list-item {
+  @extend %os-search-container-border;
   background-color: #FFFFFF; 
   border-radius: .5rem; 
   margin-bottom: .5rem; 
