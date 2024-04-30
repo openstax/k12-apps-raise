@@ -183,9 +183,12 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       </>
       }
       {searchResults !== undefined && searchResults.hits.total.value === 0 &&
+      <div className='os-search-results-count-container'>
+        <h3>Search Results</h3>
         <div>
-          <p className='os-search-no-results-message'>Your query did not produce any results. Please try again.</p>
+          <p className='os-search-magnifying-glass'>No results found for <span className='os-raise-text-bold'>{searchTerm}</span></p>
         </div>
+      </div>
       }
     </div>
   )
