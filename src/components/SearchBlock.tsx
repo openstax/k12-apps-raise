@@ -113,13 +113,13 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
             {isSubmitting
               ? <div className="os-raise-bootstrap">
                   <div className="text-center">
-                    <div className="spinner-border mt-3 text-success" role="status">
+                    <div className="spinner-border mt-3 text-primary" role="status">
                       <span className="visually-hidden">Searching...</span>
                     </div>
                   </div>
                 </div>
               : <div className='os-raise-bootstrap os-text-center mt-4'>
-                  <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-success">Search</button>
+                  <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-primary">Search</button>
                 </div>
             }
             {errorMessage !== '' && <p className='os-search-error-message'>{errorMessage}</p>}
