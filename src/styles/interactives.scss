@@ -220,27 +220,25 @@ math-field::part(menu-toggle) {
   padding: .5rem;
 }
 
-.os-search-results-list {
-  list-style: none;
-  padding: 0;
-}
-
-.os-search-results-list-item {
-  @extend %os-search-container-border;
-
-  background-color: #FFF; 
-  border-radius: .5rem; 
-  margin-bottom: .5rem; 
-  padding: .5rem;
-}
-
 .os-search-results-highlights {
   margin-bottom: .5rem;
-}
-
-.os-search-results-highlights:not(:last-child) {
   border-bottom: .1rem solid #d9d9d9;
   padding-bottom: .5rem;
+  font-size: .875rem;
+}
+
+.os-search-content-type {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.os-search-heading {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.os-search-results-text {
+  font-size: .875rem;
 }
 
 .os-search-error-message {

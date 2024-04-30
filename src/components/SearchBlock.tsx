@@ -140,8 +140,10 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                     </div>
                   </div>
                 </div>
-              : <div className='os-raise-bootstrap os-text-center mt-4'>
-                  <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-primary">Search</button>
+              : <div className='os-raise-bootstrap'>
+                  <div className='os-text-center mt-4'>
+                    <button type="submit" disabled={isSubmitting} className="os-btn btn-outline-primary">Search</button>
+                  </div>
                 </div>
             }
             {errorMessage !== '' && <p className='os-search-error-message'>{errorMessage}</p>}
@@ -151,15 +153,14 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       {searchResults !== undefined && searchResults.hits.total.value !== 0 &&
       <>
         <div className='os-search-results-count-container'>
-          <h3>Search Results</h3>
+          <h3 className='os-search-heading'>Search Results</h3>
           <div>
-            {/* Maybe add margin-top to the teacher content only container and take off the margin-bottom from the <p> so the spacing is better when a filter is provided */}
-            <p className='os-search-magnifying-glass'>
+            <p className='os-search-magnifying-glass os-search-results-text'>
               Displaying {teacherContentOnly ? totalHitsDisplayed : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span>
             </p>
             {filter === undefined &&
               <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-teacher-content-toggle-container'>
-                <p className='os-raise-mb-0'>Teacher Content Only</p>
+                <p className='os-raise-mb-0 os-search-results-text'>Teacher Content Only</p>
                 <div className='os-raise-bootstrap'>
                   <div className="form-check form-switch">
                     <input
@@ -184,10 +185,10 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                 <div className="accordion" id="teacherContentAccordion">
                   {Object.keys(groupedHits).sort().map((unitName) => {
                     return (
-                      <div className="accordion-item">
-                        <h2 className="accordion-header">
+                      <div className="accordion-item" key={unitName}>
+                        <h3 className="accordion-header">
                           <button
-                            className="accordion-button collapsed"
+                            className="accordion-button collapsed os-raise-text-bold"
                             type="button" data-bs-toggle="collapse"
                             data-bs-target={`#${unitName.slice(0, 6).replace(/\s/g, '')}`}
                             aria-expanded="false"
@@ -195,15 +196,14 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                           >
                             {unitName}
                           </button>
-                        </h2>
+                        </h3>
                         <div id={`${unitName.slice(0, 6).replace(/\s/g, '')}`} className="accordion-collapse collapse" data-bs-parent="#teacherContentAccordion">
                           <div className="accordion-body">
                             {groupedHits[unitName].map((hit: Hit) => {
                               return (
-                                <>
-                                  {/* <p>{hit._source.teacher_only ? 'Teacher Content' : 'Content'}</p> */}
-                                  {hit._source.teacher_only && hit._source.lesson_page === '' && <p className='os-raise-text-bold'>{hit._source.activity_name}</p>}
-                                  {hit._source.teacher_only && hit._source.lesson_page !== '' && <p className='os-raise-text-bold'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
+                                <div key={hit._id}>
+                                  {hit._source.teacher_only && hit._source.lesson_page === '' && <p className='os-raise-text-bold os-search-results-text'>{hit._source.activity_name}</p>}
+                                  {hit._source.teacher_only && hit._source.lesson_page !== '' && <p className='os-raise-text-bold os-search-results-text'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
                                   {hit._source.teacher_only && hit.highlight.visible_content?.map((content: string) => (
                                     <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
                                   ))}
@@ -213,7 +213,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                                   {hit._source.teacher_only && hit.highlight.activity_name?.map((activity: string) => (
                                     <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
                                   ))}
-                                </>
+                                </div>
                               )
                             })}
                           </div>
@@ -227,10 +227,10 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                 <div className="accordion" id="teacherStudentContentAccordion">
                   {Object.keys(groupedHits).sort().map((unitName) => {
                     return (
-                      <div className="accordion-item">
-                        <h2 className="accordion-header">
+                      <div className="accordion-item" key={unitName}>
+                        <h3 className="accordion-header ">
                           <button
-                            className="accordion-button collapsed"
+                            className="accordion-button collapsed os-raise-text-bold"
                             type="button" data-bs-toggle="collapse"
                             data-bs-target={`#${unitName.slice(0, 6).replace(/\s/g, '')}`}
                             aria-expanded="false"
@@ -238,14 +238,15 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                           >
                             {unitName}
                           </button>
-                        </h2>
+                        </h3>
                         <div id={`${unitName.slice(0, 6).replace(/\s/g, '')}`} className="accordion-collapse collapse" data-bs-parent="#teacherStudentContentAccordion">
                           <div className="accordion-body">
                             {groupedHits[unitName].map((hit: Hit) => {
                               return (
-                                <>
-                                  {hit._source.lesson_page === '' && <p className='os-raise-text-bold'>{hit._source.activity_name}</p>}
-                                  {hit._source.lesson_page !== '' && <p className='os-raise-text-bold'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
+                                <div key={hit._id}>
+                                  <p className='os-search-content-type'>{hit._source.teacher_only ? 'Teacher Content' : 'Student Content'}</p>
+                                  {hit._source.lesson_page === '' && <p className='os-raise-text-bold os-search-results-text'>{hit._source.activity_name}</p>}
+                                  {hit._source.lesson_page !== '' && <p className='os-raise-text-bold os-search-results-text'>{`${hit._source.activity_name}; ${hit._source.lesson_page}`}</p>}
                                   {hit.highlight.visible_content?.map((content: string) => (
                                     <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: content }}></p>
                                   ))}
@@ -255,7 +256,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                                   {hit.highlight.activity_name?.map((activity: string) => (
                                     <p ref={contentRefCallback} className='os-search-results-highlights' dangerouslySetInnerHTML={{ __html: activity }}></p>
                                   ))}
-                                </>
+                                </div>
                               )
                             })}
                           </div>
@@ -272,9 +273,9 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       }
       {searchResults !== undefined && searchResults.hits.total.value === 0 &&
       <div className='os-search-results-count-container'>
-        <h3>Search Results</h3>
+        <h3 className='os-search-heading'>Search Results</h3>
         <div>
-          <p className='os-search-magnifying-glass'>No results found for <span className='os-raise-text-bold'>{searchTerm}</span></p>
+          <p className='os-search-magnifying-glass os-search-results-text'>No results found for <span className='os-raise-text-bold'>{searchTerm}</span></p>
         </div>
       </div>
       }
