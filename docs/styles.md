@@ -49,7 +49,6 @@
   - [Italicize Text](#italicize-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
-  - [Responsive iframe](#responsive-iframe)
   - [Video Container](#video-container)
 # Styling Content for RAISE
 
