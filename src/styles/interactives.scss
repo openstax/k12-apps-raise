@@ -220,15 +220,22 @@ math-field::part(menu-toggle) {
   padding: .5rem;
 }
 
+.os-search-hit {
+  border-bottom: .1rem solid #d9d9d9;
+}
+
+.os-search-hit:not(:first-child) {
+  margin-top: .5rem;
+}
+
 .os-search-results-highlights {
   margin-bottom: .5rem;
-  border-bottom: .1rem solid #d9d9d9;
-  padding-bottom: .5rem;
   font-size: .875rem;
+  color: #444;
 }
 
 .os-search-content-type {
-  text-decoration: underline;
+  font-size: 1rem;
   font-weight: 700;
 }
 
