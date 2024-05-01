@@ -25,6 +25,9 @@ const mockStudentAndTeacherQueryResults = {
             'says: \u201cI think this sequence <strong>is</strong> geometric because in the value column, each row <strong>is</strong> 3 times the previous',
             'Do you agree with <strong>Jada</strong> or Mai? Be prepared to show your reasoning using a graph.',
             '<strong>Jada</strong> noticed that each value <strong>is</strong> multiplied by 3 to get to the next row, but the table skips terms.'
+          ],
+          activity_name: [
+            'Activity content'
           ]
         }
       },
@@ -138,17 +141,18 @@ describe('search', () => {
       fireEvent.click(screen.getByText('Search'))
     })
 
-    await screen.findAllByText('Unit 4: Functions')
+    await screen.findByText('Unit 4: Functions')
+    act(() => {
+      fireEvent.click(screen.getByText('Unit 4: Functions'))
+    })
     const firstHitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
     const secondHitLessonPage = await screen.findAllByText('4.14.2', { exact: false })
     expect(firstHitLessonPage.length === 2)
     expect(secondHitLessonPage.length === 2)
     expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
-    expect(await screen.findByText('Lesson 4.14: Sequences'))
+    expect(await screen.findByText('4.16.3: A Sequence Is a Type of Function'))
     expect(await screen.findByText('table skips terms', { exact: false }))
     expect(await screen.findByText('smallest', { exact: false }))
-    expect(await screen.findByText('Teacher Content'))
-    expect(await screen.findByText('Content'))
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=12345')
   })
 
@@ -169,12 +173,14 @@ describe('search', () => {
     })
 
     await screen.findByText('Unit 4: Functions')
+    act(() => {
+      fireEvent.click(screen.getByText('Unit 4: Functions'))
+    })
     const firstHitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
     expect(firstHitLessonPage.length === 1)
     expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
+    expect(await screen.findByText('4.16.3: A Sequence Is a Type of Function'))
     expect(await screen.findByText('table skips terms', { exact: false }))
-    expect(await screen.findByText('Teacher Content'))
-    expect(screen.queryByText('Content')).toBeNull()
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=67890&filter=teacher')
   })
 
@@ -195,12 +201,50 @@ describe('search', () => {
     })
 
     await screen.findByText('Unit 4: Functions')
+    act(() => {
+      fireEvent.click(screen.getByText('Unit 4: Functions'))
+    })
     const firstHitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
     expect(firstHitLessonPage.length === 1)
     expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
+    expect(await screen.findByText('4.16.3: A Sequence Is a Type of Function'))
     expect(await screen.findByText('table skips terms', { exact: false }))
-    expect(await screen.findByText('Content'))
-    expect(screen.queryByText('Teacher Content')).toBeNull()
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=13579&filter=student')
+  })
+
+  it('filter results to show teacher content only', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
+    })
+
+    render(
+      <SearchBlock versionId={'12345'} filter={undefined} />
+    )
+
+    const queryInput = screen.getByRole('textbox')
+    await act(async () => {
+      fireEvent.change(queryInput, { target: { value: 'math' } })
+      fireEvent.click(screen.getByText('Search'))
+    })
+
+    await screen.findByText('Teacher Content Only')
+    const slider = screen.getByRole('checkbox')
+    act(() => {
+      fireEvent.click(slider)
+    })
+    await screen.findByText('Unit 4: Functions')
+    act(() => {
+      fireEvent.click(screen.getByText('Unit 4: Functions'))
+    })
+    const hitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
+    expect(hitLessonPage.length === 2)
+    expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
+    expect(await screen.findByText('4.16.3: A Sequence Is a Type of Function'))
+    expect(await screen.findByText('Activity content'))
+    expect(await screen.findByText('table skips terms', { exact: false }))
+    expect(screen.queryAllByText('4.14.2', { exact: false })).toHaveLength(0)
+    expect(screen.queryByText('smallest')).toBeNull()
+    expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=12345')
   })
 })

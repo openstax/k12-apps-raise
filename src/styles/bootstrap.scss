@@ -22,6 +22,8 @@
   @import "bootstrap/scss/utilities";
   @import "bootstrap/scss/utilities/api";
   @import "bootstrap/scss/spinners";
+  @import "bootstrap/scss/accordion";
+  @import "bootstrap/scss/transitions";
 
   // The following are copied from bootstrap.css where the definitions under
   // :root are otherwise not applied when namespaced so manually defined here
