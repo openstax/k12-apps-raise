@@ -212,7 +212,7 @@ describe('search', () => {
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=13579&filter=student')
   })
 
-  it('filter results to show teacher content only', async () => {
+  it('filter results to show student content only', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
@@ -228,7 +228,7 @@ describe('search', () => {
       fireEvent.click(screen.getByText('Search'))
     })
 
-    await screen.findByText('Teacher Content Only')
+    await screen.findByText('Student Content Only')
     const slider = screen.getByRole('checkbox')
     act(() => {
       fireEvent.click(slider)
@@ -237,14 +237,14 @@ describe('search', () => {
     act(() => {
       fireEvent.click(screen.getByText('Unit 4: Functions'))
     })
-    const hitLessonPage = await screen.findAllByText('4.16.3', { exact: false })
+    const hitLessonPage = await screen.findAllByText('4.14.2', { exact: false })
     expect(hitLessonPage.length === 2)
-    expect(await screen.findByText('Lesson 4.16: Different Types of Sequences'))
-    expect(await screen.findByText('4.16.3: A Sequence Is a Type of Function'))
-    expect(await screen.findByText('Activity content'))
-    expect(await screen.findByText('table skips terms', { exact: false }))
-    expect(screen.queryAllByText('4.14.2', { exact: false })).toHaveLength(0)
-    expect(screen.queryByText('smallest')).toBeNull()
+    expect(await screen.findByText('Lesson 4.14: Sequences'))
+    expect(await screen.findByText('4.14.2: What Is a Sequence?'))
+    expect(await screen.findByText('disc 4', { exact: false }))
+    expect(await screen.findByText('numbers in a sequence', { exact: false }))
+    expect(screen.queryAllByText('4.16.3', { exact: false })).toHaveLength(0)
+    expect(screen.queryByText('multiplied')).toBeNull()
     expect(global.fetch).toHaveBeenCalledWith('http://searchapi/v1/search?q=math&version=12345')
   })
 })
