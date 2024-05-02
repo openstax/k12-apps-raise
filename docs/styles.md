@@ -49,8 +49,7 @@
   - [Italicize Text](#italicize-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
-  - [Responsive iframe](#responsive-iframe)
-
+  - [Video Container](#video-container)
 # Styling Content for RAISE
 
 In order to maintain consistency and reliability across all RAISE content, the styling associated with RAISE content is consolidated into a series of css classes located in `src/styles`. RAISE Style classes are either written for specific elements, or can be applied to a variety of objects. Those differences are listed below.
@@ -1270,7 +1269,7 @@ Any element that contains text.
 
 ## Responsive Media
 
-Improve image and `<video>` responsiveness by adding a maximum width and allowing the browser to calculate and select a height for the image / `<video>`. As a general rule, the max width will be 100% of the containing block's width. The `<width>` and `<height>` attributes should not be applied to `<video>`.
+Improve image responsiveness by adding a maximum width and allowing the browser to calculate and select a height for the image. As a general rule, the max width will be 100% of the containing block's width.
 
 **Example**
 
@@ -1280,7 +1279,7 @@ Improve image and `<video>` responsiveness by adding a maximum width and allowin
 
 **Availability**
 
-Add as a class attribute to `<img>` or `<video>`.
+Add as a class attribute to `<img>`.
 
 **Usage**
 
@@ -1288,33 +1287,36 @@ Add as a class attribute to `<img>` or `<video>`.
 <img src="https://openstax.org/dist/images/logo.svg" class="os-raise-media-responsive">
 ```
 
-```html
-<video controls="true" crossorigin="anonymous" class="os-raise-media-responsive">
-  <source src="https://k12.openstax.org/contents/raise/resources/3dd4ea7de318dc0911be9212995411f6c406a778">
-  <track default="true" kind="captions" label="On" src="https://k12.openstax.org/contents/raise/resources/086bdd4741914a59f9365c92f251f58e225f0211" srclang="en_us">https://k12.openstax.org/contents/raise/resources/3dd4ea7de318dc0911be9212995411f6c406a778
-</video>
-```
-
 ---
 
-## Responsive iframe
+## Video Container
 
-Improve `<iframe>` responsiveness by adding a parent container for `<iframe>` and a class for both the parent container and the `<iframe>`. The `<width>` and `<height>` attributes should not be applied to the `<iframe>` or its parent container.
+Give `<iframe>` and `<video>` tags responsiveness and an aspect ratio of `16:9`. The video container will be 80% of the parent containers width. Geogebra iframes can use this style. 
 
 **Example**
 
 <div style="text-align: center;">
-    <img src="./static/responsiveiframe.png" width="750">
+    <img src="./static/videocontainer.png" width="750">
 </div>
 
 **Availability**
 
-Add as a class attribute to `<iframe>` and its parent container.
+Add as a class attribute to the parent `div` of `<iframe>` and `<video>`. 
 
 **Usage**
 
 ```html
-<div class="os-raise-iframe-container">
-  <iframe class="os-raise-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen frameborder="0" src="https://www.youtube.com/embed/w6R8rywmgek" title="Linear equation word problems"></iframe>
+    <div class="os-raise-video-container">
+        <iframe src="https://www.youtube.com/embed/nZiRu4PpXDo?si=OEfKjtDOzQiG_BR2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+    </div>
+```
+
+To center the video horizontally, wrap the `div` containing `os-raise-video-container`  with a `div` containing the `os-raise-d-flex-nowrap` and `os-raise-justify-content-center` classes.
+
+```html
+<div class="os-raise-d-flex-nowrap os-raise-justify-content-center">
+    <div class="os-raise-video-container">
+        <iframe src="https://www.youtube.com/embed/nZiRu4PpXDo?si=OEfKjtDOzQiG_BR2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+    </div>
 </div>
 ```
