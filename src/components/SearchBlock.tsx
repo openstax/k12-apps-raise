@@ -47,11 +47,11 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SearchResults | undefined>(undefined)
   const [errorMessage, setErrorMessage] = useState('')
-  const [teacherContentOnly, setTeacherContentOnly] = useState(false)
+  const [studentContentOnly, setStudentContentOnly] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [totalTeacherHitsOnly, setTotalTeacherHitsOnly] = useState(0)
+  const [totalStudentHitsOnly, setTotalStudentHitsOnly] = useState(0)
   const [groupedStudentTeacherHits, setGroupedStudentTeacherHits] = useState<UnitHits | undefined>(undefined)
-  const [groupedTeacherHits, setGroupedTeacherHits] = useState<UnitHits | undefined>(undefined)
+  const [groupedStudentHits, setGroupedStudentHits] = useState<UnitHits | undefined>(undefined)
   const [sortedHits, setSortedHits] = useState<UnitHits | undefined>(undefined)
   const fetchContent = async (): Promise<void> => {
     try {
@@ -65,7 +65,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
 
       const data: SearchResults = await response.json()
       setSearchResults(data)
-      calculateTotalTeacherOnlyHits(data)
+      calculateTotalStudentOnlyHits(data)
       groupHitsByUnit(data)
     } catch (error) {
       setErrorMessage('Failed to get search results, please try again.')
@@ -79,14 +79,14 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
     }
   }, [])
 
-  const calculateTotalTeacherOnlyHits = (searchResults: SearchResults): void => {
-    let totalTeacherOnlyHits: number = 0
+  const calculateTotalStudentOnlyHits = (searchResults: SearchResults): void => {
+    let totalStudentOnlyHits: number = 0
     searchResults.hits.hits.forEach((hit) => {
-      if (hit._source.teacher_only) {
-        totalTeacherOnlyHits += 1
+      if (!hit._source.teacher_only) {
+        totalStudentOnlyHits += 1
       }
     })
-    setTotalTeacherHitsOnly(totalTeacherOnlyHits)
+    setTotalStudentHitsOnly(totalStudentOnlyHits)
   }
 
   const groupHitsByUnit = (searchResults: SearchResults): void => {
@@ -94,16 +94,16 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
       return
     }
     const unitStudentTeacherHits: UnitHits = {}
-    const unitTeacherHits: UnitHits = {}
+    const unitStudentHits: UnitHits = {}
 
     searchResults.hits.hits.forEach((hit) => {
       const unitName = hit._source.section
 
-      if (hit._source.teacher_only) {
-        if (unitName in unitTeacherHits) {
-          unitTeacherHits[unitName].push(hit)
+      if (!hit._source.teacher_only) {
+        if (unitName in unitStudentHits) {
+          unitStudentHits[unitName].push(hit)
         } else {
-          unitTeacherHits[unitName] = [hit]
+          unitStudentHits[unitName] = [hit]
         }
       }
 
@@ -115,8 +115,8 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
     })
 
     setGroupedStudentTeacherHits(unitStudentTeacherHits)
-    setGroupedTeacherHits(unitTeacherHits)
-    teacherContentOnly ? setSortedHits(unitTeacherHits) : setSortedHits(unitStudentTeacherHits)
+    setGroupedStudentHits(unitStudentHits)
+    studentContentOnly ? setSortedHits(unitStudentHits) : setSortedHits(unitStudentTeacherHits)
   }
 
   const handleSubmit = async (): Promise<void> => {
@@ -127,7 +127,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
     setSearchResults(undefined)
     setErrorMessage('')
     setSearchTerm(query)
-    setTeacherContentOnly(false)
+    setStudentContentOnly(false)
     await fetchContent()
   }
   return (
@@ -172,11 +172,11 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
             <h3 className='os-search-heading'>Search Results</h3>
             <div>
               <p className='os-search-magnifying-glass os-search-results-text'>
-                Displaying {teacherContentOnly ? totalTeacherHitsOnly : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span>
+                Displaying {studentContentOnly ? totalStudentHitsOnly : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span>
               </p>
               {filter === undefined &&
-                <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-teacher-content-toggle-container'>
-                  <p className='os-raise-mb-0 os-search-results-text'>Teacher Content Only</p>
+                <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-student-content-toggle-container'>
+                  <p className='os-raise-mb-0 os-search-results-text'>Student Content Only</p>
                   <div className='os-raise-bootstrap'>
                     <div className="form-check form-switch">
                       <input
@@ -184,8 +184,8 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         onChange={() => {
-                          setTeacherContentOnly(!teacherContentOnly)
-                          !teacherContentOnly ? setSortedHits(groupedTeacherHits) : setSortedHits(groupedStudentTeacherHits)
+                          setStudentContentOnly(!studentContentOnly)
+                          !studentContentOnly ? setSortedHits(groupedStudentHits) : setSortedHits(groupedStudentTeacherHits)
                         }}
                       />
                     </div>
@@ -197,7 +197,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
           {sortedHits !== undefined &&
             <div className='os-search-results-container'>
               <div className='os-raise-bootstrap'>
-                <div className="accordion" id="teacherContentAccordion">
+                <div className="accordion" id="contentAccordion">
                   {Object.keys(sortedHits).sort().map((unitName) => {
                     const uniqueId = `auto-${uuidv4()}`
                     return (
@@ -213,7 +213,7 @@ export const SearchBlock = ({ versionId, filter }: SearchBlockProps): JSX.Elemen
                             {unitName}
                           </button>
                         </h3>
-                        <div id={uniqueId} className="accordion-collapse collapse" data-bs-parent="#teacherContentAccordion">
+                        <div id={uniqueId} className="accordion-collapse collapse" data-bs-parent="#contentAccordion">
                           <div className="accordion-body">
                             {sortedHits[unitName].map((hit: Hit) => {
                               return (
