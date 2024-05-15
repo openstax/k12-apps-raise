@@ -33,6 +33,25 @@ export class MoodleApi {
     }
   }
 
+  async getUserRoles(courseId: number | undefined): Promise<string[]> {
+    const methodName = 'local_raise_get_user_roles'
+    const userRequest = {
+      index: 0,
+      methodname: methodName,
+      args: {
+        courseid: courseId
+      }
+    }
+    const url = this.getMoodleAjaxUrl(methodName)
+    const response = await fetch(url, { method: 'POST', body: JSON.stringify([userRequest]) })
+    const responseJSON = await response.json()
+    if (responseJSON.error !== undefined) {
+      throw new Error(responseJSON.error as string)
+    }
+
+    return responseJSON[0].data
+  }
+
   private getMoodleAjaxUrl(endpointMethod: string): string {
     let userUrl: string
     userUrl = this.wwwroot
