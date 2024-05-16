@@ -14,7 +14,10 @@ import {
 import { UserInputBlock } from '../components/UserInputBlock'
 import { SearchBlock } from '../components/SearchBlock'
 import { queueIbPsetProblemAttemptedV1Event, queueIbInputSubmittedV1Event } from './events'
-import { getVersionId } from './utils'
+import { getVersionId, getCurrentContext } from './utils'
+import {
+  MoodleApi
+} from '../moodleapi'
 
 export const OS_RAISE_IB_EVENT_PREFIX = 'os-raise-ib-event'
 export const OS_RAISE_IB_CONTENT_CLASS = 'os-raise-ib-content'
@@ -375,8 +378,36 @@ export const parseSearchBlock = (element: HTMLElement): JSX.Element | null => {
   }
   const maybeFilter = element.dataset.filter
 
+  const memoizedUserRole = (): () => Promise<string | undefined> => {
+    let role: string | undefined
+    return async (): Promise<string | undefined> => {
+      if (role !== undefined) {
+        if (role === 'non-student') {
+          return maybeFilter
+        }
+        return role
+      }
+
+      const context = getCurrentContext()
+      const courseId = context.courseId
+      if (courseId === undefined || window.M === undefined) {
+        return maybeFilter
+      }
+      const moodleApi = new MoodleApi(window.M.cfg.wwwroot, window.M.cfg.sesskey)
+      const userRoles = await moodleApi.getUserRoles(courseId)
+      const studentRoleExists = userRoles.includes('student')
+      role = studentRoleExists ? 'student' : 'non-student'
+      if (role === 'student') {
+        return role
+      }
+      return maybeFilter
+    }
+  }
+
+  const userRole = memoizedUserRole()
+
   return <SearchBlock
     versionId={getVersionId()}
-    filter={maybeFilter}
+    userRole={userRole}
   />
 }
