@@ -33,7 +33,7 @@ export class MoodleApi {
     }
   }
 
-  async getUserRoles(courseId: number | undefined): Promise<string[]> {
+  async getUserRoles(courseId: number): Promise<string[]> {
     const methodName = 'local_raise_get_user_roles'
     const userRequest = {
       index: 0,
