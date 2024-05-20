@@ -10,6 +10,11 @@ const server = setupServer(
         jwt: 'jwt'
       }
     }])
+  }),
+  http.post('http://moodletwo/lib/ajax/service.php', () => {
+    return HttpResponse.json([{
+      data: ['student']
+    }])
   })
 )
 
@@ -22,4 +27,11 @@ test('Test getuser', async () => {
   const res = await moodleApi.getUser()
   expect(res.uuid === 'uuid')
   expect(res.jwt === 'jwt')
+})
+
+test('Test getUserRoles', async () => {
+  const moodleApi = new MoodleApi('http://moodletwo', '67890')
+  const res = await moodleApi.getUserRoles(2)
+  expect(res.length === 1)
+  expect(res[0] === 'student')
 })

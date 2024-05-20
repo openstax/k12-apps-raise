@@ -131,8 +131,10 @@ describe('search', () => {
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
     })
 
+    const userRoleHandler = jest.fn().mockResolvedValue(undefined)
+
     render(
-      <SearchBlock versionId={'12345'} filter={undefined} />
+      <SearchBlock versionId={'12345'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -162,8 +164,10 @@ describe('search', () => {
       json: async () => await Promise.resolve(mockTeacherFilterQueryResults)
     })
 
+    const userRoleHandler = jest.fn(async () => await Promise.resolve('teacher'))
+
     render(
-      <SearchBlock versionId={'67890'} filter={'teacher'} />
+      <SearchBlock versionId={'67890'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -190,8 +194,10 @@ describe('search', () => {
       json: async () => await Promise.resolve(mockStudentFilterQueryResults)
     })
 
+    const userRoleHandler = jest.fn(async () => await Promise.resolve('student'))
+
     render(
-      <SearchBlock versionId={'13579'} filter={'student'} />
+      <SearchBlock versionId={'13579'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -218,8 +224,10 @@ describe('search', () => {
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
     })
 
+    const userRoleHandler = jest.fn().mockResolvedValue(undefined)
+
     render(
-      <SearchBlock versionId={'12345'} filter={undefined} />
+      <SearchBlock versionId={'12345'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
