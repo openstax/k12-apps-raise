@@ -18,6 +18,7 @@
   "dependencies": {
     "@khanacademy/kas": "github:openstax/raise-kas#7f1de183d58ff9b241a51062c307ea5e9ef0c3fe",
     "bootstrap": "^5.3.3",
+    "eslint-config-love": "^51.0.1",
     "formik": "^2.4.6",
     "mathlive": "^0.98.6",
     "react": "^18.3.1",
