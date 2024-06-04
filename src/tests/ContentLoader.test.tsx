@@ -1,7 +1,8 @@
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, screen, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
+
 import { ContentLoader } from '../components/ContentLoader'
 
 const server = setupServer(
@@ -25,7 +26,7 @@ const server = setupServer(
   })
 )
 
-jest.mock('../lib/env.ts', () => ({
+vi.mock('../lib/env.ts', () => ({
   ENV: {
     OS_RAISE_CONTENT_URL_PREFIX: 'http://contentapi/contents'
   }
@@ -64,8 +65,8 @@ test('error is displayed on network error when fetching content', async () => {
 })
 
 test('OnContentLoad is called', async () => {
-  const mockOnLoad = jest.fn()
-  const mockOnLoadFailed = jest.fn(() => {})
+  const mockOnLoad = vi.fn()
+  const mockOnLoadFailed = vi.fn(() => {})
   render(
     <ContentLoader contentId='test-content' versionId='version' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
@@ -77,8 +78,8 @@ test('OnContentLoad is called', async () => {
 })
 
 test('OnContentLadFailed is called when error loading content', async () => {
-  const mockOnLoad = jest.fn()
-  const mockOnLoadFailed = jest.fn()
+  const mockOnLoad = vi.fn()
+  const mockOnLoadFailed = vi.fn()
   render(
     <ContentLoader contentId='test-content-failure' versionId='version' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
@@ -89,8 +90,8 @@ test('OnContentLadFailed is called when error loading content', async () => {
 })
 
 test('OnContentLadFailed is called when there is a 404 error', async () => {
-  const mockOnLoad = jest.fn()
-  const mockOnLoadFailed = jest.fn()
+  const mockOnLoad = vi.fn()
+  const mockOnLoadFailed = vi.fn()
   render(
     <ContentLoader contentId='test-content-404' versionId='version' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )
@@ -101,8 +102,8 @@ test('OnContentLadFailed is called when there is a 404 error', async () => {
 })
 
 test('OnContentLadFailed is called when variant cannot be found', async () => {
-  const mockOnLoad = jest.fn()
-  const mockOnLoadFailed = jest.fn()
+  const mockOnLoad = vi.fn()
+  const mockOnLoadFailed = vi.fn()
   render(
     <ContentLoader contentId='test-nomain-content' versionId='version' onContentLoad={mockOnLoad} onContentLoadFailure={mockOnLoadFailed}/>
   )

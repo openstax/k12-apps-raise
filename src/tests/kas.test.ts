@@ -1,4 +1,5 @@
 import { parse, compare } from '@khanacademy/kas'
+import { vi, test, expect } from 'vitest'
 
 test('Test kas', async () => {
   const options = {

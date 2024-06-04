@@ -1,6 +1,8 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
 import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
+
 import {
   type BaseProblemProps,
   type ProblemData,

@@ -1,18 +1,19 @@
-import '@testing-library/jest-dom'
+
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { loadDesmos } from '../lib/desmos'
 import { DesmosBlock } from '../components/DesmosBlock'
+import { vi, test, expect } from 'vitest'
 
-jest.mock('../lib/desmos.ts', () => ({
-  loadDesmos: jest.fn(async () => {})
+vi.mock('../lib/desmos.ts', () => ({
+  loadDesmos: vi.fn(async () => {})
 }))
 
 test('Desmos block calls script and graphing calculator functions', async () => {
-  const setExpression = jest.fn()
-  const setMathBounds = jest.fn()
-  const setDefaultState = jest.fn()
-  const getState = jest.fn()
-  const graphingCalculator = jest.fn(() => {
+  const setExpression = vi.fn()
+  const setMathBounds = vi.fn()
+  const setDefaultState = vi.fn()
+  const getState = vi.fn()
+  const graphingCalculator = vi.fn(() => {
     return {
       setExpression,
       setMathBounds,
@@ -38,11 +39,11 @@ test('Desmos block calls script and graphing calculator functions', async () => 
 })
 
 test('DesmosBlock does not render if waitForEvent does not fire', async () => {
-  const setExpression = jest.fn()
-  const setMathBounds = jest.fn()
-  const setDefaultState = jest.fn()
-  const getState = jest.fn()
-  const graphingCalculator = jest.fn(() => {
+  const setExpression = vi.fn()
+  const setMathBounds = vi.fn()
+  const setDefaultState = vi.fn()
+  const getState = vi.fn()
+  const graphingCalculator = vi.fn(() => {
     return {
       setExpression,
       setMathBounds,
@@ -68,11 +69,11 @@ test('DesmosBlock does not render if waitForEvent does not fire', async () => {
 })
 
 test('DesmosBlock calculator does render if waitForEvent does fire', async () => {
-  const setExpression = jest.fn()
-  const setMathBounds = jest.fn()
-  const setDefaultState = jest.fn()
-  const getState = jest.fn()
-  const graphingCalculator = jest.fn(() => {
+  const setExpression = vi.fn()
+  const setMathBounds = vi.fn()
+  const setDefaultState = vi.fn()
+  const getState = vi.fn()
+  const graphingCalculator = vi.fn(() => {
     return {
       setExpression,
       setMathBounds,

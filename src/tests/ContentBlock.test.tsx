@@ -1,14 +1,17 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { ContentBlock } from '../components/ContentBlock'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
+
 import { parseContentOnlyBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import { mathifyElement } from '../lib/math'
 
-jest.mock('../lib/math.ts', () => ({
-  mathifyElement: jest.fn()
+vi.mock('../lib/math.ts', () => ({
+  mathifyElement: vi.fn()
 }))
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
 test('ContentBlock renders', async () => {
   render(

@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
 import { DropdownProblem, buildClassName } from '../components/DropdownProblem'
-import '@testing-library/jest-dom'
+import { vi, test } from 'vitest'
+
 
 test('DropdownProblem renders with contentId', async () => {
   render(
@@ -82,9 +83,9 @@ test('DropdownProblem shows message if user does not select an option', async ()
 })
 
 test('DropdownProblem shows correct response, invokes callback, and disables self on check with match', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <DropdownProblem
@@ -116,9 +117,9 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
 })
 
 test('DropdownProblem shows attempts exhausted response, invokes callback, and disables self on check with no match', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <DropdownProblem
@@ -152,9 +153,9 @@ test('DropdownProblem shows attempts exhausted response, invokes callback, and d
 })
 
 test('DropdownProblem shows encourage response and invokes callback on check with no match and one retry remaining', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <DropdownProblem
@@ -214,9 +215,9 @@ test('DropdownProblem clears encourage response when user changes answer', async
 })
 
 test('DropdownProblem exhausts and disables itself after configured number of retries', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <DropdownProblem
@@ -331,7 +332,7 @@ test('DropdownProblem renders answer specific content only on button click', asy
 })
 
 test('DropdownProblem calls the onProblemAttempt handler', async () => {
-  const problemAttemptedHandler = jest.fn()
+  const problemAttemptedHandler = vi.fn()
 
   render(
           <DropdownProblem

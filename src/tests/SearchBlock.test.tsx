@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { SearchBlock } from '../components/SearchBlock'
+import { vi, describe, expect } from 'vitest'
 
 const mockStudentAndTeacherQueryResults = {
   hits: {
@@ -118,7 +119,7 @@ const mockStudentFilterQueryResults = {
   }
 }
 
-jest.mock('../lib/env.ts', () => ({
+vi.mock('../lib/env.ts', () => ({
   ENV: {
     OS_RAISE_SEARCHAPI_URL_PREFIX: 'http://searchapi'
   }
@@ -126,12 +127,12 @@ jest.mock('../lib/env.ts', () => ({
 
 describe('search', () => {
   it('fetches and displays unfiltered results from API', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
     })
 
-    const userRoleHandler = jest.fn().mockResolvedValue(undefined)
+    const userRoleHandler = vi.fn().mockResolvedValue(undefined)
 
     render(
       <SearchBlock versionId={'12345'} userRole={userRoleHandler} />
@@ -159,12 +160,12 @@ describe('search', () => {
   })
 
   it('fetches and displays teacher filter search results from API', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockTeacherFilterQueryResults)
     })
 
-    const userRoleHandler = jest.fn(async () => await Promise.resolve('teacher'))
+    const userRoleHandler = vi.fn(async () => await Promise.resolve('teacher'))
 
     render(
       <SearchBlock versionId={'67890'} userRole={userRoleHandler} />
@@ -189,12 +190,12 @@ describe('search', () => {
   })
 
   it('fetches and displays student filter search results from API', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockStudentFilterQueryResults)
     })
 
-    const userRoleHandler = jest.fn(async () => await Promise.resolve('student'))
+    const userRoleHandler = vi.fn(async () => await Promise.resolve('student'))
 
     render(
       <SearchBlock versionId={'13579'} userRole={userRoleHandler} />
@@ -219,12 +220,12 @@ describe('search', () => {
   })
 
   it('filter results to show student content only', async () => {
-    global.fetch = jest.fn().mockResolvedValue({
+    global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => await Promise.resolve(mockStudentAndTeacherQueryResults)
     })
 
-    const userRoleHandler = jest.fn().mockResolvedValue(undefined)
+    const userRoleHandler = vi.fn().mockResolvedValue(undefined)
 
     render(
       <SearchBlock versionId={'12345'} userRole={userRoleHandler} />

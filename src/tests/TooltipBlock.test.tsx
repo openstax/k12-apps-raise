@@ -1,10 +1,11 @@
-import '@testing-library/jest-dom'
+
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TooltipBlock } from '../components/TooltipBlock'
 import { mathifyElement } from '../lib/math'
+import { vi, test } from 'vitest'
 
-jest.mock('../lib/math.ts', () => ({
-  mathifyElement: jest.fn(async () => {})
+vi.mock('../lib/math.ts', () => ({
+  mathifyElement: vi.fn(async () => {})
 }))
 
 test('Tooltip Block displays tip after mouse over event', async () => {

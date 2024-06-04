@@ -1,8 +1,8 @@
 import { getVersionId } from '../lib/utils'
+import { vi, test, expect } from 'vitest'
+vi.mock('../lib/env.ts', () => {})
 
-jest.mock('../lib/env.ts', () => {})
-
-jest.mock('../../data/content-versions.json', () => ({
+vi.mock('../../data/content-versions.json', () => ({
   defaultVersion: 'defaultVersion',
   overrides: {
     testhost: {
