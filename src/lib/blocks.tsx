@@ -379,35 +379,35 @@ export const parseSearchBlock = (element: HTMLElement): JSX.Element | null => {
   const maybeFilter = element.dataset.filter
 
   const memoizedUserRole = (): () => Promise<string | undefined> => {
-    let role: string | undefined
+    let cachedFilter: string | undefined | null = null
     return async (): Promise<string | undefined> => {
-      if (role !== undefined) {
-        if (role === 'non-student') {
-          return maybeFilter
-        }
-        return role
+      if (cachedFilter !== null) {
+        return cachedFilter
       }
+
+      cachedFilter = maybeFilter
 
       const context = getCurrentContext()
       const courseId = context.courseId
       if (courseId === undefined || window.M === undefined) {
-        return maybeFilter
+        return cachedFilter
       }
       const moodleApi = new MoodleApi(window.M.cfg.wwwroot, window.M.cfg.sesskey)
       const userRoles = await moodleApi.getUserRoles(courseId)
       const studentRoleExists = userRoles.includes('student')
-      role = studentRoleExists ? 'student' : 'non-student'
-      if (role === 'student') {
-        return role
+
+      if (studentRoleExists && maybeFilter === undefined) {
+        cachedFilter = 'student'
       }
-      return maybeFilter
+
+      return cachedFilter
     }
   }
 
-  const userRole = memoizedUserRole()
+  const getFilter = memoizedUserRole()
 
   return <SearchBlock
     versionId={getVersionId()}
-    userRole={userRole}
+    getFilter={getFilter}
   />
 }

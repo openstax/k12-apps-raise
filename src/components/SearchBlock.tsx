@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 interface SearchBlockProps {
   versionId: string
-  userRole: () => Promise<string | undefined>
+  getFilter: () => Promise<string | undefined>
 }
 
 interface HitValue {
@@ -43,7 +43,7 @@ interface SearchResults {
 
 type UnitHits = Record<string, Hit[]>
 
-export const SearchBlock = ({ versionId, userRole }: SearchBlockProps): JSX.Element => {
+export const SearchBlock = ({ versionId, getFilter }: SearchBlockProps): JSX.Element => {
   const [query, setQuery] = useState('')
   const [searchResults, setSearchResults] = useState<SearchResults | undefined>(undefined)
   const [errorMessage, setErrorMessage] = useState('')
@@ -53,10 +53,10 @@ export const SearchBlock = ({ versionId, userRole }: SearchBlockProps): JSX.Elem
   const [groupedStudentTeacherHits, setGroupedStudentTeacherHits] = useState<UnitHits | undefined>(undefined)
   const [groupedStudentHits, setGroupedStudentHits] = useState<UnitHits | undefined>(undefined)
   const [sortedHits, setSortedHits] = useState<UnitHits | undefined>(undefined)
-  const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined)
+  const [currentFilter, setCurrentFilter] = useState<string | undefined>(undefined)
   const fetchContent = async (): Promise<void> => {
     try {
-      const filter = await userRole()
+      const filter = await getFilter()
       const response = filter !== undefined
         ? await fetch(`${ENV.OS_RAISE_SEARCHAPI_URL_PREFIX}/v1/search?q=${query}&version=${versionId}&filter=${filter}`)
         : await fetch(`${ENV.OS_RAISE_SEARCHAPI_URL_PREFIX}/v1/search?q=${query}&version=${versionId}`)
@@ -69,7 +69,7 @@ export const SearchBlock = ({ versionId, userRole }: SearchBlockProps): JSX.Elem
       setSearchResults(data)
       calculateTotalStudentOnlyHits(data)
       groupHitsByUnit(data)
-      setRoleFilter(filter)
+      setCurrentFilter(filter)
     } catch (error) {
       setErrorMessage('Failed to get search results, please try again.')
       console.error('Error fetching search results:', error)
@@ -177,7 +177,7 @@ export const SearchBlock = ({ versionId, userRole }: SearchBlockProps): JSX.Elem
               <p className='os-search-magnifying-glass os-search-results-text'>
                 Displaying {studentContentOnly ? totalStudentHitsOnly : searchResults.hits.hits.length} of out {searchResults.hits.total.value} results for <span className='os-raise-text-bold'>{searchTerm}</span>
               </p>
-              {roleFilter === undefined &&
+              {currentFilter === undefined &&
                 <div className='os-raise-d-flex-nowrap os-raise-justify-content-evenly os-search-student-content-toggle-container'>
                   <p className='os-raise-mb-0 os-search-results-text'>Student Content Only</p>
                   <div className='os-raise-bootstrap'>

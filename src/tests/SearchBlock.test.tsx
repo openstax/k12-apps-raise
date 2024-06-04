@@ -135,7 +135,7 @@ describe('search', () => {
     const userRoleHandler = vi.fn().mockResolvedValue(undefined)
 
     render(
-      <SearchBlock versionId={'12345'} userRole={userRoleHandler} />
+      <SearchBlock versionId={'12345'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -168,7 +168,7 @@ describe('search', () => {
     const userRoleHandler = vi.fn(async () => await Promise.resolve('teacher'))
 
     render(
-      <SearchBlock versionId={'67890'} userRole={userRoleHandler} />
+      <SearchBlock versionId={'67890'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -198,7 +198,7 @@ describe('search', () => {
     const userRoleHandler = vi.fn(async () => await Promise.resolve('student'))
 
     render(
-      <SearchBlock versionId={'13579'} userRole={userRoleHandler} />
+      <SearchBlock versionId={'13579'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
@@ -228,7 +228,7 @@ describe('search', () => {
     const userRoleHandler = vi.fn().mockResolvedValue(undefined)
 
     render(
-      <SearchBlock versionId={'12345'} userRole={userRoleHandler} />
+      <SearchBlock versionId={'12345'} getFilter={userRoleHandler} />
     )
 
     const queryInput = screen.getByRole('textbox')
