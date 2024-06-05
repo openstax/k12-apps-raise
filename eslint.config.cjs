@@ -18,7 +18,6 @@ module.exports = [
         }
       ],
       '@typescript-eslint/ban-tslint-comment': 'off',
-      '@typescript-eslint/space-infix-ops': 'error'
     }
   },
   {
