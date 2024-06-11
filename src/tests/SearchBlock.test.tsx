@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react'
 import { SearchBlock } from '../components/SearchBlock'
-import { vi, describe, expect } from 'vitest'
+import { vi, describe, expect, it } from 'vitest'
 
 const mockStudentAndTeacherQueryResults = {
   hits: {

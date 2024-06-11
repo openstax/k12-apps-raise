@@ -1,7 +1,7 @@
 import { MoodleApi } from '../moodleapi'
 import { setupServer } from 'msw/node'
 import { http, HttpResponse } from 'msw'
-import { vi, test, expect } from 'vitest'
+import { vi, test, expect, beforeAll, afterEach, afterAll} from 'vitest'
 
 const server = setupServer(
   http.post('http://moodle/lib/ajax/service.php', () => {

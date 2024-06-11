@@ -2,7 +2,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { TooltipBlock } from '../components/TooltipBlock'
 import { mathifyElement } from '../lib/math'
-import { vi, test } from 'vitest'
+import { vi, test, expect } from 'vitest'
 
 vi.mock('../lib/math.ts', () => ({
   mathifyElement: vi.fn(async () => {})

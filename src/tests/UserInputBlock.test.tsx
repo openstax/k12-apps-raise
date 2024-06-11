@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { UserInputBlock, MAX_CHARACTER_INPUT_BLOCK_LENGTH } from '../components/UserInputBlock'
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
-import { vi, test, expect } from 'vitest'
+import { vi, test, expect, afterEach } from 'vitest'
 
 import { ContentLoadedContext } from '../lib/contexts'
 import { queueIbInputSubmittedV1Event } from '../lib/events'

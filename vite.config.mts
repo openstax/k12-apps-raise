@@ -10,11 +10,6 @@ export default defineConfig(({ mode }) => {
       environment: 'jsdom',
       setupFiles: './src/tests/vitest.setup.ts',
       include: ['src/tests/*.test.{ts,tsx}'],
-      environmentOptions: {
-        jsdom: {
-          url: 'http://localhost/',
-        },
-      },
     },
     
     build: {

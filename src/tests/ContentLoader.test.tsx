@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import { setupServer } from 'msw/node'
 import { render, screen, waitFor } from '@testing-library/react'
-import { vi, test, expect } from 'vitest'
+import { vi, test, expect, beforeAll, afterEach, afterAll } from 'vitest'
 
 import { ContentLoader } from '../components/ContentLoader'
 

@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, act } from '@testing-library/react'
 import { DropdownProblem, buildClassName } from '../components/DropdownProblem'
-import { vi, test } from 'vitest'
+import { vi, test, expect} from 'vitest'
 
 
 test('DropdownProblem renders with contentId', async () => {
