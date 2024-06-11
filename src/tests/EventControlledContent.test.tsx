@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 
 import { EventControlledContent } from '../components/EventControlledContent'
-import { vi, test, expect } from 'vitest'
+import { test, expect } from 'vitest'
 
 test('EventControlledContent does not render children if waitForEvent does not fire', async () => {
   render(
