@@ -7,7 +7,7 @@
     "lint:eslint": "eslint .",
     "lint:stylelint": "stylelint src/styles/*.scss",
     "lint": "npm run lint:eslint && npm run lint:stylelint",
-    "test:vitest": "vitest run",
+    "test:vitest": "vitest run --coverage",
     "test:playwright": "playwright test",
     "test": "npm run test:vitest && npm run test:playwright",
     "build": "tsc && vite build",
@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@khanacademy/kas": "github:openstax/raise-kas#7f1de183d58ff9b241a51062c307ea5e9ef0c3fe",
-    "@types/jest": "^29.5.12",
     "bootstrap": "^5.3.3",
     "formik": "^2.4.6",
     "mathlive": "^0.98.6",
@@ -40,7 +39,6 @@
     "@vitejs/plugin-react": "^4.3.0",
     "eslint": "^8.57.0",
     "eslint-config-love": "^52.0.0",
-    "eslint-config-standard-with-typescript": "^43.0.1",
     "msw": "^2.3.1",
     "sass": "^1.76.0",
     "stylelint": "^16.5.0",
@@ -50,6 +48,7 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
     "whatwg-fetch": "^3.6.20"
   }
 }
