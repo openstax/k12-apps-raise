@@ -86,7 +86,7 @@ test('OnContentLadFailed is called when error loading content', async () => {
   await waitFor(() => { expect(mockOnLoad.mock.calls.length).toBe(0) })
   await waitFor(() => { expect(mockOnLoadFailed.mock.calls.length).toBe(1) })
   expect(mockOnLoadFailed.mock.calls[0][0]).toBe('test-content-failure')
-  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('TypeError: Failed to fetch')
+  expect(mockOnLoadFailed.mock.calls[0][1]).toBe('Error: Request for content returned 500')
 })
 
 test('OnContentLadFailed is called when there is a 404 error', async () => {

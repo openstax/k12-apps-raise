@@ -2,7 +2,6 @@ import { render, screen, act } from '@testing-library/react'
 import { MultipleChoiceProblem, buildClassName } from '../components/MultipleChoiceProblem'
 import { vi, test, expect } from 'vitest'
 
-
 test('MultipleChoiceProblem renders', async () => {
   render(
     <MultipleChoiceProblem
