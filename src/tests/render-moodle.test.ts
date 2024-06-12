@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
+
 import {
   OS_RAISE_IB_CTA_CLASS,
   OS_RAISE_IB_CONTENT_CLASS,
@@ -15,12 +16,14 @@ import {
   renderDesmosBlocks
 } from '../lib/render-moodle'
 
-const mockRender = jest.fn()
+const mockRender = vi.fn()
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
-jest.mock('react-dom/client', () => ({
-  createRoot: jest.fn(() => ({ render: mockRender }))
+vi.mock('react-dom/client', () => ({
+  createRoot: vi.fn(() => ({ render: mockRender }))
 }))
 
 test('renderContentOnlyBlocks parses and creates expected block', async () => {

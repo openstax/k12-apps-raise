@@ -7,7 +7,7 @@ import {
   queueIbInputSubmittedV1Event
 } from '../lib/events'
 import { validate } from 'uuid'
-
+import { vi, beforeAll, afterAll, afterEach, test, expect } from 'vitest'
 const server = setupServer(
   http.post('http://localhost:8888/v1/events', () => {
     return HttpResponse.json({
@@ -49,9 +49,9 @@ async function waitForRequest(method: string, url: string): Promise<Request> {
   })
 }
 
-jest.mock('../lib/env.ts', () => ({
+vi.mock('../lib/env.ts', () => ({
   ENV: {
-    OS_RAISE_EVENTSAPI_URL_MAP: { localhost: 'http://localhost:8888' },
+    OS_RAISE_EVENTSAPI_URL_MAP: { 'localhost:3000': 'http://localhost:8888' },
     EVENT_FLUSH_PERIOD: 1
   }
 }))

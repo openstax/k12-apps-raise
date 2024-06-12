@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom'
+
 import { EventControlledContent } from '../components/EventControlledContent'
+import { test, expect } from 'vitest'
 
 test('EventControlledContent does not render children if waitForEvent does not fire', async () => {
   render(

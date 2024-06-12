@@ -1,6 +1,6 @@
 import { render, screen, act } from '@testing-library/react'
 import { MultipleChoiceProblem, buildClassName } from '../components/MultipleChoiceProblem'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
 
 test('MultipleChoiceProblem renders', async () => {
   render(
@@ -78,9 +78,9 @@ test('MultipleChoiceProblem shows message if user does not select an option', as
 })
 
 test('DropdownProblem shows correct response, invokes callback, and disables self on check with match', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <MultipleChoiceProblem
@@ -113,9 +113,9 @@ test('DropdownProblem shows correct response, invokes callback, and disables sel
 })
 
 test('DropdownProblem shows attempts exhuasted response, invokes callback, and disables self on check with no match', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <MultipleChoiceProblem
@@ -149,9 +149,9 @@ test('DropdownProblem shows attempts exhuasted response, invokes callback, and d
 })
 
 test('MultipleChoiceProblem shows encourage response and invokes callback on check with no match and one retry remaining', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <MultipleChoiceProblem
@@ -211,9 +211,9 @@ test('MultipleChoiceProblem clears encourage response when user changes answer',
 })
 
 test('MultipleChoiceProblem exhausts and disables itself after configured number of retries', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
     <MultipleChoiceProblem
@@ -324,7 +324,7 @@ test('MultipleChoiceProblem renders answer specific responses only on button cli
 })
 
 test('MultipleChoiceProblem calls the onProblemAttempt handler', async () => {
-  const problemAttemptedHandler = jest.fn()
+  const problemAttemptedHandler = vi.fn()
   render(
     <MultipleChoiceProblem
     solutionOptions={'["Option 1", "Option 2", "Option 3"]'}

@@ -5,6 +5,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const config = {
     plugins: [react()],
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: './src/tests/vitest.setup.ts',
+      include: ['src/tests/*.test.{ts,tsx}'],
+    },
+    
     build: {
       sourcemap: true,
       chunkSizeWarningLimit: 700

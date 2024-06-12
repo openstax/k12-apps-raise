@@ -1,18 +1,21 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { UserInputBlock, MAX_CHARACTER_INPUT_BLOCK_LENGTH } from '../components/UserInputBlock'
 import { parseUserInputBlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
-import '@testing-library/jest-dom'
+import { vi, test, expect, afterEach } from 'vitest'
+
 import { ContentLoadedContext } from '../lib/contexts'
 import { queueIbInputSubmittedV1Event } from '../lib/events'
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
-jest.mock('../lib/events.ts', () => ({
-  queueIbInputSubmittedV1Event: jest.fn(async () => {})
+vi.mock('../lib/events.ts', () => ({
+  queueIbInputSubmittedV1Event: vi.fn(async () => {})
 }))
 
 afterEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 test('UserInputBlock renders with content, prompt, and form as textarea', async () => {
@@ -183,7 +186,7 @@ test('UserInputBlock from parseUserInputBlock fires namespaced event on valid su
     generatedContentBlock ?? <></>
   )
 
-  const eventHandler = jest.fn()
+  const eventHandler = vi.fn()
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event1`, eventHandler)
 
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Input text' } })
@@ -206,7 +209,7 @@ test('UserInputBlock calls onInputSumbitted callback', async () => {
   divElem.innerHTML = htmlContent
   const generatedContentBlock = parseUserInputBlock(divElem.children[0] as HTMLElement)
 
-  Date.now = jest.fn(() => 12345)
+  Date.now = vi.fn(() => 12345)
 
   expect(generatedContentBlock).not.toBeNull()
 
@@ -243,7 +246,7 @@ test('UserInputBlock does not call onInputSumbitted on default context', async (
   divElem.innerHTML = htmlContent
   const generatedContentBlock = parseUserInputBlock(divElem.children[0] as HTMLElement)
 
-  Date.now = jest.fn(() => 12345)
+  Date.now = vi.fn(() => 12345)
 
   expect(generatedContentBlock).not.toBeNull()
 

@@ -2,13 +2,15 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { CTABlock } from '../components/CTABlock'
 import { parseCTABlock, OS_RAISE_IB_EVENT_PREFIX } from '../lib/blocks'
 import { mathifyElement } from '../lib/math'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
 
-jest.mock('../lib/math.ts', () => ({
-  mathifyElement: jest.fn()
+vi.mock('../lib/math.ts', () => ({
+  mathifyElement: vi.fn()
 }))
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
 test('CTABlock renders', async () => {
   render(
@@ -25,7 +27,7 @@ test('CTABlock fires event', async () => {
   render(
       <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
   )
-  const eventHandler = jest.fn()
+  const eventHandler = vi.fn()
 
   document.addEventListener('Event', eventHandler)
   fireEvent.click(screen.getByText('Click me!'))
@@ -96,7 +98,7 @@ test('CTABlock from parse CTABlock fires namespaced event on click', async () =>
   render(
     generatedContentBlock ?? <></>
   )
-  const eventHandler = jest.fn()
+  const eventHandler = vi.fn()
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-eventnameX`, eventHandler)
   fireEvent.click(screen.getByText('ButtonText'))
   expect(eventHandler).toHaveBeenCalled()

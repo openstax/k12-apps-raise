@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { InputProblem, MAX_CHARACTER_INPUT_PROBLEM_LENGTH, buildClassName, detectAndTransform, evaluateMathComparator } from '../components/InputProblem'
-import '@testing-library/jest-dom'
+import { vi, test, expect } from 'vitest'
+
 
 test('InputProblem renders with content, input and button', async () => {
   render(
@@ -54,9 +55,9 @@ test('InputProblem renders without contentId', async () => {
 })
 
 test('Text InputProblem button click with correct answer should evaluate to correct', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -91,9 +92,9 @@ test('Text InputProblem button click with correct answer should evaluate to corr
 })
 
 test('Text InputProblem button click with incorrect answer should evaluate to incorrect and show attempts exhausted response', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -222,9 +223,9 @@ test('InputProblem string text was too long', async () => {
 })
 
 test('InputProblem button click with wrong answer should evaluate to incorrect', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -256,9 +257,9 @@ test('InputProblem button click with wrong answer should evaluate to incorrect',
 })
 
 test('Retry limit, encourageResponse, and exausted callback test', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -303,9 +304,9 @@ test('Retry limit, encourageResponse, and exausted callback test', async () => {
 })
 
 test('InputProblem renders answer specific content', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -346,9 +347,9 @@ test('InputProblem renders answer specific content', async () => {
 })
 
 test('InputProblem renders answer specific content only on button click', async () => {
-  const solvedHandler = jest.fn()
-  const exhaustedHandler = jest.fn()
-  const allowedRetryHandler = jest.fn()
+  const solvedHandler = vi.fn()
+  const exhaustedHandler = vi.fn()
+  const allowedRetryHandler = vi.fn()
 
   render(
           <InputProblem
@@ -382,7 +383,7 @@ test('InputProblem renders answer specific content only on button click', async 
 })
 
 test('InputProblem calls the onProblemAttempt handler', async () => {
-  const problemAttemptedHandler = jest.fn()
+  const problemAttemptedHandler = vi.fn()
 
   render(
           <InputProblem

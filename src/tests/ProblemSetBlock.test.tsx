@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { OS_RAISE_IB_EVENT_PREFIX, parseProblemSetBlock } from '../lib/blocks'
-import '@testing-library/jest-dom'
+import { vi, test, expect, afterEach } from 'vitest'
+
 import {
   type BaseProblemProps,
   type ProblemData,
@@ -9,13 +10,15 @@ import {
 import { ContentLoadedContext } from '../lib/contexts'
 import { queueIbPsetProblemAttemptedV1Event } from '../lib/events'
 
-jest.mock('../lib/events.ts', () => ({
-  queueIbPsetProblemAttemptedV1Event: jest.fn(async () => {})
+vi.mock('../lib/events.ts', () => ({
+  queueIbPsetProblemAttemptedV1Event: vi.fn(async () => {})
 }))
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
-jest.mock('../components/DropdownProblem', () => {
+vi.mock('../components/DropdownProblem', () => {
   return {
     DropdownProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
       <>
@@ -28,7 +31,7 @@ jest.mock('../components/DropdownProblem', () => {
   }
 })
 
-jest.mock('../components/MultiselectProblem', () => {
+vi.mock('../components/MultiselectProblem', () => {
   return {
     MultiselectProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback }: BaseProblemProps) => (
       <>
@@ -41,7 +44,7 @@ jest.mock('../components/MultiselectProblem', () => {
   }
 })
 
-jest.mock('../components/InputProblem', () => {
+vi.mock('../components/InputProblem', () => {
   return {
     InputProblem: ({ solvedCallback, exhaustedCallback, allowedRetryCallback, onProblemAttempt }: BaseProblemProps) => (
       <>
@@ -56,7 +59,7 @@ jest.mock('../components/InputProblem', () => {
 })
 
 afterEach(() => {
-  jest.clearAllMocks()
+  vi.clearAllMocks()
 })
 
 const testProblems: ProblemData[] = [
@@ -249,8 +252,8 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced success event', 
     generatedProblemSetBlock ?? <></>
   )
 
-  const successHandler = jest.fn()
-  const learningOppHandler = jest.fn()
+  const successHandler = vi.fn()
+  const learningOppHandler = vi.fn()
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event1`, successHandler)
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event2`, learningOppHandler)
 
@@ -300,8 +303,8 @@ test('ProblemSetBlock from parseUserInputBlock fires namespaced learning opportu
     generatedProblemSetBlock ?? <></>
   )
 
-  const successHandler = jest.fn()
-  const learningOppHandler = jest.fn()
+  const successHandler = vi.fn()
+  const learningOppHandler = vi.fn()
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event1`, successHandler)
   document.addEventListener(`${OS_RAISE_IB_EVENT_PREFIX}-event2`, learningOppHandler)
 
@@ -431,7 +434,7 @@ test('ProblemSetBlock calls the onProblemAttempt handler', async () => {
   divElem.innerHTML = psetContent
   const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
 
-  Date.now = jest.fn(() => 12345)
+  Date.now = vi.fn(() => 12345)
 
   render(
     <ContentLoadedContext.Provider value={{ variant: 'testvariant', contentId: 'contentLoadedId' }}>
@@ -484,7 +487,7 @@ test('ProblemSetBlock does not call the onProblemAttempt handler on default cont
   divElem.innerHTML = psetContent
   const generatedProblemSetBlock = parseProblemSetBlock(divElem.children[0] as HTMLElement)
 
-  Date.now = jest.fn(() => 12345)
+  Date.now = vi.fn(() => 12345)
 
   render(
     generatedProblemSetBlock ?? <></>

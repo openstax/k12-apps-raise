@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom'
 import { ContentBlock } from '../components/ContentBlock'
 import { CTABlock } from '../components/CTABlock'
 import {
@@ -11,8 +10,11 @@ import {
 } from '../lib/blocks'
 import { UserInputBlock } from '../components/UserInputBlock'
 import { ProblemSetBlock } from '../components/ProblemSetBlock'
+import { vi, test, expect } from 'vitest'
 
-jest.mock('../lib/env.ts', () => {})
+vi.mock('../lib/env.ts', () => ({
+  default: {}
+}))
 
 test('isInteractiveBlock returns false on non-interactive block', async () => {
   const tmpDiv = document.createElement('div')
