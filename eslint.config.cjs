@@ -24,10 +24,6 @@ module.exports = [
     ignores: [
       'dist/**',
       'vite.config.ts',
-      'jest.config.ts',
-      'jest.setup.ts',
-      'jest.polyfills.js',
-      'jest.resolver.js',
       'playwright.config.ts',
       'coverage',
       'eslint.config.cjs'
