@@ -14,7 +14,8 @@ export default defineConfig(({ mode }) => {
     
     build: {
       sourcemap: true,
-      chunkSizeWarningLimit: 700
+      chunkSizeWarningLimit: 700,
+      emptyOutDir: false
     },
     server: {
       port: 3000
