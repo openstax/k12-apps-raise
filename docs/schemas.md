@@ -62,12 +62,14 @@ The Call-to-action (CTA) block encapsulates the following components:
 When the button is clicked, the component will:
 
 * Fire the named event if defined (see schema definition)
-* Remove the button
+* Disable the button
 
 #### Schema definition
 
+Default styling
+
 ```html
-<div class="os-raise-ib-cta" data-button-text="ButtonText" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
+<div class="os-raise-ib-cta" data-button-text="Solution" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
   <div class="os-raise-ib-cta-content">
     <!-- INSERT ANY VALID HTML HERE -->
     <p>CTA block content</p>
@@ -79,18 +81,38 @@ When the button is clicked, the component will:
 </div>
 ```
 
-The output if the `data-wait-for-event="eventnameX"` attribute is removed.
+Theme styling
+
+```html
+<div class="os-raise-ib-cta" data-button-text="Reveal Challenge" data-style-theme="green" data-fire-event="eventnameX" data-wait-for-event="eventnameY" data-schema-version="1.0">
+  <div class="os-raise-ib-cta-content">
+    <!-- INSERT ANY VALID HTML HERE -->
+    <p>CTA block content</p>
+  </div>
+  <div class="os-raise-ib-cta-prompt">
+    <!-- INSERT ANY VALID HTML HERE -->
+    <p>Click button to see solution</p>
+  </div>
+</div>
+```
+
+The output if the `data-wait-for-event="eventnameX"` attribute is removed. This is also the default styling without applying the optional attribute `data-style-theme`:
 
 <div style="text-align: center;">
-    <img src="./static/cta_block.png" width="200">
+    <img src="./static/cta_block.png" width="500">
 </div>
 
+The output when applying the optional attribute `data-style-theme`:
+<div style="text-align: center;">
+    <img src="./static/cta_block_style.png" width="500">
+</div>
 
 Notes on schema:
 
 * The `data-wait-for-event` attribute is optional and where specified should correspond to a `data-fire-event` from another Interactive Block on the same page (e.g. as part of a Content Template)
 * The `data-fire-event` attribute is optional
 * The `data-button-text` is optional but allows the content developer to customize the text in the CTA button. The default value is `Next`.
+* The `data-style-theme` attribute is optional and when specified will provide the styling shown above.
 
 ### User input block
 
