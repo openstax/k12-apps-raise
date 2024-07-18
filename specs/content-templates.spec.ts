@@ -31,7 +31,7 @@ test('segmented content template works', async ({ page }) => {
     <p>Want to see more?</p>
 </div>
 </div>
-<div class="os-raise-ib-cta" data-button-text="Yes!" data-fire-event="event2" data-wait-for-event="event1">
+<div class="os-raise-ib-cta" data-button-text="Yes!!" data-fire-event="event2" data-wait-for-event="event1">
   <div class="os-raise-ib-cta-content">
     <p>This is the content for block 2</p>
   </div>
@@ -52,7 +52,7 @@ test('segmented content template works', async ({ page }) => {
   await page.click('text=Yes!')
   await page.waitForSelector('text=This is the content for block 2')
   await expect(page.locator('text=That\'s all folks!')).not.toBeVisible()
-  await page.click('text=Yes!')
+  await page.click('text=Yes!!')
   await page.waitForSelector('text=That\'s all folks!')
 })
 
