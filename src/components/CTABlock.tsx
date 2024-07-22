@@ -9,9 +9,10 @@ interface CTABlockProps {
   buttonText: string
   fireEvent?: string
   waitForEvent?: string
+  styleTheme?: string
 }
 
-export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent }: CTABlockProps): JSX.Element => {
+export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent, styleTheme }: CTABlockProps): JSX.Element => {
   const [clicked, setclicked] = useState<boolean>(false)
 
   const clickHandler = (): void => {
@@ -30,20 +31,23 @@ export const CTABlock = ({ content, prompt, buttonText, fireEvent, waitForEvent 
   }, [])
 
   const maybeButton = (): JSX.Element => {
-    if (!clicked) {
-      return (<>
-      <button onClick={clickHandler} type="button" className="btn btn-outline-primary mb-3">{buttonText}</button></>)
-    } else {
-      return <></>
-    }
+    return (
+      <button
+        onClick={clickHandler}
+        type="button"
+        className={styleTheme === "green" ? "os-submit-button-green-theme" : "os-submit-button-default-theme"}
+        disabled={clicked}>
+        {buttonText}
+      </button>
+    )
   }
 
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      <div className="os-raise-bootstrap">
+      <div className={styleTheme === "green" ? "os-cta-container-green-theme" : "os-cta-container-default-theme"}>
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
         <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: prompt }} />
-      {maybeButton()}
+        {maybeButton()}
       </div>
     </EventControlledContent>
   )

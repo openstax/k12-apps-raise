@@ -34,13 +34,30 @@ test('CTABlock fires event', async () => {
   expect(eventHandler).toHaveBeenCalled()
 })
 
-test('CTABlock button disappears on click, prompt remains', async () => {
+test('CTABlock button styled with default theme, disables on click, prompt remains', async () => {
   render(
       <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} fireEvent={'Event'}/>
   )
 
-  fireEvent.click(screen.getByText('Click me!'))
-  expect(screen.queryByText('Click me!')).toBeNull()
+  const button = screen.getByText('Click me!')
+  fireEvent.click(button)
+  expect(button.className).toBe('os-submit-button-default-theme')
+  expect(button).toBeDisabled()
+  screen.getByText('String')
+  expect(screen.queryByText('Prompt'))
+})
+
+test('CTABlock container and button styled when styleTheme prop provided, disables on click, prompt remains', async () => {
+  const { container } = render(
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} styleTheme={'green'} fireEvent={'Event'}/>
+  )
+
+  const div = container.querySelector("div.os-cta-container-green-theme")
+  expect(div?.className).toBe('os-cta-container-green-theme')
+  const button = screen.getByText('Click me!')
+  fireEvent.click(button)
+  expect(button.className).toBe('os-submit-button-green-theme')
+  expect(button).toBeDisabled()
   screen.getByText('String')
   expect(screen.queryByText('Prompt'))
 })

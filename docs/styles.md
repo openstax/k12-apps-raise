@@ -47,6 +47,8 @@
 * Text Styling
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
+  - [Black Text](#black-text)
+  - [Green Bold Text](#green-bold-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
   - [Video Container](#video-container)
@@ -1263,6 +1265,50 @@ Any element that contains text.
 
 ```html
 <p class="os-raise-text-italicize">This text is italicized.</p>
+```
+
+---
+
+## Black Text
+
+This class should be used to apply the color black to text.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/blacktext.png" width="500">
+</div>
+
+**Availability**
+
+Any element that contains text.
+
+**Usage**
+
+```html
+<p class="os-raise-black-text">This color of this text is black.</p>
+```
+
+---
+
+## Green Bold Text
+
+This class should be used to apply the following to text: green, bold, and 24px.
+
+**Example**
+
+<div style="text-align: center;">
+    <img src="./static/ctatextstyle.png" width="500">
+</div>
+
+**Availability**
+
+Any element that contains text and is part of CTA block content.
+
+**Usage**
+
+```html
+<p class="os-raise-green-bold-text">This text is green, bold, and 24px.</p>
 ```
 
 ---
