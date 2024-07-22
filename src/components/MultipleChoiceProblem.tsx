@@ -161,7 +161,7 @@ export const MultipleChoiceProblem = ({
     }
   }
   return (
-    <div className="os-raise-bootstrap" ref={contentRefCallback}>
+    <div className="os-raise-bootstrap mb-4" ref={contentRefCallback}>
       <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
         initialValues={{ response: '' }}

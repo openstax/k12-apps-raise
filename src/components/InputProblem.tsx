@@ -165,7 +165,7 @@ export const InputProblem = ({
     setFeedback('')
   }
   return (
-  <div className="os-raise-bootstrap">
+  <div className="os-raise-bootstrap mb-4">
 
     <div className="my-3" ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: content }} />
     <Formik
