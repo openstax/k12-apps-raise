@@ -12,13 +12,13 @@ $os-dark-green: #0A5B50;
 div.os-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 2rem;
+  grid-gap: 1rem;
 }
 
 .os-default-answer-choice {
-  border: .125rem solid $os-dark-gray;
+  border: .063rem solid #757575;
   border-radius: .3125rem;
-  box-shadow: 0 .125rem .125rem $os-default-box-shadow;
+  box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
 }
 
 div.os-default-answer-choice:focus-within {
@@ -27,6 +27,7 @@ div.os-default-answer-choice:focus-within {
 
 div.os-default-answer-choice > div:hover {
   background-color: $os-answer-background;
+  border-radius: .3125rem;
 }
 
 label.os-label-container {
@@ -34,7 +35,7 @@ label.os-label-container {
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: .75rem .5rem .75rem .8rem;
+  padding: 1rem 1.5rem;
   cursor: pointer;
 }
 
@@ -124,6 +125,10 @@ div.os-feedback-message p {
 
 p.os-attempts-text {
   color: $os-dark-gray;
+}
+
+div.os-error-message {
+  color: #C22032;
 }
 
 .os-disabled.os-disabled {
