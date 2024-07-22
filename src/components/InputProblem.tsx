@@ -209,7 +209,7 @@ export const InputProblem = ({
               }
               </div>
               <div className="os-error-attempts-container">
-                <ErrorMessage className="text-danger" component="div" name="response" />
+                <ErrorMessage className="os-error-message" component="div" name="response" />
                 <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
               </div>
               <div className="os-text-center mt-1">
