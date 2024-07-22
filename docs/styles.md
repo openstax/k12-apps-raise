@@ -48,7 +48,7 @@
   - [Bold Text](#bold-text)
   - [Italicize Text](#italicize-text)
   - [Black Text](#black-text)
-  - [CTA Data Style Theme Text](#CTA-data-style-theme-text)
+  - [Green Bold Text](#green-bold-text)
 * Media Styling
   - [Responsive Media](#responsive-media)
   - [Video Container](#video-container)
@@ -1291,7 +1291,7 @@ Any element that contains text.
 
 ---
 
-## CTA Data Style Theme Text
+## Green Bold Text
 
 This class should be used to apply the following to text: green, bold, and 24px.
 

@@ -47,16 +47,16 @@ test('CTABlock button styled with default theme, disables on click, prompt remai
   expect(screen.queryByText('Prompt'))
 })
 
-test('CTABlock container and button styled when ctaStyleTheme prop provided, disables on click, prompt remains', async () => {
+test('CTABlock container and button styled when styleTheme prop provided, disables on click, prompt remains', async () => {
   const { container } = render(
-      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} ctaStyleTheme={'green'} fireEvent={'Event'}/>
+      <CTABlock buttonText="Click me!" content={'<p>String</p>'} prompt={'<p>Prompt</p>'} styleTheme={'green'} fireEvent={'Event'}/>
   )
 
-  const div = container.querySelector("div.os-cta-container-style-theme")
-  expect(div?.className).toBe('os-cta-container-style-theme')
+  const div = container.querySelector("div.os-cta-container-green-theme")
+  expect(div?.className).toBe('os-cta-container-green-theme')
   const button = screen.getByText('Click me!')
   fireEvent.click(button)
-  expect(button.className).toBe('os-submit-button-style-theme')
+  expect(button.className).toBe('os-submit-button-green-theme')
   expect(button).toBeDisabled()
   screen.getByText('String')
   expect(screen.queryByText('Prompt'))
