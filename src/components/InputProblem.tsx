@@ -208,11 +208,13 @@ export const InputProblem = ({
                     )
               }
               </div>
-              <ErrorMessage className="text-danger my-3" component="div" name="response" />
-              <div className="os-text-center mt-4">
-              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-btn btn-outline-primary">{buttonText}</button></div>
+              <div className="os-error-attempts-container">
+                <ErrorMessage className="text-danger" component="div" name="response" />
+                <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
+              </div>
+              <div className="os-text-center mt-1">
+              <button type="submit" disabled={inputDisabled || isSubmitting} className="os-submit-button-default-theme">{buttonText}</button></div>
               {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
-              <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </Form>
           )}
         </Formik>

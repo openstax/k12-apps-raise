@@ -1,7 +1,7 @@
 $os-correct-answer-border-color: #019920;
 $os-selected-focus-border-color: #159eb2;
 $os-wrong-answer-border-color: #fc0516;
-$os-default-answer-border-color: #424242;
+$os-dark-gray: #424242;
 $os-medium-gray: #626262;
 $os-light-gray: #d9d9d9;
 $os-answer-background: #f5f5f5;
@@ -16,7 +16,7 @@ div.os-grid {
 }
 
 .os-default-answer-choice {
-  border: .125rem solid $os-default-answer-border-color;
+  border: .125rem solid $os-dark-gray;
   border-radius: .3125rem;
   box-shadow: 0 .125rem .125rem $os-default-box-shadow;
 }
@@ -86,7 +86,7 @@ select.os-form-select:hover {
 // Input Styles
 .os-form-control.os-form-control:focus {
   border-color: $os-selected-focus-border-color;
-  box-shadow: 0 .125rem .125rem $os-default-box-shadow;
+  box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
 }
 
 .os-form-control.os-form-control:disabled {
@@ -113,20 +113,17 @@ math-field.os-form-control.os-disabled {
 
 div.os-feedback-message {
   background-color: $os-light-gray;
-  padding: .5rem;
+  padding: 1rem 1.5rem;
   border-radius: .3125rem;
 }
 
 div.os-feedback-message p {
-  color: $os-medium-gray;
+  color: #000;
+  margin-bottom: 0;
 }
 
 p.os-attempts-text {
-  color: $os-medium-gray;
-}
-
-div.os-justify-content-end {
-  justify-content: end;
+  color: $os-dark-gray;
 }
 
 .os-disabled.os-disabled {
@@ -136,6 +133,16 @@ div.os-justify-content-end {
 
 .os-text-center {
   text-align: center;
+}
+
+div.os-error-attempts-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .5rem;
+}
+
+.os-ml-auto {
+  margin-left: auto;
 }
 
 // All Interactives + CTA Styles
@@ -161,7 +168,7 @@ div.os-justify-content-end {
   box-shadow: none;
 }
 
-.os-submit-button-default-theme {
+button.os-submit-button-default-theme {
   @extend %os-submit-button-base;
 
   background-color: #757575;
