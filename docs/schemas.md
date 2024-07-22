@@ -113,7 +113,7 @@ Notes on schema:
 * The `data-fire-event` attribute is optional
 * The `data-button-text` is optional but allows the content developer to customize the text in the CTA button. The default value is `Next`.
 * The `data-style-theme` attribute is optional and when specified will provide the styling shown above.
-* Supported values for `data-style-theme`: `green`.
+  * Supported values for `data-style-theme`: `green`.
 
 ### User input block
 

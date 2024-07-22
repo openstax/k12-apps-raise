@@ -1308,7 +1308,7 @@ Any element that contains text and is part of CTA block content.
 **Usage**
 
 ```html
-<p class="os-raise-cta-title-style-theme">This text is green, bold, and 24px.</p>
+<p class="os-raise-green-bold-text">This text is green, bold, and 24px.</p>
 ```
 
 ---
