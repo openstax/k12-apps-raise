@@ -146,7 +146,7 @@ export const parseCTABlock = (element: HTMLElement): JSX.Element | null => {
   const contentElem = element.querySelector(`.${CTA_CONTENT_CLASS}`)
   const promptElem = element.querySelector(`.${CTA_PROMPT_CLASS}`)
   const buttonText = element.dataset.buttonText ?? 'Next'
-  const maybeCTAStyleTheme = element.dataset.styleTheme
+  const maybeStyleTheme = element.dataset.styleTheme
   const fireEvent = namespaceEvent(element.dataset.fireEvent)
   const waitForEvent = namespaceEvent(element.dataset.waitForEvent)
 
@@ -164,7 +164,7 @@ export const parseCTABlock = (element: HTMLElement): JSX.Element | null => {
     buttonText={buttonText}
     fireEvent={fireEvent}
     waitForEvent={waitForEvent}
-    ctaStyleTheme={maybeCTAStyleTheme}
+    styleTheme={maybeStyleTheme}
   />
 }
 

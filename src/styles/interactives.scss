@@ -181,7 +181,7 @@ button.os-submit-button-default-theme {
   box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
 }
 
-.os-submit-button-style-theme {
+.os-submit-button-green-theme {
   @extend %os-submit-button-base;
 
   background-color: #0A5B50;
@@ -315,7 +315,7 @@ math-field::part(menu-toggle) {
   @extend %os-cta-container-base;
 }
 
-.os-cta-container-style-theme {
+.os-cta-container-green-theme {
   @extend %os-cta-container-base;
 
   background-color: #F5F5F5;
@@ -326,7 +326,7 @@ math-field::part(menu-toggle) {
   margin-bottom: 1rem;
 }
 
-.os-cta-container-style-theme:has(%os-submit-button-base:disabled) {
+.os-cta-container-green-theme:has(%os-submit-button-base:disabled) {
   box-shadow: none;
 }
 
