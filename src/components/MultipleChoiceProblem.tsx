@@ -177,7 +177,7 @@ export const MultipleChoiceProblem = ({
                 <ErrorMessage className="os-error-message" component="div" name="response" />
                 <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
             </div>
-            <div className="os-text-center mt-4">
+            <div className="os-text-center mt-1">
               <button
                 className="os-submit-button-default-theme"
                 type="submit"
