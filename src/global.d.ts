@@ -1,5 +1,5 @@
-import { type MathfieldElementAttributes, type MathfieldElement } from 'mathlive'
-import { type DOMAttributes } from 'react'
+import type { MathfieldElementAttributes, MathfieldElement } from 'mathlive'
+import type { DOMAttributes } from 'react'
 
 declare global {
   interface Window {

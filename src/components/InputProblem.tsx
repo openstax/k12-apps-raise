@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 import { AttemptsCounter } from './AttemptsCounter'
 import { CorrectAnswerIcon, WrongAnswerIcon } from './Icons'
 import { Mathfield } from './Mathfield'
-import { type MathfieldElement } from 'mathlive'
+import type { MathfieldElement } from 'mathlive'
 import { parse, compare } from '@khanacademy/kas'
 export const MAX_CHARACTER_INPUT_PROBLEM_LENGTH = 500
 
