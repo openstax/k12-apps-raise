@@ -113,12 +113,12 @@ math-field.os-form-control.os-disabled {
 
 div.os-feedback-message {
   background-color: $os-light-gray;
-  padding: .5rem;
+  padding: 1rem 1.5rem;
   border-radius: .3125rem;
 }
 
 div.os-feedback-message p {
-  color: $os-medium-gray;
+  color: #000;
 }
 
 p.os-attempts-text {
@@ -161,7 +161,7 @@ div.os-justify-content-end {
   box-shadow: none;
 }
 
-.os-submit-button-default-theme {
+button.os-submit-button-default-theme {
   @extend %os-submit-button-base;
 
   background-color: #757575;

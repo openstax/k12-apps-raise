@@ -149,6 +149,7 @@
   $os-default-answer-border-color: #424242;
   $os-medium-gray: #626262;
   $os-default-box-shadow: #808080;
+  $os-default-gray: #757575;
 
   // Extends Select Element for Dropdown Styles
   .os-form-select {
@@ -171,13 +172,16 @@
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
-    border: .125rem solid $os-default-answer-border-color;
-    border-radius: .3125rem;
-    box-shadow: 0 .125rem .125rem $os-default-box-shadow;
+    border: .063rem solid #757575; border-radius: .3125rem; 
+    box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
   }
-
+  
   input.os-form-control {
     padding: .75rem;
+  }
+
+  textarea.os-form-control {
+    padding: 1rem 1.5rem;
   }
 
   math-field.os-form-control {
@@ -206,7 +210,7 @@
 
     min-width: 1.2em;
     min-height: 1.2em;
-    border: .125rem solid $os-default-answer-border-color;
+    border: .125rem solid $os-default-gray;
   }
 
   // Extends Check Button for All Interactives
