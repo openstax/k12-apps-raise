@@ -162,13 +162,7 @@ If students are entering something into a text block, be sure to follow these co
 The output if the `data-wait-for-event="eventnameY"` attribute is removed and the user submits an answer.
 
 <div style="text-align: center;">
-    <img src="./static/gen-input1.png" width="450">
-</div>
-<div style="text-align: center;">
-    <img src="./static/gen-input2.png" width="450">
-</div>
-<div style="text-align: center;">
-    <img src="./static/gen-input3.png" width="450">
+    <img src="./static/gen-input.png" width="450">
 </div>
 
 Notes on schema:

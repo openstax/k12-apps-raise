@@ -172,11 +172,10 @@
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
-    border: .125rem solid $os-default-gray;
-    border-radius: .3125rem;
-    box-shadow: 0 .125rem .125rem $os-default-gray;        
+    border: .063rem solid #757575; border-radius: .3125rem; 
+    box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
   }
-
+  
   input.os-form-control {
     padding: .75rem;
   }
