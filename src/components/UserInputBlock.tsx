@@ -105,9 +105,9 @@ export const UserInputBlock = ({ content, prompt, ack, waitForEvent, fireEvent, 
               disabled={isSubmitting || responseSubmitted}
               rows={DEFAULT_TEXTAREA_ROWS}
               className={buildClassName(responseSubmitted, errors.response)}/>
-              <ErrorMessage className="text-danger my-3" component="div" name="response" />
+              <ErrorMessage className="text-danger my-2" component="div" name="response" />
               <div className='os-text-center mt-4'>
-              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-btn btn-outline-primary">{buttonText}</button>
+              <button type="submit" disabled={isSubmitting || responseSubmitted} className="os-submit-button-default-theme">{buttonText}</button>
               </div>
             </Form>
           )}
