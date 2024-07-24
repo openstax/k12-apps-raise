@@ -18,6 +18,10 @@ module.exports = [
         }
       ],
       '@typescript-eslint/ban-tslint-comment': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/max-params': 'off',
+      '@typescript-eslint/init-declarations': 'off',
     }
   },
   {

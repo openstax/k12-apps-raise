@@ -3,28 +3,6 @@
   // NOTE: This approach may result in some unexpected issues that we'll have
   // to address as they arise
 
-  /* stylelint-disable no-invalid-position-at-import-rule */
-
-  // Required styles
-  @import "bootstrap/scss/functions";
-  @import "bootstrap/scss/variables";
-  @import "bootstrap/scss/variables-dark";
-  @import "bootstrap/scss/mixins";
-  @import "bootstrap/scss/maps";
-  @import "bootstrap/scss/root";
-  @import "bootstrap/scss/reboot";
-
-  // Additional styles
-  @import "bootstrap/scss/helpers";
-  @import "bootstrap/scss/buttons";
-  @import "bootstrap/scss/forms";
-  @import "bootstrap/scss/tooltip";
-  @import "bootstrap/scss/utilities";
-  @import "bootstrap/scss/utilities/api";
-  @import "bootstrap/scss/spinners";
-  @import "bootstrap/scss/accordion";
-  @import "bootstrap/scss/transitions";
-
   // The following are copied from bootstrap.css where the definitions under
   // :root are otherwise not applied when namespaced so manually defined here
   --bs-blue: #0d6efd;
@@ -144,6 +122,28 @@
   --bs-form-valid-border-color: #198754;
   --bs-form-invalid-color: #dc3545;
   --bs-form-invalid-border-color: #dc3545;
+
+  /* stylelint-disable no-invalid-position-at-import-rule */
+
+  // Required styles
+  @import "bootstrap/scss/functions";
+  @import "bootstrap/scss/variables";
+  @import "bootstrap/scss/variables-dark";
+  @import "bootstrap/scss/mixins";
+  @import "bootstrap/scss/maps";
+  @import "bootstrap/scss/root";
+  @import "bootstrap/scss/reboot";
+
+  // Additional styles
+  @import "bootstrap/scss/helpers";
+  @import "bootstrap/scss/buttons";
+  @import "bootstrap/scss/forms";
+  @import "bootstrap/scss/tooltip";
+  @import "bootstrap/scss/utilities";
+  @import "bootstrap/scss/utilities/api";
+  @import "bootstrap/scss/spinners";
+  @import "bootstrap/scss/accordion";
+  @import "bootstrap/scss/transitions";
 
   // Variables
   $os-default-answer-border-color: #424242;
