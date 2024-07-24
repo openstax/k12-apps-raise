@@ -1,6 +1,7 @@
 $os-correct-answer-border-color: #019920;
 $os-selected-focus-border-color: #159eb2;
 $os-wrong-answer-border-color: #fc0516;
+$os-default-gray: #757575;
 $os-dark-gray: #424242;
 $os-medium-gray: #626262;
 $os-light-gray: #d9d9d9;
@@ -16,7 +17,7 @@ div.os-grid {
 }
 
 .os-default-answer-choice {
-  border: .063rem solid #757575;
+  border: .063rem solid $os-default-gray;
   border-radius: .3125rem;
   box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
 }
@@ -176,8 +177,8 @@ div.os-error-attempts-container {
 button.os-submit-button-default-theme {
   @extend %os-submit-button-base;
 
-  background-color: #757575;
-  border: 1px solid #757575;
+  background-color: $os-default-gray;
+  border: 1px solid $os-default-gray;
   box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
 }
 

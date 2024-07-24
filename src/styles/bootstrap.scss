@@ -156,7 +156,7 @@
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-select;
 
-    border: .063rem solid #757575;
+    border: .063rem solid $os-default-gray;
     border-radius: .3125rem;
     box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
     padding: 1rem 1.5rem;
@@ -172,7 +172,7 @@
     /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
     @extend .form-control;
 
-    border: .063rem solid #757575;
+    border: .063rem solid $os-default-gray;
     border-radius: .3125rem;
     box-shadow: 0 .125rem .25rem 0 hsla(0deg 0% 46% / 25%);
   }
