@@ -177,7 +177,7 @@ export const MultiselectProblem = ({
   }
 
   return (
-    <div className="os-raise-bootstrap" ref={contentRefCallback}>
+    <div className="os-raise-bootstrap mb-4" ref={contentRefCallback}>
       <div className="my-3" dangerouslySetInnerHTML={{ __html: content }} />
       <Formik
         initialValues={{ response: [] }}
@@ -187,10 +187,13 @@ export const MultiselectProblem = ({
         {({ isSubmitting, setFieldValue, values }) => (
           <Form>
             <div className='os-grid'>{generateOptions(values, isSubmitting, setFieldValue)}</div>
-            <ErrorMessage className="text-danger my-3" component="div" name="response" />
-            <div className='os-text-center mt-4'>
+            <div className="os-error-attempts-container">
+                <ErrorMessage className="os-error-message" component="div" name="response" />
+                <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed}/>
+            </div>
+            <div className='os-text-center mt-1'>
               <button
-                className="os-btn btn-outline-primary"
+                className="os-submit-button-default-theme"
                 type="submit"
                 disabled={isSubmitting || formDisabled}
               >
@@ -199,7 +202,6 @@ export const MultiselectProblem = ({
             </div>
 
             {feedback !== '' ? <div ref={contentRefCallback} dangerouslySetInnerHTML={{ __html: feedback }} className="my-3 os-feedback-message" /> : null}
-            <AttemptsCounter retryLimit={retryLimit} retriesAllowed={retriesAllowed} />
           </Form>
         )}
       </Formik>
