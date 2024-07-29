@@ -62,7 +62,7 @@ export function DesmosBlock({ width, height, waitForEvent, equations, disableExp
   }
   return (
     <EventControlledContent waitForEvent={waitForEvent}>
-      <div className="os-raise-bootstrap">
+      <div className="os-raise-bootstrap os-desmos">
         <div ref={contentRefCallback} className="mb-3"/>
       </div>
     </EventControlledContent>
