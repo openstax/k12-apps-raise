@@ -944,6 +944,27 @@ have a `<p>` tag and `<a>` tags.
 
 ---
 
+## Blockquote
+
+Add a styled blockquote.
+
+**Examples**
+
+<div style="text-align: center;">
+    <img src="./static/blockquote.png" width="750">
+</div>
+
+**Availability**
+
+The blockquote styling should only be used on `<blockquote>` tags.
+
+**Usage**
+```html
+<blockquote class="os-raise-blockquote">Andre bought a new bag of cat food. The next day, he opened it to feed his cat. The graph shows how many ounces were left in the bag on the days after it was bought.</blockquote>
+```
+
+---
+
 # Flex
 
 ## Initializing Flexbox (os-raise-d-flex-nowrap / os-raise-d-flex)
