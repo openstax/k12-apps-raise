@@ -1,5 +1,5 @@
 {
-  "defaultVersion": "f901403a",
+  "defaultVersion": "e0b800b2",
   "overrides": {
     "raiselearning.org": {
       "course": {
@@ -248,7 +248,7 @@
     "demo.raiselearning.org": {
       "course": {
         "2": "6f1c1854",
-        "6": "2cd520ec"
+        "6": "e0b800b2"
       }
     },
     "students.raiselearning.org": {
