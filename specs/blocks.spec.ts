@@ -428,8 +428,8 @@ test('Desmos has equations and tables shows all in expressions panel', async ({ 
   await page.waitForSelector('text=x2')
   await page.waitForSelector('text=x3')
   await page.waitForSelector('text=x4')
-  await page.waitForSelector('text=125')
-  await page.waitForSelector('text=543')
+  await page.waitForSelector('text=125 >> visible=true')
+  await page.waitForSelector('text=543 >> visible=true')
 })
 
 test('Desmos expressions panel is not visible.', async ({ page }) => {
